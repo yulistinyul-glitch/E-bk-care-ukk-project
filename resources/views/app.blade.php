@@ -7,16 +7,14 @@
     
     @vite('resources/css/app.css')
 </head>
-<body class="bg-gray-100 pb-24 overflow-hidden"> 
+<body class="bg-gray-100 m-0 p-0"> 
 
-    <main class="p-4">
-        
-
+    <main>
         @yield('content')
     </main>
 
-    <div class="pb-24 z-100">
-      @include('partials.navbar')
+    <div class="fixed bottom-0 left-0 right-0 z-50">
+        @include('partials.navbar')
     </div>
     
 

@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const plugin = require("tailwindcss/plugin");
+
 export default {
     content: [
         "./resources/**/*.blade.php",
@@ -8,5 +10,21 @@ export default {
     theme: {
         extend: {},
     },
-    plugins: [],
+    plugins: [
+        plugin(function ({ addUtilities }) {
+            addUtilities({
+                /* Kelas untuk menyembunyikan scrollbar */
+                ".scrollbar-hide": {
+                    /* IE and Edge */
+                    "-ms-overflow-style": "none",
+                    /* Firefox */
+                    "scrollbar-width": "none",
+                    /* Safari and Chrome */
+                    "&::-webkit-scrollbar": {
+                        display: "none",
+                    },
+                },
+            });
+        }),
+    ],
 };

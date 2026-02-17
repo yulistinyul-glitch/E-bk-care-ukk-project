@@ -33,3 +33,6 @@ Route::middleware('auth')->group(function () {
 
 //logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+//
+Route::get('/profile', function () { return view('profile'); })->name('profile');

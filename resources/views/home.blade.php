@@ -3,8 +3,11 @@
 
 @section('content')
 {{-- Header profile --}}
-<div class="w-full relative ">
-  <div class="mx-auto max-w-2xl bg-[#1A374C] text-white p-5 rounded-b-[40px] shadow-lg">
+<div class="lg:ml-28 px-6 lg:px-10 py-6 max-w-7xl mx-auto">
+
+
+<div class="w-full ">
+  <div class="mx-auto  bg-[#1A374C] text-white p-5 rounded-b-[40px] shadow-lg">
      <div class="flex items-center gap-6 md:gap-4">
       <div class="w-24 h-24 md:w-20 md:h-20 bg-white text-black rounded-full flex items-center justify-center shrink-0 border-2 border-blue-400 overflow-hidden text-xs font-bold uppercase">
         Profile
@@ -25,36 +28,51 @@
 </div>
 
 {{-- kotak surat - bar point - btn mulai chat baru --}}
-<div class="my-8 mx-8 grid grid-cols-2 gap-5">
-  <button class="bg-red-500 hover:bg-red-600 cursor-pointer text-white active:scale-95 transition-all duration-300 p-4 rounded-2xl flex flex-col items-center justify-center gap-2 shadow-lg shadow-red-200">
-    <div class="shrink-0">
+<div class="my-10 grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
 
-      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" class="fill-current items-center">
-        <path  d="m20 8l-8 5l-8-5V6l8 5l8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2" />
-      </svg>
-    </div>
-    <p class="text-md font-semibold text-center leading-tight uppercase px-2">See your <br> mail here</p>
+  <!-- Pesan/surat -->
+  <button class="row-span-2 lg:col-span-2 
+                 aspect-square lg:aspect-auto
+                 bg-red-500 hover:bg-red-600 
+                 text-white 
+                 p-6 
+                 rounded-2xl 
+                 flex flex-col items-center justify-center 
+                 gap-3 
+                 shadow-lg shadow-red-200 
+                 transition-all duration-300 
+                 active:scale-95">
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" class="fill-current">
+      <path d="m20 8l-8 5l-8-5V6l8 5l8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2"/>
+    </svg>
+
+    <p class="font-semibold text-center uppercase">
+      See your <br> mail here
+    </p>
   </button>
 
-    <div class="grid grid-rows-2 gap-2 mx-auto">
-      <button class="bg-blue-400 text-white p-2 flex gap-2 rounded-3xl items-center shadow-md shadow-blue-200 ">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 512 512">
-	        <path fill="#fff" fill-rule="evenodd" d="m234.666 43.72l.001 233.613l233.613.002C457.576 385.138 366.62 469.333 256 469.333c-117.82 0-213.333-95.512-213.333-213.333c0-110.62 84.195-201.576 191.999-212.28m42.668 0c100.787 10.007 180.94 90.159 190.946 190.946H277.334z" />
-        </svg>
-        <p class="font-bold">50</p>
-      </button>
+  <!-- Bar pelanggaran -->
+  <button class="bg-blue-400 text-white p-4 flex items-center gap-3 rounded-2xl shadow-md shadow-blue-200">
+    <svg width="28" height="28" viewBox="0 0 512 512">
+      <path fill="#fff" d="..."/>
+    </svg>
+    <p class="font-bold">50</p>
+  </button>
 
-       <button class="bg-blue-400 text-white p-2 py-3 flex gap-2 rounded-xl items-center shadow-md shadow-blue-200">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 512 512">
-	        <path fill="#fff" fill-rule="evenodd" d="m234.666 43.72l.001 233.613l233.613.002C457.576 385.138 366.62 469.333 256 469.333c-117.82 0-213.333-95.512-213.333-213.333c0-110.62 84.195-201.576 191.999-212.28m42.668 0c100.787 10.007 180.94 90.159 190.946 190.946H277.334z" />
-        </svg>
-        <p class="font-bold text-xs">mulai konseling </p>
-      </button>
-    </div>
+  <!-- mulai chat -->
+  <button class="bg-blue-400 text-white p-4 flex items-center gap-3 rounded-2xl shadow-md shadow-blue-200">
+    <svg width="28" height="28" viewBox="0 0 512 512">
+      <path fill="#fff" d="..."/>
+    </svg>
+    <p class="font-bold text-sm">Mulai Konseling</p>
+  </button>
+
 </div>
 
+
 {{-- Recent chat --}}
-<div class="mx-8 ">
+<div class="mt-8 ">
   <h4 class="text-black font-bold text-sm">Recent Chat</h4>
   <div class="bg-white border-2 border-blue-950 flex p-4 items-center mx-auto rounded-2xl gap-6 shadow-sm">
     <div class="w-10 h-10 shrink-0 bg-blue-100 rounded-full items-center justify-center overflow-hidden border border-blue-200">
@@ -141,35 +159,46 @@
 </div>
 
 {{-- card motifasi --}}
-<div class="p-4 gap-4 
+<div class="p-3 sm:p-4 md:p-4 gap-3 sm:gap-4 md:gap-4 mb-5
             /* Mobile*/
             flex overflow-x-auto scroll-snap-x-mandatory scrollbar-hide 
             /* Desktop*/
             md:grid md:grid-cols-3 md:grid-rows-2 md:overflow-visible md:justify-items-center md:mx-auto md:max-w-5xl">
-  <div class="min-w[250px] md:min-w[200px] h-40 bg-blue-300 text-white rounded-lg flex items-center justify-center font-bold scroll-snap-align-start
-              transition-transform duration-300 ease-out hover:-translate-y-3 hover:shadow-xl cursor-pointer">
-    CARD 1
+
+  <div class=" h-auto p-3 sm:p-4 rounded-lg md:rounded-lg border-2 border-[#1A374D] flex flex-col gap-3 items-start md:items-center md:justify-center font-bold scroll-snap-align-start
+              transition-transform duration-300 ease-out hover:-translate-y-3 hover:shadow-xl cursor-pointer" style="background: linear-gradient(135deg, #93c5fd, #ffffff);">
+            <span class="flex gap-3 sm:gap-4 md:gap-5 items-start md:items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="w-6 sm:w-7 md:w-7 shrink-0">
+                <path fill="#1A374D" d="M16.802 16.027c-3.13 3.13-7.505 1.324-8.829 0s-3.13-5.699 0-8.829c3.349-3.348 10.374-3.752 11.478-2.649c1.103 1.104.7 8.13-2.649 11.478" opacity="0.5" />
+                <path fill="#1A374D" fill-rule="evenodd" d="M14.676 4.944c-2.238.37-4.655 1.267-6.173 2.784c-1.365 1.366-1.658 2.99-1.457 4.46a6.85 6.85 0 0 0 .991 2.714l1.727-1.726l-.737-2.21a.75.75 0 0 1 1.423-.474l.5 1.498l1.506-1.507l-.362-1.814a.75.75 0 0 1 1.47-.294l.167.833l1.658-1.657a.75.75 0 1 1 1.06 1.06l-1.657 1.658l.833.167a.75.75 0 0 1-.294 1.47l-1.814-.362l-1.507 1.506l1.498.5a .75 .75 0 auto" clip-rule="evenodd" />
+              </svg>
+              <h2 class="text-[#1A374D] text-xs sm:text-sm md:text-base font-bold uppercase">istitrahat sejenak</h2>
+            </span>
+            <p class="text-xs sm:text-sm md:text-sm text-center text-[#1A374D] leading-snug">Jangan lupa ambil nafas dalam-dalam setiap 30 menit belajar agar otak tetap segar</p>
   </div>
-  <div class="min-w[250px] md:min-w[200px] h-40 bg-red-300 text-white rounded-lg flex items-center justify-center font-bold scroll-snap-align-start
-              transition-transform duration-300 ease-out hover:-translate-y-3 hover:shadow-xl cursor-pointer">
+
+  <div class="min-w[250px] md:min-w[200px] h-40 text-white rounded-lg flex items-center justify-center font-bold scroll-snap-align-start
+              transition-transform duration-300 ease-out hover:-translate-y-3 hover:shadow-xl cursor-pointer" style="background: linear-gradient(135deg, #fca5a5, #ffffff);">
     CARD 2
   </div>
-  <div class="min-w[250px] md:min-w[200px] h-40 bg-green-300 text-white rounded-lg flex items-center justify-center font-bold scroll-snap-align-start
-              transition-transform duration-300 ease-out hover:-translate-y-3 hover:shadow-xl cursor-pointer">
+  <div class="min-w[250px] md:min-w[200px] h-40 text-white rounded-lg flex items-center justify-center font-bold scroll-snap-align-start
+              transition-transform duration-300 ease-out hover:-translate-y-3 hover:shadow-xl cursor-pointer" style="background: linear-gradient(135deg, #86efac, #ffffff);">
     CARD 3
   </div>
-  <div class="min-w[250px] md:min-w[200px] h-40 bg-yellow-300 text-white rounded-lg flex items-center justify-center font-bold scroll-snap-align-start
-              transition-transform duration-300 ease-out hover:-translate-y-3 hover:shadow-xl cursor-pointer">
+  <div class="min-w[250px] md:min-w[200px] h-40 text-white rounded-lg flex items-center justify-center font-bold scroll-snap-align-start
+              transition-transform duration-300 ease-out hover:-translate-y-3 hover:shadow-xl cursor-pointer" style="background: linear-gradient(135deg, #fde047, #ffffff);">
     CARD 4
   </div>
-  <div class="min-w[250px] md:min-w[200px] h-40 bg-violet-300 text-white rounded-lg flex items-center justify-center font-bold scroll-snap-align-start
-              transition-transform duration-300 ease-out hover:-translate-y-3 hover:shadow-xl cursor-pointer">
+  <div class="min-w[250px] md:min-w[200px] h-40 text-white rounded-lg flex items-center justify-center font-bold scroll-snap-align-start
+              transition-transform duration-300 ease-out hover:-translate-y-3 hover:shadow-xl cursor-pointer" style="background: linear-gradient(135deg, #d8b4fe, #ffffff);">
     CARD 5
   </div>
-  <div class="min-w[250px] md:min-w[200px] h-40 bg-cyan-300 text-white rounded-lg flex items-center justify-center font-bold scroll-snap-align-start
-              transition-transform duration-300 ease-out hover:-translate-y-3 hover:shadow-xl cursor-pointer">
+  <div class="min-w[250px] md:min-w[200px] h-40 text-white rounded-lg flex items-center justify-center font-bold scroll-snap-align-start
+              transition-transform duration-300 ease-out hover:-translate-y-3 hover:shadow-xl cursor-pointer" style="background: linear-gradient(135deg, #a5f3fc, #ffffff);">
     CARD 6
   </div>
 </div>
 
+
+</div>
 @endsection

@@ -1,38 +1,51 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\DashboardAdminController;
+use App\Http\Controllers\Siswa\DashboardSiswaController;    
+use App\Http\Controllers\GuruBK\DashboardbkController;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function () {
+    return view('auth.select-roles'); 
+})->name('choose.role');
 
-Route::get('/', function () { return view('welcome'); })->name('welcome');
-Route::get('/select-role', function () { return view('login.select-roles'); })->name('role.select');
+Route::middleware('guest')->group(function () {
+    Route::get('/login/{role}', [AuthController::class, 'login'])->name('login');
+    Route::post('/login', [AuthController::class, 'loginProses'])->name('login.proses');
 
-//alur login
-Route::get('/login/siswa', function () { return view('login.login'); })->name('login.siswa');
-Route::post('/login/proses', [AuthController::class, 'loginProses'])->name('login.post');
-
-//forgot password
-Route::get('/forgot-password', function () { return view('login.forgetpw'); })->name('password.forgot');
-//Cek NIPD
-Route::post('/forgot-password/verify', [AuthController::class, 'verifyAccount'])->name('password.verify');
-
-//kode otp
-Route::get('/verify-otp', function () { return view('login.verify-code'); })->name('otp.view');
-Route::post('/verify-otp', [AuthController::class, 'processOtp'])->name('otp.post');
-
-Route::get('/reset-password', [AuthController::class, 'showResetPage'])->name('password.new');
-
-Route::post('/simpan-password', [AuthController::class, 'savePassword'])->name('password.save');
-
-
-Route::middleware('auth')->group(function () {
-    //dasboard
-    Route::get('/home', function () { return view('home'); })->name('home');
+    //forgot password & otp
+    Route::get('/forgot-password', function() { return view ('auth.forgot-password'); })->name('password.request');
+    Route::post('/forgot-password', [AuthController::class, 'verifyAccount'])->name('password.verify');
+    Route::get('/otp-verification', function() { return view('auth.otp-view'); })->name('otp.view');
+    Route::post('/otp-verification', [AuthController::class, 'processOtp'])->name('otp.process');
 });
 
-//logout
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware('auth')->group(function () {
+    
+   
+    Route::get('/new-password', [AuthController::class, 'showResetPage'])->name('password.new');
+    Route::post('/save-password', [AuthController::class, 'savePassword'])->name('password.save');
 
-//
-Route::get('/profile', function () { return view('profile'); })->name('profile');
+ 
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    //SISWA
+    Route::middleware('role:Siswa')->group(function () {
+        Route::get('/dashboard', [DashboardSiswaController::class, 'index'])->name('home');
+        // Tambahkan route fitur siswa lainnya di sini
+    });
+
+    //GURU BK
+    Route::middleware('role:GuruBK')->prefix('guru')->group(function () {
+        Route::get('/dashboard', [DashboardbkController::class, 'index'])->name('gurubk.dashboard');
+        
+    });
+
+    //ADMIN
+    Route::middleware('role:Admin')->prefix('admin')->group(function () {
+        Route::get('/dashboard', [DashboardAdminController::class, 'index'])->name('admin.dashboard');
+       
+    });
+});

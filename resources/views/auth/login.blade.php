@@ -21,20 +21,23 @@
         </div>
 
         <div class="bg-white w-full md:flex-1 p-8 md:p-10 rounded-[40px] shadow-3xl md:shrink-0">
-            <h2 class="text-center text-3xl font-bold text-black mb-10">Log in</h2>
+            <h2 class="text-center text-3xl font-bold text-black mb-10">Log in sebagai {{ $role }}</h2>
 
             @if (session('success'))
                 <div class="bg-green-200 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-4">
                     {{ session('success')}}
                 </div>
             @endif
-            <form action="{{ route('login.post')}}" method="POST" class="space-y-6">
+
+            @if (session('error'))
+            <p class="text-red-500 text-sm text-center mb-4">{{ session('error') }}</p>
+            @endif
+
+            <form action="{{ route('login.proses')}}" method="POST" class="space-y-6">
                 @csrf
-                @if (session('error'))
-                <p class="text-red-500 text-sm text-center mb-4">{{ session('error') }}</p>
-                @endif
+                <input type="hidden" name="role" value="{{ $role}}">
                 <div>
-                    <label class="block text-black font-bold mb-2 ml-1">Username</label>
+                    <label class="block text-black font-bold mb-2 ml-1">Username / NIPD /NIP </label>
                     <input type="text"  name="username"
                            class="w-full px-4 py-3 rounded-xl border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-400"
                            placeholder="type your username here">

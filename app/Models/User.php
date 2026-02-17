@@ -9,8 +9,14 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+    protected $table = 'users';
+    protected $primaryKey = 'id_pengguna';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     /**
      * The attributes that are mass assignable.
@@ -18,11 +24,14 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'nipd',
+        'id_pengguna',
+        'username',
         'password',
         'role',
         'is_first_login',
+        'email',
+        'otp_code',
+        'otp_expires_at',
     ];
 
     /**
@@ -34,6 +43,18 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function siswa(){
+        return $this->hasOne(Siswa::class, 'id_pengguna', 'id_pengguna');
+    }
+
+    public function guru(){
+        return $this->hasOne(Gurubk::class, 'id_pengguna', 'id_pengguna');
+    }
+
+    public function admin(){
+        return $this->hasOne(Admin::class, 'id_pengguna', 'id_pengguna');
+    }
 
     /**
      * Get the attributes that should be cast.

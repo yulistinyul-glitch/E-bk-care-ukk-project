@@ -17,6 +17,8 @@
         "vite": "^7.0.7"
     },
     "dependencies": {
-        "@tailwindcss/postcss": "^4.1.18"
+        "@popperjs/core": "^2.11.8",
+        "@tailwindcss/postcss": "^4.1.18",
+        "bootstrap": "^5.3.8"
     }
 }

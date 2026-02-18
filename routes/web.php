@@ -26,14 +26,8 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware('guest')->group(function () {
-<<<<<<< HEAD
     Route::get('/login/{role}', [AuthController::class, 'login'])->name('login');
     Route::post('/login-proses', [AuthController::class, 'loginProses'])->name('login.proses');
-=======
-    Route::get('/', [AuthController::class, 'showLogin']);
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.process');
->>>>>>> 7b861502c2ee8ee4f554d080ca4e2b398ab534af
 
     Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');

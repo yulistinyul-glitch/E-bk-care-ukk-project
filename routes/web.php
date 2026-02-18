@@ -16,42 +16,33 @@ use App\Http\Controllers\Gurubk\ChatController;
 use App\Http\Controllers\Gurubk\E_SuratController;
 use App\Http\Controllers\Gurubk\RiwayatPelanggaranController;
 
-
-Route::get('/', function () {
-    return view('auth.login'); 
-})->name('login');
 /*
 |--------------------------------------------------------------------------
-| GUEST ROUTES
+| AUTH ROUTES
 |--------------------------------------------------------------------------
 */
-Route::middleware('guest')->group(function () {
-    Route::get('/', [AuthController::class, 'showLogin']);
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
-    Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
-    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+Route::get('/', [AuthController::class, 'showLogin'])->name('login');
+Route::get('/login', [AuthController::class, 'showLogin']);
+Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
-    Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
-    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
-});
+Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
 
-/*
-|--------------------------------------------------------------------------
-| AUTH ROUTES (all roles)
-|--------------------------------------------------------------------------
-*/
-Route::middleware('auth')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-});
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 
 /*
 |--------------------------------------------------------------------------
-| ADMIN ROUTES
+| ADMIN ROUTES (TANPA MIDDLEWARE)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->group(function () {
+
+Route::prefix('admin')->name('admin.')->group(function () {
+
     Route::get('/dashboard', [DashboardAdminController::class, 'dashboard'])->name('dashboard');
 
     Route::resource('siswa', SiswaController::class);
@@ -72,12 +63,14 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::post('pelanggaran/import', [PelanggaranController::class, 'import'])->name('pelanggaran.import');
 });
 
+
 /*
 |--------------------------------------------------------------------------
-| GURU BK ROUTES
+| GURU BK ROUTES (TANPA MIDDLEWARE)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:GuruBK'])->prefix('gurubk')->name('gurubk.')->group(function () {
+
+Route::prefix('gurubk')->name('gurubk.')->group(function () {
 
     Route::get('/dashboard', [DashboardbkController::class, 'dashboard'])->name('dashboard');
 
@@ -106,12 +99,14 @@ Route::middleware(['auth', 'role:GuruBK'])->prefix('gurubk')->name('gurubk.')->g
     Route::get('e_surat/{id}/selesai', [E_SuratController::class, 'selesai'])->name('e_surat.selesai');
 });
 
+
 /*
 |--------------------------------------------------------------------------
-| SISWA ROUTES
+| SISWA ROUTES (TANPA MIDDLEWARE)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:Siswa'])->prefix('siswa')->name('siswa.')->group(function () {
+
+Route::prefix('siswa')->name('siswa.')->group(function () {
     Route::get('/dashboard', function () {
         return view('siswa.home');
     })->name('home');

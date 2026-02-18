@@ -129,7 +129,6 @@ public function showLogin()
             'password' => Hash::make($request->password)
         ]);
 
-        // Hapus token setelah reset berhasil
         DB::table('password_reset_tokens')
           ->where('username', $request->username)
           ->delete();

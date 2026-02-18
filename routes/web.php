@@ -16,11 +16,6 @@ use App\Http\Controllers\Gurubk\ChatController;
 use App\Http\Controllers\Gurubk\E_SuratController;
 use App\Http\Controllers\Gurubk\RiwayatPelanggaranController;
 
-/*
-|--------------------------------------------------------------------------
-| AUTH ROUTES
-|--------------------------------------------------------------------------
-*/
 
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
 Route::get('/login', [AuthController::class, 'showLogin']);
@@ -34,12 +29,6 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
-/*
-|--------------------------------------------------------------------------
-| ADMIN ROUTES (TANPA MIDDLEWARE)
-|--------------------------------------------------------------------------
-*/
 
 Route::prefix('admin')->name('admin.')->group(function () {
 
@@ -63,12 +52,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('pelanggaran/import', [PelanggaranController::class, 'import'])->name('pelanggaran.import');
 });
 
-
-/*
-|--------------------------------------------------------------------------
-| GURU BK ROUTES (TANPA MIDDLEWARE)
-|--------------------------------------------------------------------------
-*/
 
 Route::prefix('gurubk')->name('gurubk.')->group(function () {
 
@@ -98,13 +81,6 @@ Route::prefix('gurubk')->name('gurubk.')->group(function () {
     Route::get('e_surat/{id}/email', [E_SuratController::class, 'sendEmail'])->name('e_surat.email');
     Route::get('e_surat/{id}/selesai', [E_SuratController::class, 'selesai'])->name('e_surat.selesai');
 });
-
-
-/*
-|--------------------------------------------------------------------------
-| SISWA ROUTES (TANPA MIDDLEWARE)
-|--------------------------------------------------------------------------
-*/
 
 Route::prefix('siswa')->name('siswa.')->group(function () {
     Route::get('/dashboard', function () {

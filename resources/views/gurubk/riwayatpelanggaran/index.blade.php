@@ -106,7 +106,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="header-title">Pelanggaran siswa</h4>
 
-    <a href="{{ route('riwayatpelanggaran.create') }}" class="btn-catat">
+    <a href="{{ route('gurubk.riwayatpelanggaran.create') }}" class="btn-catat">
         + Catat pelanggaran
     </a>
 </div>

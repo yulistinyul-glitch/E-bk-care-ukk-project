@@ -86,7 +86,7 @@
                 </li>
 
                 <li class="nxl-item">
-                    <a href="{{ route('riwayatpelanggaran.index') }}" class="nxl-link">
+                    <a href="{{ route('gurubk.riwayatpelanggaran.index') }}" class="nxl-link">
                         <span class="nxl-micon"><i class="feather-layers"></i></span>
                         <span class="nxl-mtext">Data Pelanggaran</span>
                     </a>

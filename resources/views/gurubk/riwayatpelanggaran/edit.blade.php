@@ -47,7 +47,7 @@
 
 <div class="form-box">
     <h4 class="text-center fw-bold mb-4">Edit Pelanggaran</h4>
-    <form action="{{ route('pelanggaran.update', $pelanggaran->id_riwayat) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('gurubk.pelanggaran.update', $pelanggaran->id_riwayat) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT') 
 

@@ -34,10 +34,10 @@
                 <span class="text-lg sm:text-xl">Login as Teacher</span>
             </a>
 
-<a href="{{ route('login.form', ['role' => 'Admin']) }}"
-   class="flex gap-6 w-full items-center justify-center border-2 border-[#1A374D] text-[#1A374D] font-bold p-4 rounded-xl hover:bg-gray-100 transition-all active:scale-95">
-   <span class="text-md">Login as Admin</span>
-</a>
+            <a href="{{ route('login.form', ['role' => 'Admin']) }}"
+              class="flex gap-6 w-full items-center justify-center border-2 border-[#1A374D] text-[#1A374D] font-bold p-4 rounded-xl hover:bg-gray-100 transition-all active:scale-95">
+              <span class="text-md">Login as Admin</span>
+            </a>
 
         </div>
     </div>

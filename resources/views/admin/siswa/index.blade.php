@@ -27,15 +27,16 @@
         background-color: #218838;
         transform: translateY(-1px);
     }
-    .import-card {
-        margin-top: 25px;  
-        margin-bottom: 25px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+.import-card {
+    margin-top: 20px;
+    margin-bottom: 10px; /* kecilkan ini */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
     .import-card input[type="file"] {
-        width: 280px; /* lebih kecil */
+        width: 280px; /
+
     }
     
     .search-container {
@@ -89,7 +90,7 @@
     .btn-history:hover { background-color: #999; color: white; }
     .table-container {
         background: white; border-radius: 20px;
-        padding: 20px; margin-top: 25px;
+        padding: 20px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.03);
     }
     .table thead th { 
@@ -143,22 +144,28 @@
         </select>
     </div>
 
-    <div class="col-md-4 text-end">
-        <a href="{{ route('admin.siswa.cetak.semua') }}" class="btn-history d-inline-flex shadow-sm">
-            <i class="bi bi-file-earmark-pdf"></i> Cetak data
-        </a>
-    </div>
-</div>
+ <div class="import-card d-flex justify-content-between align-items-center">
 
-<div class="import-card">
-    <form action="{{ route('admin.siswa.import') }}" method="POST" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
+    <!-- FORM IMPORT -->
+    <form action="{{ route('admin.siswa.import') }}" method="POST"
+          enctype="multipart/form-data"
+          class="d-flex gap-2 align-items-center">
         @csrf
         <input type="file" name="file" class="form-control" required>
+
         <button class="btn btn-import">
             <i class="bi bi-upload"></i> Import
         </button>
     </form>
+
+    <!-- TOMBOL CETAK -->
+    <a href="{{ route('admin.siswa.cetak.semua') }}"
+       class="btn-history shadow-sm">
+        <i class="bi bi-file-earmark-pdf"></i> Cetak Data
+    </a>
+
 </div>
+
 
 @if(session('success'))
 <div class="alert alert-success">
@@ -176,6 +183,7 @@
                     <th>Nama siswa</th>
                     <th>Kelas</th>
                     <th>Walikelas</th> 
+                    <th>JK</th>                   
                     <th>No. Telp</th>
                     <th>Aksi</th>
                 </tr>

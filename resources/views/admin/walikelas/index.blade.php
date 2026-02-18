@@ -116,7 +116,7 @@
     </div>
 
     <div class="col-md-4 text-end">
-        <a href="#" class="btn-history d-inline-flex shadow-sm">
+        <a href="{{ route('admin.walikelas.cetak.semua') }}" class="btn-history d-inline-flex shadow-sm">
             <i class="bi bi-file-earmark-pdf"></i> Cetak data
         </a>
     </div>

@@ -1,5 +1,5 @@
 
-@extends('app')
+@extends('partials.app')
 
 @section('content')
 {{-- Header profile --}}

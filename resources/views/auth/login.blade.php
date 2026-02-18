@@ -33,7 +33,7 @@
             <p class="text-red-500 text-sm text-center mb-4">{{ session('error') }}</p>
             @endif
 
-            <form action="{{ route('login.proses')}}" method="POST" class="space-y-6">
+            <form action="{{ url('/login-proses') }}" method="POST" class="space-y-6">
                 @csrf
                 <input type="hidden" name="role" value="{{ $role}}">
                 <div>
@@ -49,7 +49,7 @@
                            class="w-full px-4 py-3 rounded-xl border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-400"
                            placeholder="type your password here">
                     <div class="text-right mt-2">
-                        <a href="{{route('password.forgot')}}" class="text-gray-400 text-sm hover:underline">Forgot password?</a>
+                        <a href="{{route('password.request')}}" class="text-gray-400 text-sm hover:underline">Forgot password?</a>
                     </div>
                 </div>
 

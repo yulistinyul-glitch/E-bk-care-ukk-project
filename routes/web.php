@@ -13,7 +13,7 @@ Route::get('/', function () {
 
 Route::middleware('guest')->group(function () {
     Route::get('/login/{role}', [AuthController::class, 'login'])->name('login');
-    Route::post('/login', [AuthController::class, 'loginProses'])->name('login.proses');
+    Route::post('/login-proses', [AuthController::class, 'loginProses'])->name('login.proses');
 
     //forgot password & otp
     Route::get('/forgot-password', function() { return view ('auth.forgot-password'); })->name('password.request');

@@ -54,11 +54,11 @@ class AuthController extends Controller
                 $request->session()->regenerate();
 
                 return match ($user->role) {
-                    'Admin' => redirect()->route('admin.dashboard'),
-                    'GuruBK' => redirect()->route('gurubk.dashboard'),
-                    'Siswa' => redirect()->route('siswa.home'),
-                    default => redirect('/'),
-                };
+                'Admin' => redirect()->route('admin.dashboard'),
+                'GuruBK' => redirect()->route('gurubk.dashboard'),
+                'Siswa' => redirect()->route('home'), 
+                default => redirect('/'),
+                 };
             }
 
             return back()->with('error', 'Username atau password salah!');

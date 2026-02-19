@@ -2,8 +2,20 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ArtikelController;
 
+use App\Http\Controllers\LayananController;
+use App\Http\Controllers\TentangController;
+
+// Mengarahkan ke view/tentang.blade.php melalui TentangController
+Route::get('/tentang', [TentangController::class, 'index'])->name('tentang.index');
+
+Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
+Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('layanan.show');
+
+Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
 /*
+
 |--------------------------------------------------------------------------
 | ADMIN CONTROLLERS
 |--------------------------------------------------------------------------

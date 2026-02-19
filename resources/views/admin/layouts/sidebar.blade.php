@@ -6,7 +6,7 @@
 
     .profile-frame {
         width: 90px;
-        height: 90px;   
+        height: 90px;
         border-radius: 50%;
         padding: 4px;
         background: #ffffff;

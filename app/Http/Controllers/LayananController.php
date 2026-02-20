@@ -10,23 +10,29 @@ class LayananController extends Controller
     /**
      * Menampilkan halaman utama layanan
      */
+
     public function index()
     {
-        // Mengambil semua data layanan
-        $semua_layanan = Service::all();
-
-        // Mengirim data ke resources/views/layanan.blade.php
-        return view('layanan', compact('semua_layanan'));
+        
+        return view('layanan');
     }
+    // public function index()
+    // {
+    //     // Mengambil semua data layanan
+    //     $semua_layanan = Service::all();
 
-    /**
-     * Menampilkan detail layanan berdasarkan slug
-     */
-    public function show($slug)
-    {
-        // Mencari layanan berdasarkan slug
-        $layanan = Service::where('slug', $slug)->firstOrFail();
+    //     // Mengirim data ke resources/views/layanan.blade.php
+    //     return view('layanan', compact('semua_layanan'));
+    // }
 
-        return view('layanan_detail', compact('layanan'));
-    }
+    // /**
+    //  * Menampilkan detail layanan berdasarkan slug
+    //  */
+    // public function show($slug)
+    // {
+    //     // Mencari layanan berdasarkan slug
+    //     $layanan = Service::where('slug', $slug)->firstOrFail();
+
+    //     return view('layanan_detail', compact('layanan'));
+    // }
 }

@@ -1,11 +1,39 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
+/* 1. Hubungkan ke config untuk mematikan Preflight & set Important */
+/* Pastikan path ini benar mengarah ke file tailwind.config.js kamu */
+@config '../../tailwind.config.js';
+
+/* 2. Sumber file (Path) - Pastikan mengarah ke folder views */
+/* Gunakan path absolut dari file CSS ini berada */
+@source '../views/**/*.blade.php';
+@source '../js/**/*.js';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+
+    /* Font Custom */
+    --font-poppins: "Poppins", sans-serif;
+    --font-qwigley: "Qwigley", cursive;
+}
+
+/* 3. Paksa Important di Level Layer (Opsional tapi Manjur) */
+@layer utilities {
+    /* Tailwind v4 menggunakan @important untuk memaksa utility */
+    .flex {
+        @important;
+    }
+    .grid {
+        @important;
+    }
+    /* Jika masih banyak yang kalah, biarkan 'important: true' di config yang bekerja */
+}
+
+@utility scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }

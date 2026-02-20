@@ -3,7 +3,7 @@
 @section('title', 'Layanan - E-BK Care')
 
 @section('content')
-<style>
+{{-- <style>
     /* Global & Variables */
     :root {
         --teal-color: #20c997;
@@ -93,9 +93,9 @@
         border: none; font-size: 0.85rem; letter-spacing: 1px; margin-left: 60px; 
     }
     .btn-action:hover { background-color: var(--teal-color); color: white; }
-</style>
+</style> --}}
 
-<section class="hero-service">
+{{-- <section class="hero-service">
     <div class="container position-relative" style="z-index: 2;">
         <div class="row align-items-center">
             <div class="col-lg-5 mb-5 mb-lg-0">
@@ -125,7 +125,7 @@
             </div>
         </div>
 
-        <div class="row g-4">
+        {{-- <div class="row g-4">
             @forelse($semua_layanan as $item)
                 <div class="col-12 col-md-6 col-lg-3">
                     <div class="service-card-minimal">
@@ -140,6 +140,21 @@
             @empty
                 <div class="col-12 text-center text-white-50 py-5">Layanan belum tersedia.</div>
             @endforelse
+        </div> 
+
+         <div class="row g-4">
+           
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="service-card-minimal">
+                        <div class="icon-box">
+                            <i class="bi"></i>
+                        </div>
+                        <h3 class="service-title">layanan</h3>
+                        <p class="service-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel aperiam quo vero, dolore doloremque consectetur debitis impedit quisquam. Sint suscipit officia laudantium quisquam? Vero excepturi sapiente perspiciatis debitis cum mollitia.</p>
+                        <a href="#" class="learn-more-link text-uppercase">Learn More <i class="bi bi-arrow-right small"></i></a>
+                    </div>
+                </div>
+            
         </div>
     </div>
 </section>
@@ -168,5 +183,47 @@
             </div>
         </div>
     </div>
+</section> --}}
+
+<style>
+     .bg-custom {
+      background-color: #ffffff;
+      background-image:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%230d283d' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M10 10l-2-2m2 2l2 2m-2-2l2-2m-2 2l-2 2M30 30l-2-2m2 2l2 2m-2-2l2-2m-2 2l-2 2' stroke='%230d283d' stroke-width='2'/%3E%3C/g%3E%3C/svg%3E");
+    }
+</style>
+
+<section class="bg-custom mx-auto max-w-7xl">
+    <div class="grid grid-cols-3 gap-8 py-16 px-6">
+        <div class="bg-white shadow-lg rounded-2xl p-6 font-['Poppins']">
+            <h3 class="text-xl font-black mb-5">Layanan Orientasi & Informasi</h3>
+            <p class="text-gray-600 text-sm">Layanan ini dirancang untuk membekali siswa dengan pemahaman komprehensif mengenai lingkungan pendidikan, kurikulum, serta berbagai informasi krusial terkait pengembangan diri. Dengan literasi informasi yang tepat, siswa diharapkan mampu beradaptasi secara efektif dan memiliki landasan pengetahuan yang kuat dalam setiap pengambilan keputusan strategis bagi masa depan akademiknya.</p>
+        </div>
+
+         <div class="bg-white shadow-lg rounded-2xl p-6 font-['Poppins']">
+            <h3 class="text-xl font-black mb-5"> Layanan Konseling Perorangan (Privat)</h3>
+            <p class="text-gray-600 text-sm">Merupakan layanan bantuan profesional yang bersifat personal dan rahasia antara guru pembimbing dan siswa. Fokus utamanya adalah memberikan ruang aman bagi siswa untuk mengeksplorasi serta mengentaskan permasalahan pribadi melalui pendekatan psikologis yang terukur, guna mencapai kemandirian dan stabilitas emosional dalam lingkungan sekolah.</p>
+        </div> 
+
+        <div class="bg-white shadow-lg rounded-2xl p-6 font-['Poppins']">
+            <h3 class="text-xl font-black mb-5">Layanan Konseling Kelompok</h3>
+            <p class="text-gray-600 text-sm">Layanan konseling kelompok merupakan bentuk intervensi psikologis yang melibatkan individu dalam setting kelompok kecil dengan fasilitator profesional. Melalui forum ini, peserta memiliki kesempatan untuk berbagi pengalaman, perspektif, dan tantangan yang mereka hadapi dengan sesama anggota kelompok yang memiliki isu serupa. Pendekatan ini memberikan manfaat ganda: pertama, peserta mendapatkan dukungan emosional dari komunitas, merasa bahwa mereka tidak sendirian dalam menghadapi masalah; kedua, mereka dapat belajar dari pengalaman dan strategi coping yang digunakan oleh anggota kelompok lainnya ,</p>
+        </div> 
+
+        <div class="bg-white shadow-lg rounded-2xl p-6 font-['Poppins']">
+            <h3 class="text-xl font-black mb-5">Layanan Penempatan & Penyaluran</h3>
+            <p class="text-gray-600 text-sm">Layanan penempatan dan penyaluran dirancang untuk memastikan bahwa setiap individu mendapatkan akses ke sumber daya dan layanan kesehatan mental yang paling sesuai dengan kebutuhan spesifik mereka. Tim profesional kami melakukan asesmen menyeluruh terhadap kondisi psikologis, latar belakang sosial, dan preferensi personal klien untuk mengidentifikasi layanan yang optimal. Kami memfasilitasi proses rujukan ke berbagai institusi kesehatan mental, baik di tingkat sekolah, klinik, maupun rumah sakit, dengan mempertimbangkan ketersediaan sumber daya dan kecocokan program. </p>
+        </div> 
+
+        <div class="bg-white shadow-lg rounded-2xl p-6 font-['Poppins']">
+            <h3 class="text-xl font-black mb-5">Layanan Orientasi & Informasi</h3>
+            <p class="text-gray-600 text-sm">Layanan orientasi dan informasi merupakan fondasi penting dalam memberikan edukasi komprehensif kepada siswa tentang berbagai aspek dukungan kesehatan mental dan akademik yang tersedia di institusi. Melalui program ini, kami menyediakan informasi terperinci mengenai proses konseling, etika kerahasiaan, manfaat dari berbagai jenis layanan, serta prosedur untuk mengakses dukungan. Siswa diberikan pemahaman mendalam tentang bagaimana setiap layanan bekerja, apa yang dapat mereka harapkan ketika mengunjungi konselor, dan bagaimana informasi pribadi mereka akan dijaga dengan keamanan maksimal.</p>
+        </div> 
+
+        <div class="bg-white shadow-lg rounded-2xl p-6 font-['Poppins']">
+            <h3 class="text-xl font-black mb-5">Layanan Advokasi</h3>
+            <p class="text-gray-600 text-sm">Layanan advokasi kami berkomitmen untuk melindungi dan memperjuangkan hak-hak fundamental setiap individu, khususnya siswa yang mungkin menghadapi diskriminasi, perlakuan tidak adil, atau hambatan dalam mengakses layanan kesehatan mental berkualitas. Tim advokat kami bekerja secara proaktif untuk mengidentifikasi situasi di mana hak-hak siswa terganggu dan mengambil tindakan korektif yang tepat. Kami berinteraksi dengan berbagai pihak—termasuk keluarga, sekolah, dan institusi terkait—untuk memastikan bahwa setiap siswa diperlakukan dengan martabat, keadilan, dan penghormatan terhadap keunikan mereka. </p>
+
+    </div>
+
 </section>
 @endsection

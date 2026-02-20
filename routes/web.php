@@ -8,6 +8,7 @@ use App\Http\Controllers\LayananController;
 use App\Http\Controllers\TentangController;
 
 // Mengarahkan ke view/tentang.blade.php melalui TentangController
+Route::get('/home', function () { return view('home'); })->name('home');
 Route::get('/tentang', [TentangController::class, 'index'])->name('tentang.index');
 
 Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
@@ -41,39 +42,32 @@ use App\Http\Controllers\Gurubk\E_SuratController;
 use App\Http\Controllers\Gurubk\RiwayatPelanggaranController;
 
 
-<<<<<<< HEAD
-Route::get('/home', function () {
-    return view('home');
-});
 
 Route::get('/', function () {
     return view('auth.login'); 
 })->name('login');
-=======
->>>>>>> a920145cb7fdc18ffa7070743baa4a185eb7c7cd
 /*
 |--------------------------------------------------------------------------
 | AUTH
 |--------------------------------------------------------------------------
 */
-<<<<<<< HEAD
+
 Route::middleware('guest')->group(function () {
     Route::get('/login/{role}', [AuthController::class, 'login'])->name('login');
     Route::post('/login-proses', [AuthController::class, 'loginProses'])->name('login.proses');
-=======
->>>>>>> a920145cb7fdc18ffa7070743baa4a185eb7c7cd
 
-Route::get('/', [AuthController::class, 'showLogin'])->name('login');
-Route::get('/login', [AuthController::class, 'showLogin']);
-Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+    Route::get('/', [AuthController::class, 'showLogin'])->name('login');
+    Route::get('/login', [AuthController::class, 'showLogin']);
+    Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
-Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
-Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+    Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
 
-Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+    Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
 
 
 /*
@@ -277,8 +271,8 @@ Route::prefix('gurubk')->name('gurubk.')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('siswa')->name('siswa.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('siswa.home');
-    })->name('home');
+Route::prefix('siswa')->name('siswa')->group(function () {
+    Route::get('/home', function () { return view('siswa.home');})->name('home');
+    Route::get('/profile', function () { return view('siswa.profile');})->name('profile');
+
 });

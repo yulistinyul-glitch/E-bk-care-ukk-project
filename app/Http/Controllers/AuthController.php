@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;    
 use Illuminate\Support\Str;              
 use App\Models\User;
+use App\Models\Siswa;
+use App\Models\Gurubk;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OtpMail;
+use App\Http\Middleware\RoleMiddleware;
 
 class AuthController extends Controller
 {
@@ -29,7 +35,7 @@ public function showLogin()
 
 
     // Proses login
-    public function login(Request $request)
+    public function loginProses(Request $request)
     {
         $request->validate([
             'username' => 'required',
@@ -51,7 +57,6 @@ public function showLogin()
             };
         }
 
-<<<<<<< HEAD
         if ($user->is_first_login && ($role === 'Siswa' || $role === 'GuruBK'))
         {
             $isValid = false;
@@ -178,11 +183,6 @@ public function showLogin()
         }
 
         return back()->with('error', 'OTP salah atau kadaluarsa.');
-=======
-        // Jika gagal
-        return back()->withErrors(['username' => 'Username atau password salah!'])
-                     ->onlyInput('username');
->>>>>>> 7b861502c2ee8ee4f554d080ca4e2b398ab534af
     }
 
     // Logout

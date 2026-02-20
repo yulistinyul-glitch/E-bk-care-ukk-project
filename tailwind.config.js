@@ -8,18 +8,20 @@ export default {
         "./resources/**/*.vue",
     ],
     theme: {
-        extend: {},
+        extend: {
+            // PASTIKAN INI DI DALAM EXTEND
+            fontFamily: {
+                poppins: ["Poppins", "sans-serif"],
+                qwigley: ["Qwigley", "cursive"],
+            },
+        },
     },
     plugins: [
         plugin(function ({ addUtilities }) {
             addUtilities({
-                /* Kelas untuk menyembunyikan scrollbar */
                 ".scrollbar-hide": {
-                    /* IE and Edge */
                     "-ms-overflow-style": "none",
-                    /* Firefox */
                     "scrollbar-width": "none",
-                    /* Safari and Chrome */
                     "&::-webkit-scrollbar": {
                         display: "none",
                     },

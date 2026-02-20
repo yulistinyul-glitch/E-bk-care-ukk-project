@@ -17,6 +17,10 @@ use App\Http\Controllers\Gurubk\E_SuratController;
 use App\Http\Controllers\Gurubk\RiwayatPelanggaranController;
 
 
+Route::get('/home', function () {
+    return view('home');
+});
+
 Route::get('/', function () {
     return view('auth.login'); 
 })->name('login');

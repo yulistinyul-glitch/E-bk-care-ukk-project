@@ -125,7 +125,6 @@
                placeholder="type your username here">
     </div>
 
-<<<<<<< HEAD
             <form action="{{ url('/login-proses') }}" method="POST" class="space-y-6">
                 @csrf
                 <input type="hidden" name="role" value="{{ $role}}">
@@ -153,28 +152,6 @@
                     </button>
                 </div>
             </form>
-=======
-    <div class="relative">
-        <label class="block text-black font-bold mb-2 ml-1">Password</label>
-        <input type="password" 
-               name="password"
-               class="w-full px-4 py-3 rounded-xl border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-400"
-               placeholder="type your password here">
-        <div class="text-right mt-2">
-            <a href="{{ route('password.request') }}" class="text-gray-400 text-sm hover:underline">
-                Forgot password?
-            </a>
-        </div>
-    </div>
-
-    <div class="pt-4">
-        <button type="submit" 
-                class="w-full bg-[#1A374D] text-white font-bold py-4 rounded-3xl hover:bg-[#2c4e66] transition-all transform active:scale-95 shadow-lg">
-            Login
-        </button>
-    </div>
-</form>
->>>>>>> 7b861502c2ee8ee4f554d080ca4e2b398ab534af
         </div>
     </div>
 </div>

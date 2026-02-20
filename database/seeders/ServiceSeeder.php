@@ -4,34 +4,44 @@ namespace Database\Seeders;
 
 use App\Models\Service;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Schema;
 
 class ServiceSeeder extends Seeder
 {
     public function run()
     {
-        $services = [
+        // Menghindari error constraint dan mengosongkan data lama
+        Schema::disableForeignKeyConstraints();
+        Service::truncate();
+        Schema::enableForeignKeyConstraints();
+
+$services = [
             [
-                'title' => 'Individual Therapy',
-                'icon' => 'bi-person-bounding-box',
-                'description' => 'Personalized sessions focused on your self-growth and emotional healing in a safe environment.',
+                'title'       => 'Privacy Space',
+                'slug'        => Str::slug('Privacy Space'),
+                'icon'        => 'bi-chat-right-dots-fill',
+                'description' => 'Sampaikan bebanmu melalui sesi chat rahasia bersama Guru BK untuk bimbingan profesional.',
             ],
             [
-                'title' => 'Couples & Family',
-                'icon' => 'bi-heart-fill',
-                'description' => 'Building stronger connections and resolving conflicts through effective communication strategies.',
+                'title'       => 'Voice of Change',
+                'slug'        => Str::slug('Voice of Change'),
+                'icon'        => 'bi-mailbox2',
+                'description' => 'Salurkan aspirasi, keluhan, atau ide secara anonim untuk membangun lingkungan sekolah yang lebih baik.',
             ],
             [
-                'title' => 'Stress & Anxiety',
-                'icon' => 'bi-wind',
-                'description' => 'Proven techniques to manage daily pressure and regain control over your peace of mind.',
+                'title'       => 'Protection System',
+                'slug'        => Str::slug('Protection System'),
+                'icon'        => 'bi-shield-lock-fill',
+                'description' => 'Laporkan perundungan atau bahaya secara aman. Kami lindungi identitasmu sepenuhnya.',
             ],
             [
-                'title' => 'Trauma & Grief',
-                'icon' => 'bi-diagram-3-fill',
-                'description' => 'Professional support to help you navigate through life\'s most difficult and painful transitions.',
+                'title'       => 'Discipline Info',
+                'slug'        => Str::slug('Discipline Info'),
+                'icon'        => 'bi-file-earmark-bar-graph',
+                'description' => 'Pantau data poin pelanggaran secara real-time. Transparansi penuh untuk menjaga integritas siswa.',
             ],
         ];
-
         foreach ($services as $service) {
             Service::create($service);
         }

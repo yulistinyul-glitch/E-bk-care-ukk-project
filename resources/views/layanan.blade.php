@@ -4,21 +4,18 @@
 
 @section('content')
 <style>
-    /* Global & Variables */
     :root {
         --teal-color: #20c997;
         --dark-navy: #1e2a3a;
         --light-bg: #fcfdfe;
-        --gold-accent: #d4af37; /* Untuk garis vertikal judul seperti di gambar */
+        --gold-accent: #d4af37; 
     }
 
     .text-teal { color: var(--teal-color) !important; }
     .section-padding { padding: 100px 0; }
-    
-    /* --- HERO SECTION (TOP) --- */
+
     .hero-service { background-color: var(--light-bg); padding: 100px 0; position: relative; overflow: hidden;}
-    
-    /* Aksen Background Silang (X) seperti di gambar */
+
     .hero-service::after {
         content: "✕"; position: absolute; top: -50px; right: -30px; 
         font-size: 300px; color: #f1f1f1; z-index: 0; font-weight: bold; opacity: 0.5;
@@ -29,7 +26,6 @@
     
     .title-accent { border-left: 3px solid var(--gold-accent); padding-left: 15px; }
 
-    /* --- PRACTICE AREAS (MIDDLE - DARK BUILDINGS) --- */
     .focus-areas {
         background: linear-gradient(rgba(30, 42, 58, 0.85), rgba(30, 42, 58, 0.85)), 
                     url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop');
@@ -66,10 +62,8 @@
     }
     .learn-more-link:hover { color: white; }
 
-    /* --- WHY CHOOSE US (BOTTOM) --- */
     .why-choose { background-color: white; position: relative; }
-    
-    /* Aksen Background Silang (X) kiri bawah */
+
     .why-choose::before {
         content: "✕"; position: absolute; bottom: -50px; left: -30px; 
         font-size: 250px; color: #f8f9fa; z-index: 0; font-weight: bold;
@@ -96,7 +90,7 @@
 </style>
 
 <section class="hero-service">
-    <div class="container position-relative" style="z-index: 2;">
+    <div class="container px-4" style="z-index: 2;">
         <div class="row align-items-center">
             <div class="col-lg-5 mb-5 mb-lg-0">
                 <div class="hero-img-box">
@@ -117,7 +111,7 @@
 </section>
 
 <section class="focus-areas section-padding">
-    <div class="container">
+    <div class="container px-4">
         <div class="mb-5">
             <p class="area-sub mb-2">Practice Areas</p>
             <div style="border-left: 3px solid var(--gold-accent); padding-left: 15px;">
@@ -145,7 +139,7 @@
 </section>
 
 <section class="why-choose section-padding">
-    <div class="container position-relative" style="z-index: 2;">
+    <div class="container px-4" style="z-index: 2;">
         <div class="row g-5">
             <div class="col-lg-6">
                 <p class="area-sub mb-2">We Make A Difference</p>

@@ -41,7 +41,6 @@ use App\Http\Controllers\Gurubk\E_SuratController;
 use App\Http\Controllers\Gurubk\RiwayatPelanggaranController;
 
 
-<<<<<<< HEAD
 Route::get('/home', function () {
     return view('home');
 });
@@ -49,19 +48,13 @@ Route::get('/home', function () {
 Route::get('/', function () {
     return view('auth.login'); 
 })->name('login');
-=======
->>>>>>> a920145cb7fdc18ffa7070743baa4a185eb7c7cd
 /*
 |--------------------------------------------------------------------------
 | AUTH
 |--------------------------------------------------------------------------
 */
-<<<<<<< HEAD
-Route::middleware('guest')->group(function () {
-    Route::get('/login/{role}', [AuthController::class, 'login'])->name('login');
-    Route::post('/login-proses', [AuthController::class, 'loginProses'])->name('login.proses');
-=======
->>>>>>> a920145cb7fdc18ffa7070743baa4a185eb7c7cd
+Route::get('/login/{role}', [AuthController::class, 'login'])->name('login');
+Route::post('/login-proses', [AuthController::class, 'loginProses'])->name('login.proses');
 
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
 Route::get('/login', [AuthController::class, 'showLogin']);

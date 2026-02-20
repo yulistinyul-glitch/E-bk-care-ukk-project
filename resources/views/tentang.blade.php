@@ -3,121 +3,207 @@
 @section('title', 'Visi & Misi - E-BK Care')
 
 @section('content')
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
 <style>
-    :root {
-        --dark-navy: #1e2a3a;
-        --teal-accent: #20c997;
+    .bg-white-custom { 
+        background-color: #ffffff !important; 
+        color: #000000; 
+        font-family: 'Arial', sans-serif;
+    }
+    .font-serif-custom { 
+        font-family: 'Playfair Display', serif; 
+        letter-spacing: 3px; 
+    }
+    
+    .divider-line { 
+        border-top: 1px solid #333; 
+        border-bottom: 1px solid #333; 
+        padding: 30px 0; 
+        margin: 50px 0; 
     }
 
-    /* --- HERO SECTION --- */
-    .about-hero {
-        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                    url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop');
-        background-size: cover; background-position: center; height: 50vh;
-        display: flex; align-items: center; justify-content: center; text-align: center; color: white;
+    .service-box {
+        transition: all 0.4s ease;
+        padding: 20px;
+        cursor: pointer;
+        perspective: 1000px; 
     }
 
-    .hero-title-main {
-        font-family: 'Playfair Display', serif; font-style: italic;
-        font-size: 3rem;
-        margin-bottom: 5px;
+    .service-icon-wrapper {
+        font-size: 3.5rem;
+        color: #B89551; 
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s ease;
+        margin-bottom: 20px;
+        display: inline-block;
+        transform-style: preserve-3d;
     }
 
-    /* --- VISI & MISI SECTION --- */
-    .vision-mission-section { padding: 80px 0; background-color: #fff; overflow: hidden; }
+    .service-line {
+        width: 60px;
+        height: 3px;
+        background-color: #B89551; 
+        transition: all 0.4s ease;
+        margin: 15px auto 0;
+    }
 
-    .section-label {
-        font-weight: 800;
-        font-size: 2.2rem;
+    .service-box:hover .service-icon-wrapper {
+        color: #1A374D; 
+        transform: rotateY(180deg); 
+    }
+
+    .service-box:hover .service-line {
+        background-color: #1A374D; 
+        width: 100px;
+    }
+
+    .service-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+        text-transform: uppercase;
         color: #000;
-        margin-bottom: 25px;
     }
 
-    /* Kotak Navy di Belakang Gambar */
-    .image-container { position: relative; display: inline-block; width: 100%; }
-
-    .navy-block {
-        position: absolute;
-        background-color: var(--dark-navy);
-        width: 240px; 
-        height: 280px;
-        z-index: 1;
+    .service-subtitle {
+        color: #777;
+        font-size: 0.85rem;
     }
 
-    .vision-block { top: -20px; right: 0; }
-    .mission-block { bottom: -20px; left: 0; }
+    .btn-square-dark {
+        border: 2px solid #000; 
+        color: #000; 
+        background: transparent;
+        padding: 10px 30px; 
+        text-transform: uppercase; 
+        font-size: 11px; 
+        letter-spacing: 2px; 
+        border-radius: 0;
+        transition: 0.3s; 
+        text-decoration: none; 
+        display: inline-block;
+        font-weight: bold;
+    }
+    .btn-square-dark:hover { background: #000; color: #fff; }
 
-    .img-asymmetric {
-        position: relative; z-index: 2;
-        width: 100%; max-width: 400px; 
-        height: 280px; object-fit: cover; display: block;
-        box-shadow: 10px 10px 20px rgba(0,0,0,0.1);
+    .btn-square-white {
+        border: 1px solid #fff; color: #fff; background: transparent;
+        padding: 8px 25px; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; border-radius: 0;
+        transition: 0.3s; text-decoration: none; display: inline-block;
+    }
+    .btn-square-white:hover { background: #fff; color: #1A374D; }
+
+    .overlap-box-blue {
+        background-color: #1A374D !important;
+        color: #ffffff !important;
+        padding: 45px;
+        position: relative;
+        z-index: 10;
     }
 
-    .vision-img-pos { margin-left: auto; margin-right: 30px; margin-top: 15px; }
-    .mission-img-pos { margin-left: 30px; margin-bottom: 15px; }
+    .border-kuning-kanan { border-right: 6px solid #B89551 !important; } 
+    .border-kuning-kiri { border-left: 6px solid #B89551 !important; }
 
-    .lead-text { font-size: 0.95rem; line-height: 1.6; color: #444; }
+    .img-full { width: 100%; height: auto; display: block; }
 
-    .mission-list li { margin-bottom: 10px; display: flex; align-items: flex-start; font-size: 0.95rem; }
-    .mission-list i { color: var(--teal-accent); font-size: 1rem; margin-right: 12px; margin-top: 3px; }
-
-    @media (max-width: 991px) {
-        .navy-block { width: 150px; height: 200px; }
-        .hero-title-main { font-size: 2.2rem; }
-        .img-asymmetric { height: 220px; max-width: 100%; }
-        .vision-img-pos { margin-right: 15px; }
-        .mission-img-pos { margin-left: 15px; }
+    @media (min-width: 992px) {
+        .overlap-right { margin-left: -100px; margin-top: 50px; }
+        .overlap-left { margin-right: -100px; margin-top: 50px; }
     }
+
+    .text-description-muted { color: #d1d1d1; font-size: 0.9rem; line-height: 1.8; }
 </style>
 
-<section id="vision-section" class="vision-mission-section">
-    <div class="container">
-        <div class="row align-items-center mb-5">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <h2 class="section-label">VISI</h2>
-                <div class="pe-lg-4">
-                    <p class="lead-text">
-                        {{ $aboutData->vision ?? 'Menjadi pusat layanan bimbingan konseling digital yang profesional, inklusif, dan terpercaya untuk mendukung tumbuh kembang mental serta karakter siswa secara optimal di lingkungan sekolah.' }}
+<div class="bg-white-custom w-100 pb-5">
+    <div class="container px-4">
+        
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-10">
+                <div class="divider-line">
+                    <h1 class="font-serif-custom mb-3 text-uppercase" style="font-size: 3rem; font-weight: 700;">E-BK CARE</h1>
+                    <p class="fst-italic" style="color: #333; font-size: 1.3rem;">
+                        "Memberikan layanan bimbingan, konseling, dan dukungan kesehatan mental"
                     </p>
-                    <p class="lead-text mt-3">
-                        Kami berkomitmen untuk menciptakan ekosistem pendidikan di mana setiap siswa merasa didengarkan, dihargai, dan dibimbing menuju masa depan yang cerah.
+
+                    <p class="text-muted mb-4 px-lg-5" style="font-size: 1rem; line-height: 1.8;">
+                        E-BK Care menyediakan solusi berorientasi pada kesejahteraan mental yang efektif bagi isu-isu psikologis yang kompleks. Kami berkomitmen untuk mendampingi setiap individu dalam proses pengenalan diri dan pemecahan masalah secara profesional.
                     </p>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="image-container text-end">
-                    <div class="navy-block vision-block"></div>
-                    <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1000&auto=format&fit=crop" 
-                         class="img-asymmetric vision-img-pos" alt="Visi">
+                    
+                    <p class="text-muted px-lg-5" style="font-size: 1rem; line-height: 1.8;">
+                        Melalui pendekatan yang inklusif dan teknologi bimbingan konseling terkini, kami membantu Anda dalam membuat keputusan yang tepat demi masa depan yang lebih baik. Mari wujudkan kesehatan mental yang stabil bersama tim ahli kami.
+                    </p>
                 </div>
             </div>
         </div>
 
-        <div style="height: 100px;"></div>
-
-        <div class="row align-items-center flex-column-reverse flex-lg-row">
-            <div class="col-lg-6">
-                <div class="image-container">
-                    <div class="navy-block mission-block"></div>
-                    <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1000&auto=format&fit=crop" 
-                         class="img-asymmetric mission-img-pos" alt="Misi">
+        <div class="row text-center justify-content-center">
+            <div class="col-md-4 mb-4">
+                <div class="service-box">
+                    <div class="service-icon-wrapper">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <h3 class="service-title">Counseling</h3>
+                    <p class="service-subtitle">The Professional Guidance</p>
+                    <div class="service-line"></div>
                 </div>
             </div>
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <div class="ps-lg-4 text-end">
-                    <h2 class="section-label">MISI</h2>
-                                    <div class="pe-lg-4">
-                    <p class="lead-text">
-                        {{ $aboutData->vision ?? 'Menjadi pusat layanan bimbingan konseling digital yang profesional, inklusif, dan terpercaya untuk mendukung tumbuh kembang mental serta karakter siswa secara optimal di lingkungan sekolah.' }}
-                    </p>
-                    <p class="lead-text mt-3">
-                        Kami berkomitmen untuk menciptakan ekosistem pendidikan di mana setiap siswa merasa didengarkan, dihargai, dan dibimbing menuju masa depan yang cerah.
-                    </p>
+            <div class="col-md-4 mb-4">
+                <div class="service-box">
+                    <div class="service-icon-wrapper">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h3 class="service-title">Psychotherapy</h3>
+                    <p class="service-subtitle">A Collaborative Treatment</p>
+                    <div class="service-line"></div>
                 </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="service-box">
+                    <div class="service-icon-wrapper">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <h3 class="service-title">Self Management</h3>
+                    <p class="service-subtitle">In Physical and Mental Health</p>
+                    <div class="service-line"></div>
                 </div>
             </div>
         </div>
+
+        <div class="py-5"></div> <div class="row align-items-center mb-5 pb-lg-5">
+            <div class="col-lg-7 px-0">
+                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000" class="img-full shadow" alt="Visi">
+            </div>
+            <div class="col-lg-5 px-0">
+                <div class="overlap-box-blue overlap-right border-kuning-kanan shadow-lg">
+                    <h2 class="font-serif-custom h4 mb-3 text-uppercase">VISI KAMI</h2>
+                    <p class="small fw-bold mb-3">Menjadi platform konseling digital yang humanis dan solutif.</p>
+                    <p class="text-description-muted mb-4">
+                        Membangun ekosistem kesehatan mental yang inklusif di lingkungan pendidikan guna mendukung pertumbuhan karakter siswa secara maksimal.
+                    </p>
+                    <a href="#" class="btn btn-square-white">Read More</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row align-items-center flex-column-reverse flex-lg-row pt-5">
+            <div class="col-lg-5 px-0">
+                <div class="overlap-box-blue overlap-left border-kuning-kiri shadow-lg">
+                    <h2 class="font-serif-custom h4 mb-3 text-uppercase">MISI KAMI</h2>
+                    <p class="small fw-bold mb-3">Menyediakan akses bimbingan profesional kapan saja.</p>
+                    <p class="text-description-muted mb-4">
+                        Berkomitmen memberikan layanan privasi tinggi dan edukasi preventif bagi seluruh civitas akademika dalam menghadapi tantangan psikologis.
+                    </p>
+                    <a href="#" class="btn btn-square-white">Read More</a>
+                </div>
+            </div>
+            <div class="col-lg-7 px-0">
+                <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1000" class="img-full shadow" alt="Misi">
+            </div>
+        </div>
+
     </div>
-</section>
+</div>
+
 @endsection

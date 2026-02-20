@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Siswa;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Kelas;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class SiswaController extends Controller
 {
@@ -31,9 +32,9 @@ class SiswaController extends Controller
         $nextSiswaNumber = $lastSiswa ? (int) substr($lastSiswa->id_siswa, 3) + 1 : 1;
         $nextSiswaID = 'SIS' . str_pad($nextSiswaNumber, 3, '0', STR_PAD_LEFT);
 
-        $lastPenggunaNumber = User::all()->map(function($user){
-            return (int) substr($user->id_pengguna, 2);  
-        })->max(); 
+        $lastPenggunaNumber = User::all()->map(function ($user) {
+            return (int) substr($user->id_pengguna, 2);
+        })->max();
 
         $nextPenggunaNumber = $lastPenggunaNumber ? $lastPenggunaNumber + 1 : 1;
         $nextPenggunaID = 'PS' . str_pad($nextPenggunaNumber, 3, '0', STR_PAD_LEFT);
@@ -58,8 +59,9 @@ class SiswaController extends Controller
         $lastSiswa = Siswa::latest('id_siswa')->first();
         $nextSiswaNumber = $lastSiswa ? (int) substr($lastSiswa->id_siswa, 3) + 1 : 1;
         $nextSiswaID = 'SIS' . str_pad($nextSiswaNumber, 3, '0', STR_PAD_LEFT);
-        $lastPenggunaNumber = User::all()->map(function($user){
-            return (int) substr($user->id_pengguna, 2); 
+
+        $lastPenggunaNumber = User::all()->map(function ($user) {
+            return (int) substr($user->id_pengguna, 2);
         })->max();
 
         $nextPenggunaNumber = $lastPenggunaNumber ? $lastPenggunaNumber + 1 : 1;
@@ -68,30 +70,29 @@ class SiswaController extends Controller
         $user = User::create([
             'id_pengguna' => $nextPenggunaID,
             'name'        => $request->nama_siswa,
-            'username'    => $request->NIPD ?? \Str::slug($request->nama_siswa),
+            'username'    => $request->NIPD ?? Str::slug($request->nama_siswa),
             'email'       => $request->NIPD . '@example.com',
-            'password'    => \Hash::make('12345678'),
+            'password'    => Hash::make('12345678'),
             'role'        => 'Siswa'
         ]);
 
         Siswa::create([
-            'id_siswa'    => $nextSiswaID,
-            'id_pengguna' => $user->id_pengguna,
-            'NIPD'        => $request->NIPD,
-            'NISN'        => $request->NISN,
-            'nama_siswa'  => $request->nama_siswa,
-            'id_kelas'    => $request->id_kelas,
-            'JK'          => $request->jk,
-            'tempat_lahir'=> $request->tempat_lahir,
+            'id_siswa'     => $nextSiswaID,
+            'id_pengguna'  => $user->id_pengguna,
+            'NIPD'         => $request->NIPD,
+            'NISN'         => $request->NISN,
+            'nama_siswa'   => $request->nama_siswa,
+            'id_kelas'     => $request->id_kelas,
+            'JK'           => $request->jk,
+            'tempat_lahir' => $request->tempat_lahir,
             'tanggal_lahir'=> $request->tanggal_lahir,
-            'no_telp'     => $request->no_telp,
-            'alamat'      => $request->alamat,
+            'no_telp'      => $request->no_telp,
+            'alamat'       => $request->alamat,
         ]);
 
         return redirect()->route('admin.siswa.index')
-                        ->with('success', 'Data siswa berhasil ditambahkan!');
+            ->with('success', 'Data siswa berhasil ditambahkan!');
     }
-
 
     public function edit($id_siswa)
     {
@@ -121,7 +122,6 @@ class SiswaController extends Controller
 
         $siswa->update($request->all());
 
-        // Update akun user jika perlu
         User::updateOrCreate(
             ['id_pengguna' => $request->id_pengguna],
             [
@@ -139,7 +139,6 @@ class SiswaController extends Controller
         $siswa = Siswa::findOrFail($id);
 
         User::where('id_pengguna', $siswa->id_pengguna)->delete();
-
         $siswa->delete();
 
         return redirect()->route('admin.siswa.index')
@@ -157,7 +156,7 @@ class SiswaController extends Controller
         $rows = array_map('str_getcsv', file($file->getRealPath()));
 
         foreach ($rows as $i => $row) {
-            if ($i == 0) continue; // skip header
+            if ($i == 0) continue;
 
             $id_siswa      = trim($row[0] ?? null);
             $id_kelas      = trim($row[1] ?? null);
@@ -171,7 +170,6 @@ class SiswaController extends Controller
             $alamat        = trim($row[9] ?? '-');
 
             if (!$id_siswa || !$nipd || !$id_kelas) continue;
-
             if (!Kelas::find($id_kelas)) continue;
 
             $id_pengguna = 'SW' . substr($id_siswa, 3);

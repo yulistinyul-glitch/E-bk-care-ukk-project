@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Walikelas;
 use App\Models\Kelas;
+use Barryvdh\DomPDF\Facade\Pdf; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -145,5 +146,25 @@ class WalikelasController extends Controller
         fclose($file);
 
         return back()->with('success', 'Import berhasil!');
+    }
+
+    // public function cetakSemua()
+    // {
+    //     $kelasList = Kelas::with('siswa')->orderBy('nama_kelas')->get();
+
+    //     $pdf = Pdf::loadView('admin.siswa.pdf-semua', compact('kelasList'))
+    //         ->setPaper('A4', 'landscape');
+
+    //     return $pdf->stream('data_siswa_perkelas.pdf');
+    // }
+
+    public function cetakSemua()
+    {
+        $walikelas = Walikelas::with('kelas')->orderBy('id_walikelas')->get();
+
+        $pdf = Pdf::loadView('admin.walikelas.pdf-semua', compact('walikelas'))
+            ->setPaper('A4', 'landscape'); // landscape supaya tabel muat
+
+        return $pdf->stream('daftar_walikelas.pdf');
     }
 }

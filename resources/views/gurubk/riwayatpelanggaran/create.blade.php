@@ -14,7 +14,7 @@
     @endif
 
     <div class="card shadow-sm p-4">
-        <form action="{{ route('riwayatpelanggaran.store') }}" method="POST">
+        <form action="{{ route('gurubk.riwayatpelanggaran.store') }}" method="POST">
             @csrf
 
             <div class="row mb-3">

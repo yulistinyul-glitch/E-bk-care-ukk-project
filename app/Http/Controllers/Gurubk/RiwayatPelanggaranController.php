@@ -11,6 +11,15 @@ use App\Models\RiwayatPelanggaran;
 
 class RiwayatPelanggaranController extends Controller
 {
+
+    public function index()
+    {
+        $riwayat = RiwayatPelanggaran::with(['siswa', 'pelanggaran'])
+                    ->latest()
+                    ->get();
+
+        return view('gurubk.riwayatpelanggaran.index', compact('riwayat'));
+    }
     public function create()
     {
         $kelas = Kelas::all();

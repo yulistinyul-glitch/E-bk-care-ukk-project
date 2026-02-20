@@ -1,200 +1,209 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Data Walikelas</title>
+@extends('admin.layouts.app')
 
-    {{-- Google Font: Poppins --}}
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <style>
-        body { 
-            background: #F8F9FA; 
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 20px 0;
-        }
+@section('title', 'Input Data Walikelas')
 
-        .form-box { 
-            width: 100%;
-            max-width: 650px; 
-            background: white; 
-            padding: 35px; 
-            border-radius: 25px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
-        }
+@section('content')
 
-        h4 { font-weight: 600; color: #2D3436; margin-bottom: 25px; }
+<style>
+    body { 
+        background: #F8F9FA; 
+        font-family: 'Poppins', sans-serif;
+    }
 
-        .form-label {
-            font-weight: 500;
-            color: #2D3436;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
+    .center-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px 0;
+    }
 
-        .form-control, .form-select {
-            border: 1.5px solid #DFE6E9;
-            border-radius: 12px;
-            padding: 10px 15px;
-            font-size: 0.95rem;
-        }
+    .form-box { 
+        width: 100%;
+        max-width: 600px; 
+        background: white; 
+        padding: 35px; 
+        border-radius: 25px; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+    }
 
-        .form-control:focus, .form-select:focus {
-            box-shadow: 0 0 0 3px rgba(93, 95, 239, 0.1);
-            border-color: #5D5FEF;
-            outline: none;
-        }
+    h4 { 
+        font-weight: 600; 
+        color: #2D3436; 
+        margin-bottom: 25px; 
+        font-size: 1.4rem; 
+    }
 
-        .form-control[readonly] {
-            background-color: #f1f3f5 !important;
-            color: #495057;
-            font-weight: 600;
-            border-color: #e9ecef;
-        }
+    .form-label { 
+        font-weight: 500; 
+        color: #2D3436; 
+        margin-bottom: 8px; 
+        font-size: 0.9rem; 
+    }
 
-        .button-group {
-            display: flex;
-            gap: 12px;
-            margin-top: 30px;
-        }
+    .form-control, .form-select {
+        border: 1.5px solid #DFE6E9;
+        border-radius: 12px;
+        padding: 10px 15px;
+        color: #2D3436;
+        font-size: 0.95rem;
+    }
 
-        .btn-kembali {
-            background: #B5B5B5;
-            color: white;
-            border-radius: 12px;
-            padding: 12px 20px;
-            flex: 1;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-weight: 500;
-        }
+    .form-control[readonly] {
+        background-color: #f1f3f5;
+        font-weight: 600;
+        color: #5D5FEF;
+    }
 
-        .btn-simpan {
-            background: #5D5FEF;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 12px 20px;
-            flex: 1.5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-weight: 500;
-        }
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 3px rgba(93, 95, 239, 0.1);
+        border-color: #5D5FEF;
+        outline: none;
+    }
 
-        .btn-simpan:hover { background: #4a4cd9; box-shadow: 0 4px 12px rgba(93, 95, 239, 0.3); }
-    </style>
-</head>
+    .button-group { 
+        display: flex; 
+        gap: 12px; 
+        margin-top: 30px; 
+    }
 
-<body>
+    .btn-kembali {
+        background: #B5B5B5; 
+        color: white; 
+        border: none; 
+        border-radius: 12px;
+        padding: 12px 20px; 
+        flex: 1; 
+        text-decoration: none;
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        font-weight: 500; 
+        transition: 0.3s;
+    }
 
-<div class="form-box">
-    <h4 class="text-center">Tambah Data Walikelas</h4>
-    
-    <form action="{{ route('admin.walikelas.store') }}" method="POST">
-        @csrf
+    .btn-simpan {
+        background: #5D5FEF; 
+        color: white; 
+        border: none; 
+        border-radius: 12px;
+        padding: 12px 20px; 
+        flex: 1.5; 
+        display: flex;
+        align-items: center; 
+        justify-content: center;
+        font-weight: 500; 
+        transition: 0.3s;
+    }
 
-        <div class="row">
+    .btn-simpan:hover { 
+        background: #4a4cd9; 
+        box-shadow: 0 4px 12px rgba(93, 95, 239, 0.3); 
+    }
 
-            {{-- KELAS (SUDAH TANPA ID_KELAS DI TAMPILAN) --}}
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Kelas</label>
-                <select name="id_kelas" id="id_kelas" class="form-select" required onchange="syncID()">
-                    <option value="">Pilih Kelas</option>
+    .btn-kembali:hover { 
+        background: #999; 
+        color: white; 
+    }
+</style>
 
-                    @foreach($kelas as $k)
-                        <option value="{{ $k->id_kelas }}">
-                            {{ $k->nama_kelas == 10 ? 'X' : ($k->nama_kelas == 11 ? 'XI' : 'XII') }}
-                            {{ $k->jurusan }}
-                            {{ $k->nomor_ruang }}
-                        </option>
-                    @endforeach
+<div class="center-wrapper">
+    <div class="form-box">
+        <h4 class="text-center mb-4">Input Data Walikelas</h4>
 
-                </select>
-            </div>
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
 
-            {{-- ID Walikelas --}}
-            <div class="col-md-6 mb-3">
+        <form action="{{ route('admin.walikelas.store') }}" method="POST">
+            @csrf
+
+            <div class="mb-3">
                 <label class="form-label">ID Walikelas (Otomatis)</label>
-                <input type="text" name="id_walikelas" id="id_walikelas" class="form-control" placeholder="Pilih kelas dulu..." readonly required>
+                <input type="text" id="id_walikelas" class="form-control" readonly placeholder="WL + NIP">
+                <small class="text-muted">ID akan terbentuk otomatis dari NIP.</small>
             </div>
-        </div>
 
-        <hr class="my-3 text-muted">
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="mb-3">
                 <label class="form-label">NIP</label>
-                <input type="text" name="NIP" class="form-control @error('NIP') is-invalid @enderror" placeholder="Masukkan NIP" value="{{ old('NIP') }}" required>
-                @error('NIP')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                <input type="text" name="NIP" id="nip"
+                       class="form-control"
+                       placeholder="Masukkan NIP..."
+                       required oninput="generateID()">
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Nama Guru</label>
-                <input type="text" name="nama_guru" class="form-control" placeholder="Nama Lengkap & Gelar" value="{{ old('nama_guru') }}" required>
+            <div class="mb-3">
+                <label class="form-label">Nama Lengkap</label>
+                <input type="text" name="nama_walikelas"
+                       class="form-control"
+                       placeholder="Masukkan nama walikelas..."
+                       required>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="mb-3">
                 <label class="form-label">Jenis Kelamin</label>
                 <select name="JK" class="form-select" required>
-                    <option value="">Pilih JK</option>
+                    <option value="">Pilih Jenis Kelamin</option>
                     <option value="L">Laki-laki</option>
                     <option value="P">Perempuan</option>
                 </select>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">No. Telepon</label>
-                <input type="text" name="no_telp" class="form-control" placeholder="08...">
+            <div class="mb-3">
+                <label class="form-label">Kelas</label>
+                <select name="id_kelas" class="form-select" required>
+                    <option value="">Pilih Kelas</option>
+                    @foreach ($kelas as $k)
+                        <option value="{{ $k->id_kelas }}">
+                            {{ $k->nama_kelas }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
-        </div>
 
-        <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" name="email" class="form-control" placeholder="email@sekolah.sch.id">
-        </div>
+            <div class="mb-3">
+                <label class="form-label">No. Telepon</label>
+                <input type="text" name="no_telp"
+                       class="form-control"
+                       placeholder="08..."
+                       required>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Alamat Lengkap</label>
-            <textarea name="alamat" class="form-control" rows="2"></textarea>
-        </div>
+            <div class="mb-3">
+                <label class="form-label">Alamat</label>
+                <textarea name="alamat"
+                          class="form-control"
+                          rows="2"
+                          placeholder="Masukkan alamat lengkap..."
+                          required></textarea>
+            </div>
 
-        <div class="button-group">
-            <a href="{{ route('admin.walikelas.index') }}" class="btn-kembali">Batal</a>
-            <button type="submit" class="btn-simpan">Simpan Data Walikelas</button>
-        </div>
-    </form>
+            <div class="button-group">
+                <a href="{{ route('admin.walikelas.index') }}" class="btn-kembali">
+                    Batal
+                </a>
+
+                <button type="submit" class="btn-simpan">
+                    Simpan Walikelas
+                </button>
+            </div>
+
+        </form>
+    </div>
 </div>
 
 <script>
-function syncID() {
-    const selectKelas = document.getElementById('id_kelas');
-    const inputWali = document.getElementById('id_walikelas');
-
-    let val = selectKelas.value;
-
-    if (val !== "") {
-        let angka = val.replace(/[^0-9]/g, '');
-        inputWali.value = "GR" + angka;
-    } else {
-        inputWali.value = "";
-    }
+function generateID() {
+    const nip = document.getElementById('nip').value.trim();
+    const idWalikelas = document.getElementById('id_walikelas');
+    idWalikelas.value = nip ? "WL" + nip : "";
 }
 </script>
 
-</body>
-</html>
+@endsection

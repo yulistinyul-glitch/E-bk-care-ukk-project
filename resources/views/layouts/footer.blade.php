@@ -192,11 +192,11 @@
 
       <div class="col-12 col-md-6 col-xl-2" data-aos="fade-up" data-aos-delay="400">
         <h5>Contact Info</h5>
-        <ul class="footer-contact">
-          <li><img src="/img/email-2.png"><span>{{ $locations->email }}</span></li>
-          <li><img src="/img/call.png"><span>{{ $locations->phone }}</span></li>
-          <li><img src="/img/lokasi.png"><span>{{ $locations->address }}</span></li>
-        </ul>
+<ul class="footer-contact">
+    <li><img src="/img/email-2.png"><span>{{ $locations->email ?? 'email@anda.com' }}</span></li>
+    <li><img src="/img/call.png"><span>{{ $locations->phone ?? '-' }}</span></li>
+    <li><img src="/img/lokasi.png"><span>{{ $locations->address ?? 'Alamat Belum Diatur' }}</span></li>
+</ul>
       </div>
 
     </div>

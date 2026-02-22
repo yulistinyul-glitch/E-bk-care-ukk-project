@@ -3,8 +3,6 @@
 @section('content')
 
 <div class="container mt-4">
-
-    {{-- HEADER --}}
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
         <h2 class="fw-bold mb-0">S - Report</h2>
 
@@ -99,7 +97,6 @@
     font-size: 14px;
 }
 
-/* BUTTON SWITCH */
 .btn-switch {
     background-color: #eef0ff;
     color: #5d5fef;

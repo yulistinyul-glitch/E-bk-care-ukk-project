@@ -1,4 +1,4 @@
-@extends('gurubk.layouts.app')
+{{-- @extends('gurubk.layouts.app')
 
 @section('content')
 
@@ -150,4 +150,4 @@
     }
 </script>
 
-@endsection
+@endsection --}}

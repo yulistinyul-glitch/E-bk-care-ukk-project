@@ -5,8 +5,6 @@
 @section('content')
 <style>
 body {
-    background: #f0f2f5;
-    font-family: 'Poppins', sans-serif;
     margin: 0;
 }
 .chat-wrapper {

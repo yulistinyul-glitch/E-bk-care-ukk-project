@@ -17,12 +17,61 @@ class SiswaController extends Controller
     {
         $siswa = Siswa::with('kelas.walikelas')
             ->orderBy('id_siswa', 'asc')
-            ->paginate(10);
+            ->paginate(15);
 
         $kelas = Kelas::all();
 
         return view('admin.siswa.index', compact('siswa', 'kelas'));
     }
+
+    // --- FITUR HISTORY START ---
+
+    /**
+     * Menampilkan data siswa yang telah dihapus (History)
+     */
+    public function history()
+    {
+        // Mengambil hanya data yang di-soft delete
+        $siswa = Siswa::onlyTrashed()
+            ->with('kelas.walikelas')
+            ->orderBy('deleted_at', 'desc')
+            ->paginate(15);
+
+        return view('admin.siswa.history', compact('siswa'));
+    }
+
+    /**
+     * Mengembalikan data siswa dari history (Restore)
+     */
+    public function restore($id)
+    {
+        $siswa = Siswa::onlyTrashed()->findOrFail($id);
+        $siswa->restore();
+
+        return redirect()->route('admin.siswa.index')
+            ->with('success', 'Data siswa berhasil dikembalikan dari history');
+    }
+
+    /**
+     * Menghapus data secara permanen dari database
+     */
+    public function forceDelete($id)
+    {
+        $siswa = Siswa::onlyTrashed()->findOrFail($id);
+
+        // Hapus Akun User secara permanen
+        if ($siswa->id_pengguna) {
+            User::where('id_pengguna', trim($siswa->id_pengguna))->delete();
+        }
+
+        // Hapus baris data dari database
+        $siswa->forceDelete();
+
+        return redirect()->route('admin.siswa.history')
+            ->with('success', 'Data Siswa dan Akun User dihapus permanen');
+    }
+
+    // --- FITUR HISTORY END ---
 
     public function create()
     {
@@ -134,56 +183,56 @@ class SiswaController extends Controller
             ->with('success', 'Data siswa berhasil diperbarui');
     }
 
+    /**
+     * Pindahkan ke History (Soft Delete)
+     */
     public function destroy($id)
     {
         $siswa = Siswa::findOrFail($id);
 
-        User::where('id_pengguna', $siswa->id_pengguna)->delete();
+        // Soft Delete (hanya mengisi kolom deleted_at)
+        // User tidak dihapus di sini agar jika di-restore akun tetap berfungsi
         $siswa->delete();
 
-        return redirect()->route('admin.siswa.index')
-            ->with('success', 'Siswa berhasil dihapus');
+        return redirect()->route('admin.siswa.history')
+            ->with('success', 'Data siswa berhasil dipindahkan ke history');
     }
 
     public function import(Request $request)
     {
         $file = $request->file('file');
-
-        if (!$file) {
-            return back()->withErrors(['file' => 'File tidak ditemukan']);
-        }
+        if (!$file) return back()->withErrors(['file' => 'File tidak ditemukan']);
 
         $rows = array_map('str_getcsv', file($file->getRealPath()));
 
         foreach ($rows as $i => $row) {
-            if ($i == 0) continue;
+            if ($i == 0) continue; // Lewati Header
 
-            $id_siswa      = trim($row[0] ?? null);
-            $id_kelas      = trim($row[1] ?? null);
-            $nama_siswa    = trim($row[2] ?? 'Unknown');
-            $nipd          = trim($row[3] ?? null);
-            $nisn          = trim($row[4] ?? '-');
-            $jk            = trim($row[5] ?? 'L');
-            $tempat_lahir  = trim($row[6] ?? 'Unknown');
-            $tanggal_lahir = trim($row[7] ?? '2008-01-01');
-            $no_telp       = trim($row[8] ?? '-');
-            $alamat        = trim($row[9] ?? '-');
+            $id_siswa      = trim($row[0] ?? null); 
+            $id_kelas      = trim($row[2] ?? null); 
+            $nama_siswa    = trim($row[3] ?? null); 
+            $nipd          = trim($row[4] ?? null); 
+            $nisn          = trim($row[5] ?? null); 
+            $jk            = trim($row[6] ?? 'L');  
+            $tempat_lahir  = trim($row[7] ?? '-');  
+            $tanggal_lahir = trim($row[8] ?? null); 
+            $no_telp       = trim($row[9] ?? '-');  
+            $alamat        = trim($row[10] ?? '-'); 
 
             if (!$id_siswa || !$nipd || !$id_kelas) continue;
-            if (!Kelas::find($id_kelas)) continue;
 
-            $id_pengguna = 'SW' . substr($id_siswa, 3);
+            $id_pengguna = 'PS' . substr($id_siswa, 3);
 
-            User::firstOrCreate(
+            \App\Models\User::updateOrCreate(
                 ['id_pengguna' => $id_pengguna],
                 [
                     'username' => $id_pengguna,
-                    'password' => Hash::make($nipd),
-                    'role' => 'Siswa'
+                    'password' => \Illuminate\Support\Facades\Hash::make($nipd),
+                    'role'     => 'Siswa'
                 ]
             );
 
-            Siswa::updateOrCreate(
+            \App\Models\Siswa::updateOrCreate(
                 ['id_siswa' => $id_siswa],
                 [
                     'id_pengguna'   => $id_pengguna,
@@ -200,7 +249,7 @@ class SiswaController extends Controller
             );
         }
 
-        return back()->with('success', 'Import siswa berhasil & akun otomatis dibuat.');
+        return back()->with('success', 'Import Data Siswa Berhasil!');
     }
 
     public function cetakSemua()

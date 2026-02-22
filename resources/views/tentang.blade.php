@@ -13,6 +13,13 @@
         color: #000000; 
         font-family: 'Arial', sans-serif;
     }
+
+    /* Class khusus untuk area biru soft */
+    .bg-soft-blue-area {
+        background-color: #f0f5ff !important;
+        width: 100%;
+    }
+
     .font-serif-custom { 
         font-family: 'Playfair Display', serif; 
         letter-spacing: 3px; 
@@ -72,22 +79,6 @@
         font-size: 0.85rem;
     }
 
-    .btn-square-dark {
-        border: 2px solid #000; 
-        color: #000; 
-        background: transparent;
-        padding: 10px 30px; 
-        text-transform: uppercase; 
-        font-size: 11px; 
-        letter-spacing: 2px; 
-        border-radius: 0;
-        transition: 0.3s; 
-        text-decoration: none; 
-        display: inline-block;
-        font-weight: bold;
-    }
-    .btn-square-dark:hover { background: #000; color: #fff; }
-
     .btn-square-white {
         border: 1px solid #fff; color: #fff; background: transparent;
         padding: 8px 25px; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; border-radius: 0;
@@ -117,16 +108,16 @@
 </style>
 
 <div class="bg-white-custom w-100 pb-5">
-    <div class="container px-4">
-        
-        <div class="row justify-content-center text-center">
-            <div class="col-lg-10">
-                <div class="divider-line">
-                    <h1 class="font-serif-custom mb-3 text-uppercase" style="font-size: 3rem; font-weight: 700;">E-BK CARE</h1>
-                    <p class="fst-italic" style="color: #333; font-size: 1.3rem;">
-                        "Memberikan layanan bimbingan, konseling, dan dukungan kesehatan mental"
-                    </p>
-
+    
+    <div class="bg-soft-blue-area">
+        <div class="container px-4">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-10">
+                    <div class="divider-line">
+                        <h1 class="font-serif-custom mb-3 text-uppercase" style="font-size: 3rem; font-weight: 700;">E-BK CARE</h1>
+                        <p class="fst-italic" style="color: #333; font-size: 1.3rem;">
+                            "Memberikan layanan bimbingan, konseling, dan dukungan kesehatan mental"
+                        </p>
                     <p class="text-muted mb-4 px-lg-5" style="font-size: 1rem; line-height: 1.8;">
                         E-BK Care menyediakan solusi berorientasi pada kesejahteraan mental yang efektif bagi isu-isu psikologis yang kompleks. Kami berkomitmen untuk mendampingi setiap individu dalam proses pengenalan diri dan pemecahan masalah secara profesional.
                     </p>
@@ -134,16 +125,17 @@
                     <p class="text-muted px-lg-5" style="font-size: 1rem; line-height: 1.8;">
                         Melalui pendekatan yang inklusif dan teknologi bimbingan konseling terkini, kami membantu Anda dalam membuat keputusan yang tepat demi masa depan yang lebih baik. Mari wujudkan kesehatan mental yang stabil bersama tim ahli kami.
                     </p>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="row text-center justify-content-center">
+    <div class="container px-4">
+        <div class="row text-center justify-content-center mt-5">
             <div class="col-md-4 mb-4">
                 <div class="service-box">
-                    <div class="service-icon-wrapper">
-                        <i class="fa-solid fa-users"></i>
-                    </div>
+                    <div class="service-icon-wrapper"><i class="fa-solid fa-users"></i></div>
                     <h3 class="service-title">Counseling</h3>
                     <p class="service-subtitle">The Professional Guidance</p>
                     <div class="service-line"></div>
@@ -151,9 +143,7 @@
             </div>
             <div class="col-md-4 mb-4">
                 <div class="service-box">
-                    <div class="service-icon-wrapper">
-                        <i class="fa-solid fa-brain"></i>
-                    </div>
+                    <div class="service-icon-wrapper"><i class="fa-solid fa-brain"></i></div>
                     <h3 class="service-title">Psychotherapy</h3>
                     <p class="service-subtitle">A Collaborative Treatment</p>
                     <div class="service-line"></div>
@@ -161,39 +151,42 @@
             </div>
             <div class="col-md-4 mb-4">
                 <div class="service-box">
-                    <div class="service-icon-wrapper">
-                        <i class="fa-solid fa-heart-pulse"></i>
-                    </div>
+                    <div class="service-icon-wrapper"><i class="fa-solid fa-heart-pulse"></i></div>
                     <h3 class="service-title">Self Management</h3>
                     <p class="service-subtitle">In Physical and Mental Health</p>
                     <div class="service-line"></div>
                 </div>
             </div>
         </div>
+        <div class="py-3"></div>
+    </div>
 
-        <div class="py-5"></div> <div class="row align-items-center mb-5 pb-lg-5">
-            <div class="col-lg-7 px-0">
-                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000" class="img-full shadow" alt="Visi">
-            </div>
-            <div class="col-lg-5 px-0">
-                <div class="overlap-box-blue overlap-right border-kuning-kanan shadow-lg">
-                    <h2 class="font-serif-custom h4 mb-3 text-uppercase">VISI KAMI</h2>
-                    <p class="small fw-bold mb-3">Menjadi platform konseling digital yang humanis dan solutif.</p>
-                    <p class="text-description-muted mb-4">
-                        Membangun ekosistem kesehatan mental yang inklusif di lingkungan pendidikan guna mendukung pertumbuhan karakter siswa secara maksimal.
-                    </p>
-                    <a href="#" class="btn btn-square-white">Read More</a>
+        <div class="container px-4 py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-7 px-0">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000" class="img-full shadow" alt="Visi">
+                </div>
+                <div class="col-lg-5 px-0">
+                    <div class="overlap-box-blue overlap-right border-kuning-kanan shadow-lg">
+                        <h2 class="font-serif-custom h4 mb-3 text-uppercase">VISI KAMI</h2>
+                        <p class="small fw-bold mb-3">Menjadi platform konseling digital yang humanis dan solutif.</p>
+                        <p class="text-description-muted mb-4">
+                            Membangun ekosistem kesehatan mental yang inklusif di lingkungan pendidikan guna mendukung pertumbuhan karakter siswa secara maksimal.
+                        </p>
+                        <a href="#" class="btn btn-square-white">Read More</a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="row align-items-center flex-column-reverse flex-lg-row pt-5">
+    <div class="container px-4 pt-5">
+        <div class="row align-items-center flex-column-reverse flex-lg-row">
             <div class="col-lg-5 px-0">
                 <div class="overlap-box-blue overlap-left border-kuning-kiri shadow-lg">
                     <h2 class="font-serif-custom h4 mb-3 text-uppercase">MISI KAMI</h2>
                     <p class="small fw-bold mb-3">Menyediakan akses bimbingan profesional kapan saja.</p>
                     <p class="text-description-muted mb-4">
-                        Berkomitmen memberikan layanan privasi tinggi dan edukasi preventif bagi seluruh civitas akademika dalam menghadapi tantangan psikologis.
+                        Berkomitmen memberikan layanan privasi tinggi dan edukasi preventif bagi seluruh civitas akademika.
                     </p>
                     <a href="#" class="btn btn-square-white">Read More</a>
                 </div>
@@ -201,9 +194,10 @@
             <div class="col-lg-7 px-0">
                 <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1000" class="img-full shadow" alt="Misi">
             </div>
+                    <div class="py-4"></div>
         </div>
-
     </div>
+
 </div>
 
 @endsection

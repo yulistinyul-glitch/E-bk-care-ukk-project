@@ -6,6 +6,7 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <style>
     body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; } 
@@ -20,6 +21,21 @@
         text-decoration: none; transition: 0.3s;
         box-shadow: 0 4px 15px rgba(93, 95, 239, 0.2);
     }
+    .btn-catat:hover { color: white; opacity: 0.9; transform: translateY(-2px); }
+
+    .btn-history {
+        background-color: #b5b5b5;
+        color: white;
+        padding: 10px 25px;
+        border-radius: 15px;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+    }
+    .btn-history:hover { background-color: #999; color: white; transform: translateY(-2px); }
 
     .main-wrapper {
         background: white;
@@ -29,29 +45,7 @@
         box-shadow: 0 10px 30px rgba(0,0,0,0.02);
     }
 
-    .nav-tabs-custom {
-        display: flex;
-        background: #f8fafc;
-        padding: 12px 20px 0;
-        border-bottom: 1px solid #edf2f7;
-    }
-    .tab-item {
-        padding: 12px 20px;
-        font-size: 14px;
-        font-weight: 600;
-        color: #94a3b8;
-        cursor: pointer;
-        border-radius: 12px 12px 0 0;
-    }
-    .tab-item.active {
-        background: white;
-        color: #3b82f6;
-        border: 1px solid #edf2f7;
-        border-bottom: 1px solid white;
-    }
-
     .filter-area { padding: 25px; }
-    .label-mini { font-size: 13px; font-weight: 600; color: #444; margin-bottom: 8px; display: block; }
     
     .input-group-custom {
         background: #fff;
@@ -60,7 +54,7 @@
         height: 35px;
         padding: 0 15px;
         font-size: 14px;
-        width: 80%;
+        width: 100%;
     }
 
     .btn-search-outline {
@@ -104,14 +98,46 @@
     .badge-l { background-color: #e3f2fd; color: #1976d2; }
     .badge-p { background-color: #fce4ec; color: #d81b60; }
 
-    .btn-action {
-        width: 32px; height: 32px;
-        display: inline-flex; align-items: center; justify-content: center;
-        border-radius: 8px; border: none; transition: 0.2s; color: white;
+    .btn-action-icon {
+        border: none;
+        background: none;
+        padding: 0;
+        font-size: 1.25rem;
+        transition: 0.2s;
+        cursor: pointer;
     }
-    .btn-edit { background-color: #ffb74d; }
-    .btn-delete { background-color: #ff7070; }
+    .icon-edit { color: #ffb74d; }
+    .icon-edit:hover { color: #f5a623; transform: scale(1.2); }
+    .icon-delete { color: #ff7070; }
+    .icon-delete:hover { color: #ff4d4d; transform: scale(1.2); }
     
+    .pagination-wrapper {
+        display: flex !important;
+        justify-content: center !important;
+        padding: 30px 0;
+        width: 100%;
+    }
+    .pagination-wrapper nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .pagination { margin-bottom: 12px; gap: 4px; }
+    .page-link {
+        padding: 4px 12px;
+        font-size: 12px;
+        color: #666;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 6px !important;
+    }
+    .page-item.active .page-link {
+        background-color: #b5b5b5;
+        border-color: #b5b5b5;
+        color: #fff;
+    }
+    .page-link:hover { color: #333; background-color: #f1f1f1; }
+
     .import-box {
         background: #f8fafc;
         border: 1px dashed #cbd5e1;
@@ -119,24 +145,77 @@
         padding: 15px;
         margin-top: 15px;
     }
+
+    .my-swal-popup { 
+        border-radius: 24px !important; 
+        padding: 2.5em !important; 
+        width: 400px !important; 
+    }
+
+    .swal2-title { 
+        font-family: 'Poppins', sans-serif; 
+        font-weight: 700 !important; 
+        color: #333 !important; 
+    }
+
+    .swal2-html-container { 
+        font-family: 'Poppins', sans-serif; 
+        color: #666 !important; 
+    }
+
+    .swal-button-custom {
+        border-radius: 10px !important; 
+        padding: 8px 25px !important; 
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        margin: 0 8px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .swal-button-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .swal-btn-cancel {
+        background-color: #f1f1f1 !important;
+        color: #888 !important;
+    }
+
+    .swal2-icon.swal2-warning {
+        animation: swal2-animate-pulse 1.5s infinite;
+    }
+
+    @keyframes swal2-animate-pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+        100% { transform: scale(1); }
+    }
+
+    .swal2-styled:focus {
+        box-shadow: none !important;
+    }
 </style>
 
 <div class="container-fluid py-4">
-    
     <div class="d-flex justify-content-between align-items-center mb-4 px-2">
         <div>
-            <h4 class="header-title mb-4">Manajemen Data Siswa</h4>
+            <h4 class="header-title mb-0">Manajemen Data Siswa</h4>
         </div>
-        <a href="{{ route('admin.siswa.create') }}" class="btn-catat">
-            <i class="bi bi-plus-lg"></i> Catat Siswa
-        </a>
+        <div class="d-flex gap-2">
+            <a href="{{ route('admin.siswa.history') }}" class="btn-history">
+                <i class="bi bi-clock-history"></i> History
+            </a>
+            <a href="{{ route('admin.siswa.create') }}" class="btn-catat">
+                <i class="bi bi-plus-lg"></i> Catat Siswa
+            </a>
+        </div>
     </div>
 
     <div class="main-wrapper shadow">
-        
         <div class="filter-area">
             <form action="" method="GET">
-                <div class="row g-3 align-items-end">
+                <div class="row g-2 align-items-center">
                     <div class="col-md-4">
                         <div class="position-relative">
                             <i class="bi bi-search position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%); color: #b5b5b5;"></i>
@@ -156,10 +235,10 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn-search-outline w-100">Search</button>
+                    <div class="col-auto">
+                        <button type="submit" class="btn-search-outline">Search</button>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col text-end">
                         <a href="{{ route('admin.siswa.cetak.semua') }}" class="btn-export-solid shadow">
                             <i class="bi bi-file-earmark-pdf"></i> Export Data
                         </a>
@@ -184,15 +263,6 @@
                 </form>
             </div>
         </div>
-
-        @if(session('success'))
-        <div class="p-4 pb-0">
-            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert" style="border-radius: 15px;">
-                <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
-        @endif
 
         <div class="table-container">
             <div class="table-responsive">
@@ -224,13 +294,13 @@
                             </td>
                             <td>{{ $s->no_telp }}</td>
                             <td>
-                                <div class="d-flex justify-content-center gap-2">
-                                    <a href="{{ route('admin.siswa.edit', $s->id_siswa) }}" class="btn-action btn-edit shadow-sm">
+                                <div class="d-flex justify-content-center gap-3">
+                                    <a href="{{ route('admin.siswa.edit', $s->id_siswa) }}" class="btn-action-icon icon-edit">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <form action="{{ route('admin.siswa.destroy', $s->id_siswa) }}" method="POST" class="d-inline">
+                                    <form id="delete-form-{{ $s->id_siswa }}" action="{{ route('admin.siswa.destroy', $s->id_siswa) }}" method="POST" class="d-inline">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="btn-action btn-delete shadow-sm" onclick="return confirm('Hapus data siswa ini?')">
+                                        <button type="button" class="btn-action-icon icon-delete" onclick="confirmDelete('{{ $s->id_siswa }}', '{{ $s->nama_siswa }}')">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
@@ -242,7 +312,6 @@
                             <td colspan="8" class="text-center py-5 text-muted">
                                 <i class="bi bi-person-exclamation" style="font-size: 50px; opacity: 0.5;"></i>
                                 <p class="mt-3 fw-bold">Belum ada data siswa.</p>
-                                <small>Silakan tambah data atau import file excel.</small>
                             </td>
                         </tr>
                         @endforelse
@@ -250,10 +319,58 @@
                 </table>
             </div>
 
-            <div class="mt-4 d-flex justify-content-center pb-2">
+            <div class="pagination-wrapper">
                 {{ $siswa->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    @if(session('success'))
+        Swal.fire({
+            title: 'Berhasil!',
+            text: "{{ session('success') }}",
+            icon: 'success',
+            iconColor: '#00C897',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            showClass: { popup: 'animate__animated animate__fadeInUp animate__faster' },
+            customClass: { popup: 'my-swal-popup' }
+        });
+    @endif
+
+function confirmDelete(id, nama) {
+    Swal.fire({
+        title: 'Hapus Siswa?',
+        text: "Yakin ingin menghapus " + nama + "? Data ini akan dipindahkan ke folder History.",
+        icon: 'warning',
+        iconColor: '#ff7070',
+        showCancelButton: true,
+        confirmButtonColor: '#ff7070',
+        cancelButtonColor: '#f1f1f1',
+        confirmButtonText: 'Hapus',
+        cancelButtonText: 'Batal',
+        reverseButtons: true,
+        showClass: {
+            popup: 'animate__animated animate__zoomIn animate__faster'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__zoomOut animate__faster'
+        },
+        customClass: {
+            popup: 'my-swal-popup',
+            confirmButton: 'swal-button-custom',
+            cancelButton: 'swal-button-custom swal-btn-cancel'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    })
+}
+</script>
+
 @endsection

@@ -1,6 +1,7 @@
 @extends('gurubk.layouts.app')
 
 @section('content')
+
 <div class="container mt-4">
 
     <h3 class="fw-bold mb-4">Generate E-SP</h3>

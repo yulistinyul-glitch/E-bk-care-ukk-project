@@ -15,6 +15,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/vendors.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/daterangepicker.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/theme.min.css') }}" />
+
+    <style> body { font-family: 'Poppins', sans-serif; } </style>
 </head>
 
 <body>

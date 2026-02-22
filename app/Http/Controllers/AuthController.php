@@ -13,70 +13,47 @@ use App\Models\Gurubk;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OtpMail;
-use App\Http\Middleware\RoleMiddleware;
 
 class AuthController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | SHOW LOGIN
-    |--------------------------------------------------------------------------
-    */
-
+    /**
+     * Menampilkan Form Login
+     */
     public function showLogin()
     {
         if (Auth::check()) {
-            return match (Auth::user()->role) {
-                'Admin'  => redirect()->route('admin.dashboard'),
-                'GuruBK' => redirect()->route('gurubk.dashboard'),
-                'Siswa'  => redirect()->route('siswa.home'),
-                default  => redirect()->route('login')
-            };
+            return $this->redirectByRole(Auth::user());
         }
 
         return view('auth.login');
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | PROCESS LOGIN
-    |--------------------------------------------------------------------------
-    */
-
-<<<<<<< HEAD
-
-    // Proses login
+    /**
+     * Proses Login Utama
+     */
     public function loginProses(Request $request)
-=======
-    public function login(Request $request)
->>>>>>> a920145cb7fdc18ffa7070743baa4a185eb7c7cd
     {
         $request->validate([
             'username' => 'required',
             'password' => 'required'
         ]);
 
-        $user = User::where('username', $request->username)->first();
+        $username = $request->username;
+        $password = $request->password;
 
-        if ($user && Hash::check($request->password, $user->password)) {
-            Auth::login($user);
-            $request->session()->regenerate();
+        $user = User::where('username', $username)->first();
 
-            return match ($user->role) {
-                'Admin'  => redirect()->route('admin.dashboard'),
-                'GuruBK' => redirect()->route('gurubk.dashboard'),
-                'Siswa'  => redirect()->route('siswa.home'),
-                default  => redirect()->route('login')
-            };
+        if (!$user) {
+            return back()->with('error', 'Username tidak ditemukan!');
         }
 
-<<<<<<< HEAD
-        if ($user->is_first_login && ($role === 'Siswa' || $role === 'GuruBK'))
-        {
+        // 1. Logika Login Pertama Kali (First Login)
+        if ($user->is_first_login) {
             $isValid = false;
-            if ($role === 'Siswa' && $user->siswa) {
+            
+            if ($user->role === 'Siswa' && $user->siswa) {
                 if ($password === $user->siswa->nipd) $isValid = true;
-            } elseif ($role === 'GuruBK' && $user->gurubk) {
+            } elseif ($user->role === 'GuruBK' && $user->gurubk) {
                 if ($password === $user->gurubk->NIP) $isValid = true;
             }
 
@@ -86,57 +63,55 @@ class AuthController extends Controller
             }
         }
 
-        if (Auth::attempt(['username' => $input, 'password' => $password]))
-            {
-                $request->session()->regenerate();
+        // 2. Logika Login Normal (Bcrypt Hash)
+        if (Auth::attempt(['username' => $username, 'password' => $password])) {
+            $request->session()->regenerate();
+            return $this->redirectByRole(Auth::user());
+        }
 
-                return match ($user->role) {
-                'Admin' => redirect()->route('admin.dashboard'),
-                'GuruBK' => redirect()->route('gurubk.dashboard'),
-                'Siswa' => redirect()->route('home'), 
-                default => redirect('/'),
-                 };
-            }
-
-            return back()->with('error', 'Username atau password salah!');
-=======
-        return back()
-            ->withErrors(['username' => 'Username atau password salah!'])
-            ->onlyInput('username');
->>>>>>> a920145cb7fdc18ffa7070743baa4a185eb7c7cd
+        return back()->with('error', 'Username atau password salah!');
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | LOGOUT
-    |--------------------------------------------------------------------------
-    */
-
-<<<<<<< HEAD
-   
-    return view('auth.login', compact('role'));
+    /**
+     * Helper untuk redirect berdasarkan role
+     */
+    private function redirectByRole($user)
+    {
+        return match ($user->role) {
+            'Admin'  => redirect()->route('admin.dashboard'),
+            'GuruBK' => redirect()->route('gurubk.dashboard'),
+            'Siswa'  => redirect()->route('siswa.home'),
+            default  => redirect()->route('login')
+        };
     }
 
-    public function showResetPage() {
-    if(Auth::check()) {
-        return view('auth.reset-pass', [
-            'type' => 'first_login', 
-            'title' => 'Buat Password Keamanan',
-            'user_id' => Auth::id()
-        ]);
+    /**
+     * Menampilkan Halaman Ganti Password
+     */
+    public function showResetPage() 
+    {
+        if (Auth::check()) {
+            return view('auth.reset-pass', [
+                'type' => 'first_login', 
+                'title' => 'Buat Password Keamanan',
+                'user_id' => Auth::id()
+            ]);
+        }
+
+        if (session()->has('reset_user_id')) {
+            return view('auth.reset-pass', [
+                'type' => 'forgot_password',
+                'title' => 'Atur ulang password',
+                'user_id' => session('reset_user_id')
+            ]);
+        }
+
+        return redirect()->route('login')->with('error', 'Silahkan verifikasi akun atau login terlebih dahulu');
     }
 
-    if (session()->has('reset_user_id')) {
-        return view('auth.reset-pass', [
-            'type' => 'forgot_password',
-            'title' => 'Atur ulang password',
-            'user_id' => session('reset_user_id')
-        ]);
-    }
-
-    return redirect()->route('choose.role')->with('error', 'Silahkan verifikasi akun atau login terlebih dahulu');
-    }
-
+    /**
+     * Menyimpan Password Baru
+     */
     public function savePassword(Request $request)
     {
         $request->validate([
@@ -144,6 +119,7 @@ class AuthController extends Controller
             'user_id' => 'required'
         ]);
 
+        // Sesuaikan primary key, biasanya 'id' atau 'id_pengguna'
         $user = User::where('id_pengguna', $request->user_id)->firstOrFail();
 
         $user->password = Hash::make($request->password);
@@ -155,18 +131,22 @@ class AuthController extends Controller
         $user->save();
 
         Auth::logout();
-        return redirect()->route('choose.role')->with('success', 'Password berhasil diubah. Silakan login dengan password baru Anda.');
+        return redirect()->route('login')->with('success', 'Password berhasil diubah. Silakan login kembali.');
     }
 
+    /**
+     * Verifikasi Akun lewat NIP/NIPD untuk Reset
+     */
     public function verifyAccount(Request $request)
     {
-        // Cari identitas (NIPD atau NIP) di tabel terkait
+        $request->validate(['identitas' => 'required']);
+
         $siswa = Siswa::where('nipd', $request->identitas)->first();
         $gurubk = Gurubk::where('NIP', $request->identitas)->first();
 
         $user = null;
-        if ($siswa) $user = User::find($siswa->id_pengguna);
-        elseif ($gurubk) $user = User::find($gurubk->id_pengguna);
+        if ($siswa) $user = User::where('id_pengguna', $siswa->id_pengguna)->first();
+        elseif ($gurubk) $user = User::where('id_pengguna', $gurubk->id_pengguna)->first();
 
         if ($user && $user->email) {
             $otp = rand(100000, 999999);
@@ -183,10 +163,13 @@ class AuthController extends Controller
         return back()->with('error', 'Identitas tidak ditemukan atau email belum diatur.');
     }
 
+    /**
+     * Proses Cek OTP
+     */
     public function processOtp(Request $request) 
     {
         $request->validate(['otp' => 'required|numeric']);
-        $user = User::find(session('otp_user_id'));
+        $user = User::where('id_pengguna', session('otp_user_id'))->first();
 
         if (!$user) {
             return redirect()->route('login')->with('error', 'Sesi berakhir.');
@@ -204,9 +187,9 @@ class AuthController extends Controller
         return back()->with('error', 'OTP salah atau kadaluarsa.');
     }
 
-    // Logout
-=======
->>>>>>> a920145cb7fdc18ffa7070743baa4a185eb7c7cd
+    /**
+     * Logout
+     */
     public function logout(Request $request)
     {
         Auth::logout();
@@ -214,82 +197,5 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | FORGOT PASSWORD
-    |--------------------------------------------------------------------------
-    */
-
-    public function showForgotForm()
-    {
-        return view('auth.forgot-password');
-    }
-
-    public function sendResetLink(Request $request)
-    {
-        $request->validate([
-            'username' => ['required', 'exists:users,username']
-        ]);
-
-        $token = Str::random(60);
-
-        DB::table('password_reset_tokens')->updateOrInsert(
-            ['username' => $request->username],
-            [
-                'token'      => Hash::make($token),
-                'created_at' => now()
-            ]
-        );
-
-        return redirect()->route('password.reset', [
-            'token'    => $token,
-            'username' => $request->username
-        ])->with('status', 'Link reset password dibuat!');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | RESET PASSWORD
-    |--------------------------------------------------------------------------
-    */
-
-    public function showResetForm(Request $request, $token)
-    {
-        return view('auth.reset-password', [
-            'token'    => $token,
-            'username' => $request->username
-        ]);
-    }
-
-    public function resetPassword(Request $request)
-    {
-        $request->validate([
-            'token'    => 'required',
-            'username' => 'required|exists:users,username',
-            'password' => 'required|min:6|confirmed'
-        ]);
-
-        $record = DB::table('password_reset_tokens')
-            ->where('username', $request->username)
-            ->first();
-
-        if (!$record || !Hash::check($request->token, $record->token)) {
-            return back()->withErrors(['username' => 'Token tidak valid']);
-        }
-
-        $user = User::where('username', $request->username)->first();
-
-        $user->update([
-            'password' => Hash::make($request->password)
-        ]);
-
-        DB::table('password_reset_tokens')
-            ->where('username', $request->username)
-            ->delete();
-
-        return redirect()->route('login')
-            ->with('status', 'Password berhasil direset!');
     }
 }

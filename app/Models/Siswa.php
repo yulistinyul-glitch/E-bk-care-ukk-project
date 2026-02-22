@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes; // WAJIB: Untuk fitur History
 
 class Siswa extends Model
 {
+    use SoftDeletes; 
+
     protected $table = 'siswas';
     protected $primaryKey = 'id_siswa';
     public $incrementing = false; 
@@ -25,6 +28,8 @@ class Siswa extends Model
         'alamat',
     ];
 
+    protected $dates = ['deleted_at'];
+
     public function kelas()
     {
         return $this->belongsTo(Kelas::class, 'id_kelas', 'id_kelas');
@@ -34,5 +39,4 @@ class Siswa extends Model
     {
         return $this->belongsTo(User::class, 'id_pengguna', 'id_pengguna');
     }
-
 }

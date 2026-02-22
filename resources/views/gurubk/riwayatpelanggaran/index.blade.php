@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <style>
-    body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; }
     .header-title { font-size: 28px; font-weight: 700; color: #333; }
 
     .btn-catat {

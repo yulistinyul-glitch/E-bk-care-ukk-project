@@ -52,22 +52,31 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('guest')->group(function () {
-    Route::get('/login/{role}', [AuthController::class, 'login'])->name('login');
-    Route::post('/login-proses', [AuthController::class, 'loginProses'])->name('login.proses');
+// Route::middleware('guest')->group(function () {
+//     Route::get('/login/{role}', [AuthController::class, 'login'])->name('login');
+//     Route::post('/login-proses', [AuthController::class, 'loginProses'])->name('login.proses');
 
-    Route::get('/', [AuthController::class, 'showLogin'])->name('login');
-    Route::get('/login', [AuthController::class, 'showLogin']);
-    Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+//     Route::get('/', [AuthController::class, 'showLogin'])->name('login');
+//     Route::get('/login', [AuthController::class, 'showLogin']);
+//     Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
-    Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
-    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+//     Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
+//     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
 
-    Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
-    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+//     Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+//     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-});
+//     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+// });
+
+Route::get('/login', function() {return view('auth.login');})->name('login');
+Route::get('/newPass', function() {return view('auth.new-pass');})->name('newPass');
+Route::get('/resetPass', function() {return view('auth.reset-pass');})->name('resetPass');
+Route::get('/forgetPw', function() {return view('auth.forgetpw');})->name('forgetPw');
+Route::get('/verify', function() {return view('auth.verify-code');})->name('verify');
+
+
+
 
 
 /*
@@ -274,5 +283,7 @@ Route::prefix('gurubk')->name('gurubk.')->group(function () {
 Route::prefix('siswa')->name('siswa')->group(function () {
     Route::get('/home', function () { return view('siswa.home');})->name('home');
     Route::get('/profile', function () { return view('siswa.profile');})->name('profile');
+    Route::get('/history', function () { return view('siswa.history');})->name('history');
+    Route::get('/chat', function () { return view('siswa.room-chat');})->name('chat');
 
 });

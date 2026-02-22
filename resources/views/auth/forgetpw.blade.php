@@ -33,7 +33,7 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <form action="{{ route('password.verify')}}" method="POST" class="space-y-6">
+            <form action="#" method="POST" class="space-y-6">
                 @csrf
                 <div>
                     <label class="block text-black font-bold mb-2 ml-1">Username</label>

@@ -22,7 +22,7 @@
         </div>
       </div>
 
-      <div class="md:hidden absolute bottom-0 w-full leading-[0]">
+      <div class="md:hidden absolute bottom-0 w-full leading-0 ">
         <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 80px; width: 100%;">
           <path d="M0.00,49.98 C150.00,150.00 349.20,-50.00 500.00,49.98 L500.00,150.00 L0.00,150.00 Z" style="stroke: none; fill: #fff;"></path>
         </svg>
@@ -53,7 +53,7 @@
 
                     <div class="group border-b border-gray-600 pb-2 transition-all hover:border-blue-400">
                         <span class="text-[10px] text-blue-300 font-bold uppercase tracking-wider">Kelas</span>
-                        <p class="text-sm md:text-base font-semibold">XII Teknik Informatika 1</p>
+                        <p class="text-sm md:text-base font-semibold">XII RPL 1</p>
                     </div>
 
                     <div class="group border-b border-gray-600 pb-2 transition-all hover:border-blue-400">
@@ -137,51 +137,40 @@
       </div>
 
     {{-- popup edit profile siswa --}}
-    <section id="editPhotoModal" class="fixed inset-0 z-100 hidden items-center justify-center p-4">
-      <div class="absolute inset-0 backdrop-blur-sm shadow-inner bg-[#1e3a52]/40 rounded-2xl"></div>
+  <div id="editPhotoModal" class="fixed inset-0 z-[999] hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-[#1e3a52]/60 backdrop-blur-md" onclick="closeEditPhotoModal()"></div>
 
-      <div class="relative bg-white w-full max-w-sm rounded-2xl shadow-2xl border-2 overflow-hidden transform transition-all scale-300" id="modalContent">
-        <h3 class="text-xl font-bold uppercase tracking-wider">Edit Profile</h3>
-        <p class="text-xs text-blue-300 mt-1 italic">Hanya foto yang bisa diubah</p>
+    <div id="modalContent" 
+         class="relative bg-white w-full max-w-sm rounded-[3rem] shadow-2xl border-4 border-[#B1D0E0] overflow-hidden transform transition-all scale-90 opacity-0 duration-300">
+        
+        <div class="bg-[#1e3a52] p-8 text-center text-white">
+            <h3 class="text-xl font-bold uppercase tracking-widest">Ganti Foto</h3>
+            <p class="text-[10px] text-blue-200 mt-1 uppercase font-medium">Hanya foto profil yang bisa diubah</p>
+        </div>
 
-        <button onclick="closedEdit()" class="absolute top-4 right-6 text-white/50 hover:text-white transition-colors text-2xl font-bold">
-        &times;
-      </button>
-      </div>
-
-      <div class="p-8 flex flex-col items-center">
-            <div class="relative group">
-                <div class="w-32 h-32 rounded-full border-4 border-[#669FC9] overflow-hidden bg-gray-100 shadow-md">
-                    <img id="photoPreview" src="https://via.placeholder.com/150" alt="Preview" class="w-full h-full object-cover">
-                </div>
-                <div class="absolute inset-0 bg-black/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                </div>
+        <div class="p-8 flex flex-col items-center">
+            <div class="w-32 h-32 rounded-full border-4 border-[#669FC9] overflow-hidden bg-gray-100 shadow-inner mb-6">
+                <img id="photoPreview" src="https://via.placeholder.com/150" alt="Preview" class="w-full h-full object-cover">
             </div>
 
             <input type="file" id="photoInput" class="hidden" accept="image/*" onchange="previewImage(event)">
             
-            <label for="photoInput" class="mt-6 cursor-pointer bg-[#669FC9] hover:bg-[#1A374D] text-white font-bold py-2 px-6 rounded-full transition-all shadow-lg active:scale-95 text-sm uppercase tracking-widest">
-                Pilih Foto Baru
+            <label for="photoInput" class="cursor-pointer bg-[#669FC9] hover:bg-[#1A374D] text-white font-bold py-3 px-8 rounded-full transition-all shadow-lg active:scale-95 text-xs uppercase tracking-widest mb-2">
+                Pilih File Baru
             </label>
-
-            <p class="mt-4 text-[10px] text-gray-400 text-center uppercase font-bold italic tracking-tighter">Format: JPG, PNG (Max 2MB)</p>
+            <span class="text-[9px] text-gray-400 font-bold uppercase italic tracking-widest">Maksimal 2MB (JPG/PNG)</span>
         </div>
 
-        <div class="p-6 bg-gray-50 flex gap-3 justify-center">
-            <button onclick="closeEditPhotoModal()" class="px-6 py-2 border-2 border-gray-300 text-gray-500 rounded-full font-bold text-xs hover:bg-gray-100 transition-all uppercase tracking-widest">
+        <div class="p-6 bg-gray-50 flex gap-3 justify-center border-t border-gray-100">
+            <button onclick="closeEditPhotoModal()" class="px-5 py-2 text-gray-400 font-bold text-[10px] uppercase hover:text-gray-600 transition-colors">
                 Batal
             </button>
-            <button class="px-6 py-2 bg-[#1e3a52] text-white rounded-full font-bold text-xs hover:bg-blue-900 transition-all shadow-lg uppercase tracking-widest">
-                Simpan Perubahan
+            <button class="px-8 py-2 bg-[#1e3a52] text-white rounded-full font-bold text-[10px] hover:bg-blue-900 transition-all shadow-md uppercase">
+                Simpan
             </button>
         </div>
     </div>
-
-    </section>
+</div>  
        
 
     <script>
@@ -221,46 +210,45 @@
   pointsText.innerText = `${poinSiswa}/100`;
 
   // Fungsi untuk membuka modal edit foto
-  const modal = document.getElementById('editPhotoModal');
-  const modalContent = document.getElementById('modalContent');
-  const photoPreview = document.getElementById('photoPreview'); 
-
   function openEditPhotoModal() {
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-
-    setTimeout(() => {
-      modalContent.classList.remove('scale-95', 'opacity-0');
-      modalContent.classList.add('scale-100', 'opacity-100');
-    }, 10);
-  }
-
-  function closeEditPhotoModal() {
-    modalContent.classList.remove('scale-100', 'opacity-100');
-    modalContent.classList.add('scale-95', 'opacity-0');
-
-    setTimeout(() => {
-      modal.classList.remove('flex');
-      modal.classList.add('hidden');
-    }, 300);
-  }
-
-  function previewImage(event) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        photoPreview.src = e.target.result;
-      }
-      reader.readAsDataURL(file);
+        const modal = document.getElementById('editPhotoModal');
+        const modalContent = document.getElementById('modalContent');
+        
+        // Munculkan container modal
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        // Jalankan animasi (pake timeout dikit biar CSS transition-nya 'ngeh')
+        setTimeout(() => {
+            modalContent.classList.remove('scale-90', 'opacity-0');
+            modalContent.classList.add('scale-100', 'opacity-100');
+        }, 10);
     }
-  } 
 
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      closeEditPhotoModal();
+    function closeEditPhotoModal() {
+        const modal = document.getElementById('editPhotoModal');
+        const modalContent = document.getElementById('modalContent');
+        
+        // Jalankan animasi tutup
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-90', 'opacity-0');
+        
+        // Sembunyikan container setelah animasi selesai (300ms sesuai durasi di CSS)
+        setTimeout(() => {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }, 300);
     }
-  });
+
+    // Fungsi Preview Gambar
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            const output = document.getElementById('photoPreview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
 </script>
 
 

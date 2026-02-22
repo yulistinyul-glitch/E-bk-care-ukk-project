@@ -17,7 +17,7 @@
         <div class="bg-white max-w-lg w-lg md:flex-1 p-8 md:p-10 rounded-[40px] shadow-3xl md:shrink-0">
             <h2 class="text-center text-3xl font-bold text-black mb-10">Verify code</h2>
 
-            <form action="{{ route('otp.post')}}" method="POST" class="space-y-6">
+            <form action="#" method="POST" class="space-y-6">
                 @csrf
                 @if (session('error'))
                     <div class="text-red-500 text-sm text-center bg-red-100 p-2 rounded-xl">

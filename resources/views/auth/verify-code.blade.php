@@ -25,13 +25,13 @@
                     </div>
                 @endif
              
-              <div class="flex gap-2 items-center justify-center">
+                <div class="flex gap-2 items-center justify-center">
                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
-    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
-    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
-    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
-    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
-    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">                
+                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
+                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
+                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
+                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
+                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">                
                 </div>
 
                 <input type="hidden" name="otp" id="real-otp">

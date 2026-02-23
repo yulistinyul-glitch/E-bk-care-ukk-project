@@ -6,147 +6,159 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <style>
     body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; } 
 
-    /* Judul & Tombol di Luar Card */
-    .header-title { font-size: 26px; font-weight: 700; color: #333; } 
-    
+    .header-title { font-size: 24px; font-weight: 700; color: #333; } 
+
     .btn-catat {
         background-color: #5d5fef;
-        color: white; padding: 10px 20px;
-        border-radius: 12px; font-weight: 600;
+        color: white; padding: 8px 18px;
+        border-radius: 10px; font-weight: 600;
+        font-size: 13px;
         text-decoration: none; transition: 0.3s;
         box-shadow: 0 4px 15px rgba(93, 95, 239, 0.2);
     }
-    .btn-catat:hover { background-color: #4a4cd9; color: white; transform: translateY(-2px); }
+    .btn-catat:hover { color: white; opacity: 0.9; transform: translateY(-2px); }
 
-    /* Pembungkus Utama (Card) */
     .main-wrapper {
         background: white;
-        border-radius: 24px;
+        border-radius: 20px;
+        padding: 0;
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-        margin-top: 10px;
     }
 
-    /* Area Filter */
-    .filter-area { padding: 25px; }
+    .filter-area { padding: 20px; }
     
     .input-group-custom {
         background: #fff;
         border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        height: 38px;
-        padding: 0 15px;
-        font-size: 14px;
-        width: 70%;
+        border-radius: 10px;
+        height: 32px;
+        padding: 0 12px;
+        font-size: 12px;
+        width: 100%;
         outline: none;
-        transition: 0.3s;
     }
-    .input-group-custom:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-
-    .btn-search-outline {
-        height: 38px;
-        background: white;
-        border: 2px solid #3b82f6;
-        color: #3b82f6;
-        border-radius: 12px;
-        font-weight: 600;
-        padding: 0 25px;
-        transition: 0.3s;
-        width: 60%;
-    }
-    .btn-search-outline:hover { background: #3b82f6; color: white; }
-
+    
     .btn-export-solid {
-        height: 38px;
+        height: 32px;
         background: #5bcb65;
         color: white;
         border: none;
-        border-radius: 12px;
+        border-radius: 10px;
         font-weight: 600;
-        padding: 0 20px;
+        font-size: 12px;
+        padding: 0 15px;
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        gap: 8px;
+        gap: 6px;
         text-decoration: none;
-        width: 80%;
-        transition: 0.3s;
-    }
-    .btn-export-solid:hover { background: #48b352; color: white; opacity: 0.9; }
-
-    /* Import Box */
-    .import-box {
-        background: #f8fafc;
-        border: 1px dashed #cbd5e1;
-        border-radius: 12px;
-        padding: 15px;
-        margin-top: 20px;
     }
 
-    /* Tabel Section */
-    .table-container { padding: 0 20px 20px 20px; }
+    .table-container { padding: 0 15px 15px 15px; }
     .table thead th { 
         background-color: #f8fafc;
         border: none; 
-        font-size: 13px; 
+        font-size: 12px; 
         color: #888; 
         font-weight: 600; 
-        padding: 15px;
+        padding: 12px;
     }
-    .table tbody td { padding: 15px; color: #444; font-size: 14px; border-bottom: 1px solid #f8f9fa; }
+    /* Mengecilkan Text di Tabel */
+    .table tbody td { padding: 12px; color: #444; font-size: 12.5px; border-bottom: 1px solid #f8f9fa; }
     
-    .badge-jk { padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; }
+    .badge-jk { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; }
     .badge-l { background-color: #e3f2fd; color: #1976d2; }
     .badge-p { background-color: #fce4ec; color: #d81b60; }
 
-    .btn-action {
-        width: 32px; height: 32px;
-        display: inline-flex; align-items: center; justify-content: center;
-        border-radius: 8px; border: none; transition: 0.2s; color: white;
+    .btn-action-icon {
+        border: none;
+        background: none;
+        padding: 0;
+        font-size: 1.1rem;
+        transition: 0.2s;
+        cursor: pointer;
     }
-    .btn-view { background-color: #4dabff; }
-    .btn-edit { background-color: #ffb74d; }
-    .btn-delete { background-color: #ff7070; }
-    .btn-action:hover { opacity: 0.8; color: white; transform: scale(1.05); }
+    .icon-view { color: #4dabff; }
+    .icon-edit { color: #ffb74d; }
+    .icon-delete { color: #ff7070; }
+    .btn-action-icon:hover { transform: scale(1.15); }
+    
+    .pagination-wrapper {
+        display: flex !important;
+        justify-content: center !important;
+        padding: 20px 0;
+    }
+    .page-link { padding: 3px 10px; font-size: 11px; border-radius: 5px !important; }
+
+    .import-box {
+        background: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        border-radius: 10px;
+        padding: 12px;
+        margin-top: 12px;
+    }
+
+    /* KUSTOMISASI MODAL POPUP SUKSES (LEBIH KECIL) */
+    .my-swal-popup { 
+        border-radius: 18px !important; 
+        padding: 1.5em !important; 
+        width: 320px !important; /* Perkecil lebar modal */
+    }
+
+    .swal2-title { 
+        font-size: 18px !important; /* Perkecil teks judul */
+        font-weight: 700 !important; 
+    }
+
+    .swal2-html-container { 
+        font-size: 13px !important; /* Perkecil teks pesan */
+    }
+
+    .swal2-icon {
+        transform: scale(0.7); /* Perkecil icon centang/warning */
+        margin: 10px auto 5px !important;
+    }
+
+    .swal-button-custom {
+        border-radius: 8px !important; 
+        padding: 6px 20px !important; 
+        font-size: 12px !important;
+    }
 </style>
 
 <div class="container-fluid py-4">
-    
     <div class="d-flex justify-content-between align-items-center mb-4 px-2">
         <div>
-            <h4 class="header-title">Data Walikelas</h4>
+            <h4 class="header-title mb-0">Manajemen Data Walikelas</h4>
         </div>
-        <a href="{{ route('admin.walikelas.create') }}" class="btn-catat">
-            <i class="bi bi-plus-lg"></i> Tambah Walikelas
-        </a>
+        <div class="d-flex gap-2">
+            <a href="{{ route('admin.walikelas.create') }}" class="btn-catat">
+                <i class="bi bi-plus-lg"></i> Tambah Walikelas
+            </a>
+        </div>
     </div>
 
-    <div class="main-wrapper shadow">
-        
+    <div class="main-wrapper shadow-sm">
         <div class="filter-area">
             <form action="" method="GET">
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-6">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-5">
                         <div class="position-relative">
-                            <i class="bi bi-search position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%); color: #b5b5b5;"></i>
+                            <i class="bi bi-search position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #b5b5b5; font-size: 12px;"></i>
                             <input type="text" name="search" class="input-group-custom" 
                                 placeholder="Cari Nama atau NIP..." 
                                 value="{{ request('search') }}" 
-                                style="padding-left: 45px;">
+                                style="padding-left: 35px;">
                         </div>
                     </div>
-
-                    <div class="col-md-3">
-                        <button type="submit" class="btn-search-outline">Search</button>
-                    </div>
-
-                    <div class="col-md-3">
-                        <a href="{{ route('admin.walikelas.cetak.semua') }}" class="btn-export-solid">
-                            <i class="bi bi-file-earmark-pdf"></i> Export
+                    <div class="col text-end">
+                        <a href="{{ route('admin.walikelas.cetak.semua') }}" class="btn-export-solid shadow-sm">
+                            <i class="bi bi-file-earmark-pdf"></i> Export Data
                         </a>
                     </div>
                 </div>
@@ -156,28 +168,19 @@
                 <form action="{{ route('admin.walikelas.import') }}" method="POST" enctype="multipart/form-data" class="row g-2 align-items-center">
                     @csrf
                     <div class="col-auto">
-                        <span class="small fw-bold text-muted"><i class="bi bi-file-earmark-excel"></i> IMPORT:</span>
+                        <span class="small fw-bold text-muted" style="font-size: 11px;"><i class="bi bi-file-earmark-excel"></i> IMPORT:</span>
                     </div>
                     <div class="col-md-4">
-                        <input type="file" name="file" class="form-control form-control-sm" required>
+                        <input type="file" name="file" class="form-control form-control-sm" style="font-size: 11px;" required>
                     </div>
                     <div class="col-auto">
-                        <button class="btn btn-success btn-sm px-3" style="border-radius: 8px;">
+                        <button class="btn btn-success btn-sm px-3" style="border-radius: 6px; font-size: 11px;">
                             <i class="bi bi-upload"></i> Upload
                         </button>
                     </div>
                 </form>
             </div>
         </div>
-
-        @if(session('success'))
-        <div class="p-4 pb-0">
-            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert" style="border-radius: 15px;">
-                <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
-        @endif
 
         <div class="table-container">
             <div class="table-responsive">
@@ -199,7 +202,7 @@
                             <td class="fw-bold text-dark">{{ $w->NIP }}</td>
                             <td class="text-start fw-semibold">{{ $w->nama_guru }}</td>
                             <td>
-                                <span class="badge bg-light text-dark border px-2 py-1" style="border-radius: 8px;">
+                                <span class="badge bg-light text-dark border px-2 py-1" style="border-radius: 6px; font-size: 11px;">
                                     {{ $w->kelas->nama_lengkap ?? 'Belum Ada Kelas' }}
                                 </span>
                             </td>
@@ -209,16 +212,16 @@
                                 </span>
                             </td>
                             <td>
-                                <div class="d-flex justify-content-center gap-2">
-                                    <a href="{{ route('admin.walikelas.show', $w->id_walikelas) }}" class="btn-action btn-view shadow-sm">
+                                <div class="d-flex justify-content-center gap-3">
+                                    <a href="{{ route('admin.walikelas.show', $w->id_walikelas) }}" class="btn-action-icon icon-view">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    <a href="{{ route('admin.walikelas.edit', $w->id_walikelas) }}" class="btn-action btn-edit shadow-sm">
+                                    <a href="{{ route('admin.walikelas.edit', $w->id_walikelas) }}" class="btn-action-icon icon-edit">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <form action="{{ route('admin.walikelas.destroy', $w->id_walikelas) }}" method="POST" class="d-inline">
+                                    <form id="delete-form-{{ $w->id_walikelas }}" action="{{ route('admin.walikelas.destroy', $w->id_walikelas) }}" method="POST" class="d-inline">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="btn-action btn-delete shadow-sm" onclick="return confirm('Hapus data walikelas ini?')">
+                                        <button type="button" class="btn-action-icon icon-delete" onclick="confirmDelete('{{ $w->id_walikelas }}', '{{ $w->nama_guru }}')">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
@@ -228,9 +231,8 @@
                         @empty
                         <tr>
                             <td colspan="6" class="text-center py-5 text-muted">
-                                <i class="bi bi-person-exclamation" style="font-size: 50px; opacity: 0.5;"></i>
-                                <p class="mt-3 fw-bold">Belum ada data walikelas.</p>
-                                <small>Silakan tambah data atau import file excel.</small>
+                                <i class="bi bi-person-exclamation" style="font-size: 40px; opacity: 0.5;"></i>
+                                <p class="mt-2 fw-bold" style="font-size: 13px;">Belum ada data walikelas.</p>
                             </td>
                         </tr>
                         @endforelse
@@ -238,10 +240,55 @@
                 </table>
             </div>
 
-            <div class="mt-4 d-flex justify-content-center pb-2">
+            <div class="pagination-wrapper">
                 {{ $walikelas->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    @if(session('success'))
+        Swal.fire({
+            title: 'Berhasil!',
+            text: "{{ session('success') }}",
+            icon: 'success',
+            iconColor: '#00C897',
+            showConfirmButton: false,
+            timer: 2000, /* Durasi lebih cepat */
+            timerProgressBar: true,
+            customClass: { 
+                popup: 'my-swal-popup',
+                title: 'swal2-title',
+                htmlContainer: 'swal2-html-container'
+            }
+        });
+    @endif
+
+function confirmDelete(id, nama) {
+    Swal.fire({
+        title: 'Hapus?',
+        text: "Yakin ingin menghapus " + nama + "?",
+        icon: 'warning',
+        iconColor: '#ff7070',
+        showCancelButton: true,
+        confirmButtonColor: '#ff7070',
+        cancelButtonColor: '#f1f1f1',
+        confirmButtonText: 'Hapus',
+        cancelButtonText: 'Batal',
+        reverseButtons: true,
+        customClass: {
+            popup: 'my-swal-popup',
+            confirmButton: 'swal-button-custom',
+            cancelButton: 'swal-button-custom swal-btn-cancel'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    })
+}
+</script>
+
 @endsection

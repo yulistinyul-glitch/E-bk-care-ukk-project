@@ -25,7 +25,21 @@ class WalikelasController extends Controller
     public function create()
     {
         $kelas = Kelas::all();
-        return view('admin.walikelas.create', compact('kelas'));
+
+        // LOGIK UNTUK GENERATE ID OTOMATIS (Melanjutkan GR001, GR002, dst)
+        $lastWali = Walikelas::orderBy('id_walikelas', 'desc')->first();
+        if ($lastWali) {
+            // Mengambil angka saja dari ID terakhir (misal GR040 diambil 40)
+            $lastNum = (int) substr($lastWali->id_walikelas, 2);
+            $nextNum = $lastNum + 1;
+        } else {
+            $nextNum = 1;
+        }
+        
+        // Format menjadi GR + 3 digit angka (Contoh: GR041)
+        $nextWaliID = "GR" . str_pad($nextNum, 3, "0", STR_PAD_LEFT);
+
+        return view('admin.walikelas.create', compact('kelas', 'nextWaliID'));
     }
 
     public function store(Request $request)
@@ -85,11 +99,9 @@ class WalikelasController extends Controller
         $data = $request->all();
 
         if ($request->hasFile('foto')) {
-
             if ($walikelas->foto) {
                 Storage::disk('public')->delete($walikelas->foto);
             }
-
             $data['foto'] = $request->file('foto')->store('walikelas', 'public');
         }
 
@@ -119,21 +131,20 @@ class WalikelasController extends Controller
             'file' => 'required|mimes:csv,txt'
         ]);
 
-        $file = fopen($request->file('file'), 'r');
+        $file = fopen($request->file('file')->getRealPath(), 'r');
         $header = true;
 
         while (($row = fgetcsv($file, 1000, ",")) !== false) {
-
             if ($header) {
                 $header = false;
                 continue;
             }
 
             Walikelas::updateOrCreate(
-                ['NIP' => $row[2]],
+                ['NIP' => $row[1]], 
                 [
                     'id_walikelas' => $row[0],
-                    'id_kelas'     => $row[1],
+                    'id_kelas'     => $row[2], // Tadi $row[1] (double), diperbaiki ke index 2
                     'nama_guru'    => $row[3],
                     'JK'           => $row[4],
                     'no_telp'      => $row[5],
@@ -144,26 +155,15 @@ class WalikelasController extends Controller
         }
 
         fclose($file);
-
         return back()->with('success', 'Import berhasil!');
     }
-
-    // public function cetakSemua()
-    // {
-    //     $kelasList = Kelas::with('siswa')->orderBy('nama_kelas')->get();
-
-    //     $pdf = Pdf::loadView('admin.siswa.pdf-semua', compact('kelasList'))
-    //         ->setPaper('A4', 'landscape');
-
-    //     return $pdf->stream('data_siswa_perkelas.pdf');
-    // }
 
     public function cetakSemua()
     {
         $walikelas = Walikelas::with('kelas')->orderBy('id_walikelas')->get();
 
         $pdf = Pdf::loadView('admin.walikelas.pdf-semua', compact('walikelas'))
-            ->setPaper('A4', 'landscape'); // landscape supaya tabel muat
+            ->setPaper('A4', 'landscape');
 
         return $pdf->stream('daftar_walikelas.pdf');
     }

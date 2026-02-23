@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('siswas', function (Blueprint $table) {
-            $table->softDeletes(); // Ini akan menambah kolom 'deleted_at'
+        Schema::table('pelanggarans', function (Blueprint $table) {
+            // Menambahkan kolom deleted_at untuk fitur Soft Delete
+            $table->softDeletes(); 
         });
     }
 
@@ -21,7 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('siswas', function (Blueprint $table) {
+        Schema::table('pelanggarans', function (Blueprint $table) {
+            // Menghapus kolom deleted_at jika migration di-rollback
             $table->dropSoftDeletes();
         });
     }

@@ -58,23 +58,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/dashboard', [DashboardAdminController::class, 'dashboard'])
         ->name('dashboard');
+Route::get('siswa/history', [SiswaController::class, 'history'])->name('siswa.history');
+    Route::post('siswa/{id}/restore', [SiswaController::class, 'restore'])->name('siswa.restore');
+    Route::delete('siswa/{id}/force-delete', [SiswaController::class, 'forceDelete'])->name('siswa.forceDelete');
+    Route::get('siswa/cetak-semua', [SiswaController::class, 'cetakSemua'])->name('siswa.cetak.semua');
+    Route::post('siswa/import', [SiswaController::class, 'import'])->name('siswa.import');
 
-// 1. Rute Khusus (Wajib di atas Resource)
-    Route::get('siswa/history', [SiswaController::class, 'history'])
-        ->name('siswa.history');
-
-    Route::get('siswa/cetak-semua', [SiswaController::class, 'cetakSemua'])
-        ->name('siswa.cetak.semua');
-
-    Route::post('siswa/import', [SiswaController::class, 'import'])
-        ->name('siswa.import');
-
-    // 2. Rute untuk Restore & Force Delete (Jika diperlukan nanti)
-    Route::post('siswa/{id}/restore', [SiswaController::class, 'restore'])
-        ->name('siswa.restore');
-
-    // 3. Resource Route
-    // Tetap gunakan 'siswa' sebagai nama resource
+    // Resource Route (Otomatis mencakup index, create, store, edit, update, destroy)
     Route::resource('siswa', SiswaController::class);
 
     Route::resource('kelas', KelasController::class);
@@ -100,6 +90,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('pelanggaran/import',
         [PelanggaranController::class, 'import']
     )->name('pelanggaran.import');
+
+    Route::get('pelanggaran/history', [PelanggaranController::class, 'history'])->name('pelanggaran.history');
+    Route::post('pelanggaran/{id}/restore', [PelanggaranController::class, 'restore'])->name('pelanggaran.restore');
+    Route::delete('pelanggaran/{id}/force-delete', [PelanggaranController::class, 'forceDelete'])->name('pelanggaran.forceDelete');
 
     Route::resource('pelanggaran', PelanggaranController::class);
 });

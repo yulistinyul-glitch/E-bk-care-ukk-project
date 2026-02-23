@@ -21,23 +21,33 @@
 
         .form-box { 
             width: 100%;
-            max-width: 600px; 
+            max-width: 550px; /* Diperkecil sedikit */
             background: white; 
-            padding: 35px; 
-            border-radius: 25px; 
+            padding: 30px; 
+            border-radius: 20px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
         }
 
-        h4 { font-weight: 600; color: #2D3436; margin-bottom: 25px; font-size: 1.4rem; }
+        h4 { 
+            font-weight: 600; 
+            color: #2D3436; 
+            margin-bottom: 20px; 
+            font-size: 1.25rem; /* Judul lebih kecil */
+        }
 
-        .form-label { font-weight: 500; color: #2D3436; margin-bottom: 8px; font-size: 0.9rem; }
+        .form-label { 
+            font-weight: 500; 
+            color: #2D3436; 
+            margin-bottom: 6px; 
+            font-size: 0.85rem; /* Label lebih kecil */
+        }
 
         .form-control, .form-select {
             border: 1.5px solid #DFE6E9;
-            border-radius: 12px;
-            padding: 10px 15px;
+            border-radius: 10px;
+            padding: 8px 12px; /* Padding input diperkecil */
             color: #2D3436;
-            font-size: 0.95rem;
+            font-size: 0.85rem; /* Text input lebih kecil */
         }
 
         .form-control[readonly] {
@@ -52,24 +62,58 @@
             outline: none;
         }
 
-        .button-group { display: flex; gap: 12px; margin-top: 30px; }
+        .button-group { 
+            display: flex; 
+            gap: 10px; 
+            margin-top: 25px; 
+        }
 
         .btn-kembali {
-            background: #B5B5B5; color: white; border: none; border-radius: 12px;
-            padding: 12px 20px; flex: 1; text-decoration: none;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            font-weight: 500; transition: 0.3s;
+            background: #B5B5B5; 
+            color: white; 
+            border: none; 
+            border-radius: 10px;
+            padding: 10px 15px; 
+            flex: 1; 
+            text-decoration: none;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px;
+            font-weight: 500; 
+            font-size: 0.85rem; /* Font tombol lebih kecil */
+            transition: 0.3s;
         }
 
         .btn-simpan {
-            background: #5D5FEF; color: white; border: none; border-radius: 12px;
-            padding: 12px 20px; flex: 1.5; display: flex;
-            align-items: center; justify-content: center; gap: 8px;
-            font-weight: 500; transition: 0.3s;
+            background: #5D5FEF; 
+            color: white; 
+            border: none; 
+            border-radius: 10px;
+            padding: 10px 15px; 
+            flex: 1.5; 
+            display: flex;
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px;
+            font-weight: 500; 
+            font-size: 0.85rem; /* Font tombol lebih kecil */
+            transition: 0.3s;
         }
 
-        .btn-simpan:hover { background: #4a4cd9; box-shadow: 0 4px 12px rgba(93, 95, 239, 0.3); }
-        .btn-kembali:hover { background: #999; color: white; }
+        .btn-simpan:hover { 
+            background: #4a4cd9; 
+            box-shadow: 0 4px 12px rgba(93, 95, 239, 0.3); 
+        }
+        .btn-kembali:hover { 
+            background: #999; 
+            color: white; 
+        }
+
+        /* Styling tambahan untuk textarea */
+        textarea.form-control {
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
@@ -81,14 +125,15 @@
         @csrf
         @method('PUT')
 
-        <div class="mb-3">
-            <label class="form-label">ID Siswa</label>
-            <input type="text" name="id_siswa" id="id_siswa" class="form-control" value="{{ $siswa->id_siswa }}" readonly required>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">ID Pengguna</label>
-            <input type="text" name="id_pengguna" id="id_pengguna" class="form-control" value="{{ $siswa->id_pengguna }}" readonly required>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">ID Siswa</label>
+                <input type="text" name="id_siswa" id="id_siswa" class="form-control" value="{{ $siswa->id_siswa }}" readonly required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">ID Pengguna</label>
+                <input type="text" name="id_pengguna" id="id_pengguna" class="form-control" value="{{ $siswa->id_pengguna }}" readonly required>
+            </div>
         </div>
 
         <div class="row">

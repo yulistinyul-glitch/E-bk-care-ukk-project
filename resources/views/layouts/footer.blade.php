@@ -6,7 +6,6 @@
   padding-top: 4rem;
 }
 
-/* Headings */
 .footer h3.footer-logo {
   font-size: 1.7rem;
   font-weight: 700;
@@ -18,7 +17,6 @@
   margin-bottom: 1.2rem;
 }
 
-/* Deskripsi */
 .footer p.footer-desc {
   font-size: 10px;
   line-height: 1.6;
@@ -78,9 +76,6 @@
   white-space: nowrap;
 }
 
-/* Responsive spacing */
-
-/* Mobile <768px */
 @media (max-width: 767px) {
   .footer-links,
   .footer-contact {
@@ -93,7 +88,6 @@
   }
 }
 
-/* Tablet 768–1023px */
 @media (min-width: 768px) and (max-width: 1023px) {
   .footer-links,
   .footer-contact {

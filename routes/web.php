@@ -51,6 +51,7 @@ Route::get('/', function () {
 
 Route::prefix('admin')->name('admin.')->group(function () {
 
+<<<<<<< HEAD
     Route::middleware('guest')->group(function() {
         Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit'); 
@@ -75,6 +76,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // 3. Resource Route
     // Tetap gunakan 'siswa' sebagai nama resource
+=======
+    Route::get('/dashboard', [DashboardAdminController::class, 'dashboard'])
+        ->name('dashboard');
+Route::get('siswa/history', [SiswaController::class, 'history'])->name('siswa.history');
+    Route::post('siswa/{id}/restore', [SiswaController::class, 'restore'])->name('siswa.restore');
+    Route::delete('siswa/{id}/force-delete', [SiswaController::class, 'forceDelete'])->name('siswa.forceDelete');
+    Route::get('siswa/cetak-semua', [SiswaController::class, 'cetakSemua'])->name('siswa.cetak.semua');
+    Route::post('siswa/import', [SiswaController::class, 'import'])->name('siswa.import');
+
+    // Resource Route (Otomatis mencakup index, create, store, edit, update, destroy)
+>>>>>>> 098a2476afb3c6d271f5c6d5d0ee5e4dc20902d5
     Route::resource('siswa', SiswaController::class);
 
     Route::resource('kelas', KelasController::class);
@@ -100,6 +112,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('pelanggaran/import',
         [PelanggaranController::class, 'import']
     )->name('pelanggaran.import');
+
+    Route::get('pelanggaran/history', [PelanggaranController::class, 'history'])->name('pelanggaran.history');
+    Route::post('pelanggaran/{id}/restore', [PelanggaranController::class, 'restore'])->name('pelanggaran.restore');
+    Route::delete('pelanggaran/{id}/force-delete', [PelanggaranController::class, 'forceDelete'])->name('pelanggaran.forceDelete');
 
     Route::resource('pelanggaran', PelanggaranController::class);
     });

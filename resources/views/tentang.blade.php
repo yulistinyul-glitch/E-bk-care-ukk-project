@@ -16,7 +16,7 @@
 
     /* Class khusus untuk area biru soft */
     .bg-soft-blue-area {
-        background-color: #f0f5ff !important;
+        background-color: #f2f5f7 !important;
         width: 100%;
     }
 

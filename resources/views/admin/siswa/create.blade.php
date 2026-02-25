@@ -23,39 +23,40 @@
 
     .form-box { 
         width: 100%;
-        max-width: 600px; 
+        max-width: 550px; /* Diperkecil sedikit lebarnya */
         background: white; 
-        padding: 35px; 
-        border-radius: 25px; 
+        padding: 30px; 
+        border-radius: 20px; 
         box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
     }
 
     h4 { 
         font-weight: 600; 
         color: #2D3436; 
-        margin-bottom: 25px; 
-        font-size: 1.4rem; 
+        margin-bottom: 20px; 
+        font-size: 1.25rem; /* Ukuran judul diperkecil */
     }
 
     .form-label { 
         font-weight: 500; 
         color: #2D3436; 
-        margin-bottom: 8px; 
-        font-size: 0.9rem; 
+        margin-bottom: 6px; 
+        font-size: 0.85rem; /* Label lebih kecil */
     }
 
     .form-control, .form-select {
         border: 1.5px solid #DFE6E9;
-        border-radius: 12px;
-        padding: 10px 15px;
+        border-radius: 10px;
+        padding: 8px 12px; /* Padding input diperkecil */
         color: #2D3436;
-        font-size: 0.95rem;
+        font-size: 0.85rem; /* Text input lebih kecil */
     }
 
     .form-control[readonly] {
         background-color: #f1f3f5;
         font-weight: 600;
         color: #5D5FEF;
+        font-size: 0.85rem;
     }
 
     .form-control:focus, .form-select:focus {
@@ -66,22 +67,23 @@
 
     .button-group { 
         display: flex; 
-        gap: 12px; 
-        margin-top: 30px; 
+        gap: 10px; 
+        margin-top: 25px; 
     }
 
     .btn-kembali {
         background: #B5B5B5; 
         color: white; 
         border: none; 
-        border-radius: 12px;
-        padding: 12px 20px; 
+        border-radius: 10px;
+        padding: 10px 15px; 
         flex: 1; 
         text-decoration: none;
         display: flex; 
         align-items: center; 
         justify-content: center;
         font-weight: 500; 
+        font-size: 0.85rem; /* Text tombol lebih kecil */
         transition: 0.3s;
     }
 
@@ -89,13 +91,14 @@
         background: #5D5FEF; 
         color: white; 
         border: none; 
-        border-radius: 12px;
-        padding: 12px 20px; 
+        border-radius: 10px;
+        padding: 10px 15px; 
         flex: 1.5; 
         display: flex;
         align-items: center; 
         justify-content: center;
         font-weight: 500; 
+        font-size: 0.85rem; /* Text tombol lebih kecil */
         transition: 0.3s;
     }
 
@@ -107,6 +110,13 @@
     .btn-kembali:hover { 
         background: #999; 
         color: white; 
+    }
+
+    /* Penyesuaian Alert */
+    .alert {
+        font-size: 0.8rem;
+        padding: 10px;
+        border-radius: 10px;
     }
 </style>
 
@@ -127,14 +137,15 @@
         <form action="{{ route('admin.siswa.store') }}" method="POST">
             @csrf
 
-            <div class="mb-3">
-                <label class="form-label">ID Siswa (Otomatis)</label>
-                <input type="text" name="id_siswa" id="id_siswa" class="form-control" value="{{ $nextSiswaID }}" readonly required>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">ID Pengguna (Otomatis)</label>
-                <input type="text" name="id_pengguna" id="id_pengguna" class="form-control" value="{{ $nextPenggunaID }}" readonly required>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">ID Siswa (Otomatis)</label>
+                    <input type="text" name="id_siswa" id="id_siswa" class="form-control" value="{{ $nextSiswaID }}" readonly required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">ID Pengguna (Otomatis)</label>
+                    <input type="text" name="id_pengguna" id="id_pengguna" class="form-control" value="{{ $nextPenggunaID }}" readonly required>
+                </div>
             </div>
 
             <div class="row">
@@ -147,6 +158,7 @@
                     <input type="text" name="NISN" class="form-control" placeholder="10 digit nomor">
                 </div>
             </div>
+
             <div class="mb-3">
                 <label class="form-label">Nama Lengkap</label>
                 <input type="text" name="nama_siswa" class="form-control" placeholder="Masukkan nama siswa" required>
@@ -196,7 +208,7 @@
 
             <div class="mb-3">
                 <label class="form-label">Alamat Lengkap</label>
-                <textarea name="alamat" class="form-control" rows="2" placeholder="Tulis alamat rumah..."></textarea>
+                <textarea name="alamat" class="form-control" rows="2" placeholder="Tulis alamat rumah..." style="font-size: 0.85rem;"></textarea>
             </div>
 
             <div class="button-group">
@@ -205,7 +217,7 @@
                 </a>
 
                 <button type="submit" class="btn-simpan">
-                    Simpan Guru BK
+                    Simpan Data Siswa
                 </button>
             </div>
 
@@ -214,14 +226,13 @@
 </div>
 
 <script>
+    // Fungsi tetap sama, hanya memastikan ID sesuai
     function generateID() {
         const nipd = document.getElementById('NIPD').value;
         const idSiswa = document.getElementById('id_siswa');
         
         if (nipd.length > 0) {
             idSiswa.value = "SIS" + nipd.trim();
-        } else {
-            idSiswa.value = "";
         }
     }
 </script>

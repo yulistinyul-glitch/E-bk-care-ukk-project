@@ -13,71 +13,41 @@ use Illuminate\Support\Str;
 
 class SiswaController extends Controller
 {
-    public function index()
-    {
-        $siswa = Siswa::with('kelas.walikelas')
-            ->orderBy('id_siswa', 'asc')
-            ->paginate(15);
+    // =============================
+    // INDEX (Ditambahkan Filter Search & Kelas)
+    // =============================
+public function index(Request $request)
+{
+    $query = Siswa::query()->with('kelas.walikelas');
 
-        $kelas = Kelas::all();
-
-        return view('admin.siswa.index', compact('siswa', 'kelas'));
+    // Filter pencarian
+    if ($request->filled('search')) {
+        $search = $request->input('search');
+        $query->where(function($q) use ($search) {
+            $q->where('nama_siswa', 'like', "%{$search}%")
+              ->orWhere('NIPD', 'like', "%{$search}%");
+        });
     }
 
-    // --- FITUR HISTORY START ---
-
-    /**
-     * Menampilkan data siswa yang telah dihapus (History)
-     */
-    public function history()
-    {
-        // Mengambil hanya data yang di-soft delete
-        $siswa = Siswa::onlyTrashed()
-            ->with('kelas.walikelas')
-            ->orderBy('deleted_at', 'desc')
-            ->paginate(15);
-
-        return view('admin.siswa.history', compact('siswa'));
+    // Filter kelas
+    if ($request->filled('kelas')) {
+        $query->where('id_kelas', $request->kelas);
     }
 
-    /**
-     * Mengembalikan data siswa dari history (Restore)
-     */
-    public function restore($id)
-    {
-        $siswa = Siswa::onlyTrashed()->findOrFail($id);
-        $siswa->restore();
+    // Ambil data dengan pagination
+    $siswa = $query->paginate(10)->withQueryString();
 
-        return redirect()->route('admin.siswa.index')
-            ->with('success', 'Data siswa berhasil dikembalikan dari history');
-    }
+    // Ambil semua kelas untuk dropdown
+    $kelas = \App\Models\Kelas::all();
 
-    /**
-     * Menghapus data secara permanen dari database
-     */
-    public function forceDelete($id)
-    {
-        $siswa = Siswa::onlyTrashed()->findOrFail($id);
-
-        // Hapus Akun User secara permanen
-        if ($siswa->id_pengguna) {
-            User::where('id_pengguna', trim($siswa->id_pengguna))->delete();
-        }
-
-        // Hapus baris data dari database
-        $siswa->forceDelete();
-
-        return redirect()->route('admin.siswa.history')
-            ->with('success', 'Data Siswa dan Akun User dihapus permanen');
-    }
-
-    // --- FITUR HISTORY END ---
+    return view('admin.siswa.index', compact('siswa', 'kelas'));
+}
 
     public function create()
     {
         $kelas = Kelas::all();
 
-        $lastSiswa = Siswa::latest('id_siswa')->first();
+        $lastSiswa = Siswa::withTrashed()->latest('id_siswa')->first();
         $nextSiswaNumber = $lastSiswa ? (int) substr($lastSiswa->id_siswa, 3) + 1 : 1;
         $nextSiswaID = 'SIS' . str_pad($nextSiswaNumber, 3, '0', STR_PAD_LEFT);
 
@@ -95,7 +65,7 @@ class SiswaController extends Controller
     {
         $request->validate([
             'nama_siswa' => 'required',
-            'NIPD' => 'required|unique:siswas',
+            'NIPD' => 'required|unique:siswas,NIPD',
             'NISN' => 'required',
             'id_kelas' => 'required|exists:kelas,id_kelas',
             'jk' => 'required',
@@ -105,21 +75,17 @@ class SiswaController extends Controller
             'alamat' => 'required',
         ]);
 
-        $lastSiswa = Siswa::latest('id_siswa')->first();
-        $nextSiswaNumber = $lastSiswa ? (int) substr($lastSiswa->id_siswa, 3) + 1 : 1;
-        $nextSiswaID = 'SIS' . str_pad($nextSiswaNumber, 3, '0', STR_PAD_LEFT);
+        // Auto Generate ID lagi untuk keamanan data bersamaan
+        $lastSiswa = Siswa::withTrashed()->latest('id_siswa')->first();
+        $nextSiswaID = 'SIS' . str_pad($lastSiswa ? (int) substr($lastSiswa->id_siswa, 3) + 1 : 1, 3, '0', STR_PAD_LEFT);
 
-        $lastPenggunaNumber = User::all()->map(function ($user) {
-            return (int) substr($user->id_pengguna, 2);
-        })->max();
-
-        $nextPenggunaNumber = $lastPenggunaNumber ? $lastPenggunaNumber + 1 : 1;
-        $nextPenggunaID = 'PS' . str_pad($nextPenggunaNumber, 3, '0', STR_PAD_LEFT);
+        $lastUser = User::all()->map(fn($u) => (int) substr($u->id_pengguna, 2))->max();
+        $nextPenggunaID = 'PS' . str_pad($lastUser ? $lastUser + 1 : 1, 3, '0', STR_PAD_LEFT);
 
         $user = User::create([
             'id_pengguna' => $nextPenggunaID,
-            'name'        => $request->nama_siswa,
-            'username'    => $request->NIPD ?? Str::slug($request->nama_siswa),
+            'nama'        => $request->nama_siswa, // DIUBAH ke 'nama' sesuai error database Anda
+            'username'    => $request->NIPD,
             'email'       => $request->NIPD . '@example.com',
             'password'    => Hash::make('12345678'),
             'role'        => 'Siswa'
@@ -139,64 +105,97 @@ class SiswaController extends Controller
             'alamat'       => $request->alamat,
         ]);
 
-        return redirect()->route('admin.siswa.index')
-            ->with('success', 'Data siswa berhasil ditambahkan!');
+        return redirect()->route('admin.siswa.index')->with('success', 'Data siswa berhasil ditambahkan!');
     }
-
-    public function edit($id_siswa)
+    // =============================
+    // EDIT
+    // =============================
+    public function edit($id)
     {
-        $siswa = Siswa::findOrFail($id_siswa);
+        $siswa = Siswa::where('id_siswa', $id)->firstOrFail();
         $kelas = Kelas::all();
 
         return view('admin.siswa.edit', compact('siswa', 'kelas'));
     }
 
+
+    // =============================
+    // UPDATE
+    // =============================
     public function update(Request $request, $id)
     {
-        $siswa = Siswa::findOrFail($id);
-
         $request->validate([
-            'id_siswa' => 'required|unique:siswas,id_siswa,' . $id . ',id_siswa',
-            'id_pengguna' => 'required|unique:siswas,id_pengguna,' . $id . ',id_siswa',
-            'id_kelas' => 'required|exists:kelas,id_kelas',
             'nama_siswa' => 'required',
-            'NIPD' => 'required|unique:siswas,NIPD,' . $id . ',id_siswa',
-            'NISN' => 'required',
-            'JK' => 'required',
-            'tempat_lahir' => 'required',
-            'tanggal_lahir' => 'required|date',
-            'no_telp' => 'required',
-            'alamat' => 'required'
+            'NIPD'       => 'required',
+            'id_kelas'   => 'required',
+            'jk'         => 'required',
         ]);
 
-        $siswa->update($request->all());
+        $siswa = Siswa::where('id_siswa', $id)->firstOrFail();
 
-        User::updateOrCreate(
-            ['id_pengguna' => $request->id_pengguna],
-            [
-                'username' => $request->id_pengguna,
-                'role' => 'Siswa'
-            ]
-        );
+        $siswa->update([
+            'id_kelas'      => $request->id_kelas,
+            'nama_siswa'    => $request->nama_siswa,
+            'NIPD'          => $request->NIPD,
+            'NISN'          => $request->NISN,
+            'JK'            => $request->jk, // 🔥 fix null error
+            'tempat_lahir'  => $request->tempat_lahir,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'no_telp'       => $request->no_telp,
+            'alamat'        => $request->alamat,
+        ]);
 
         return redirect()->route('admin.siswa.index')
             ->with('success', 'Data siswa berhasil diperbarui');
     }
-
-    /**
-     * Pindahkan ke History (Soft Delete)
-     */
+    // =============================
+    // SOFT DELETE → HISTORY
+    // =============================
     public function destroy($id)
     {
-        $siswa = Siswa::findOrFail($id);
+$siswa = Siswa::where('id_siswa', $id)->firstOrFail();
+$siswa->delete();
 
-        // Soft Delete (hanya mengisi kolom deleted_at)
-        // User tidak dihapus di sini agar jika di-restore akun tetap berfungsi
-        $siswa->delete();
-
-        return redirect()->route('admin.siswa.history')
-            ->with('success', 'Data siswa berhasil dipindahkan ke history');
+return redirect()->route('admin.siswa.history')
+    ->with('success', 'Data ' . $siswa->nama_siswa . ' berhasil dipindahkan ke history');
     }
+
+    // =============================
+    // HISTORY
+    // =============================
+    public function history()
+    {
+        $siswa = Siswa::onlyTrashed()->with('kelas')->paginate(10);
+        return view('admin.siswa.history', compact('siswa'));
+    }
+
+    // =============================
+    // RESTORE
+    // =============================
+    public function restore($id)
+    {
+    $siswa = Siswa::withTrashed()->where('id_siswa', $id)->firstOrFail();
+    $siswa->restore();
+
+    return redirect()->route('admin.siswa.index')
+        ->with('success', 'Data berhasil dikembalikan.');
+    }
+
+    // =============================
+    // FORCE DELETE
+    // =============================
+public function forceDelete($id)
+{
+    $siswa = Siswa::onlyTrashed()->where('id_siswa', $id)->firstOrFail();
+
+    if ($siswa->id_pengguna) {
+        User::where('id_pengguna', $siswa->id_pengguna)->delete();
+    }
+
+    $siswa->forceDelete();
+
+    return redirect()->route('admin.siswa.history')->with('success', 'Data dihapus permanen');
+}
 
     public function import(Request $request)
     {

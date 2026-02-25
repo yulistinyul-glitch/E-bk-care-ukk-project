@@ -259,7 +259,6 @@
 
 <<<<<<< HEAD
 <body class="mx-auto max-w-7xl font-[Poppins]">
-  
 
   {{-- visi & misi --}}
   <div class="bg-custom min-h-screen relative overflow-x-hidden p-8 md:p-16">

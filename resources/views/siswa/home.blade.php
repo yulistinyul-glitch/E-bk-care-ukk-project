@@ -13,14 +13,14 @@
         Profile
       </div>
       <div class="flex-1 min-w-0">
-        <h2 class="text-lg md:text-sm font-bold  leading-tight uppercase">
-          YULISTIN SITI FADILAH FATHAN
+        <h2 class="text-lg md:text-xl font-bold  leading-tight uppercase">
+          {{ Auth::user()->siswa->nama_siswa ?? 'Nama siswa'}}
         </h2>
         <p class="text-md md:text-sm font-medium  text-blue-200 mt-1">
-          12 RPL 1
+          {{ Auth::user()->siswa->kelas->nama_kelas ?? 'Kelas tidak ada'}}
         </p>
         <p class="text-xs md:text-xs text-gray-300 mt-1 tracking-widest ">
-          123456/7891011
+          {{ Auth::user()->username }}
         </p>
       </div>
      </div>
@@ -162,12 +162,15 @@
 
   <!-- mulai chat -->
   <div class="flex flex-col">
-    <p>poin pelanggaran</p>
-    <button class="bg-blue-400 text-white p-4 flex items-center gap-3 rounded-2xl shadow-md shadow-blue-200">
-    <svg width="28" height="28" viewBox="0 0 512 512">
+    <p class="text-xs md:text-sm lg:text-base font-semibold">Mulai konseling</p>
+    <button class="bg-[#d9ffb6] text-[#1a541f] border-2 border-[#083710] p-2 md:p-3 lg:p-4 flex items-center md:gap-3 rounded-full shadow-md shadow-blue-200 transition-all hover:scale-105 active:scale-95">
+    <svg class="w-6 h-6 md:w-7 md:h-7" viewBox="0 0 512 512">
       <path fill="#fff" d="..."/>
     </svg>
-    <p class="font-bold">50</p>
+    <p class="font-bold text-xs md:text-sm lg:text-base">Start Counseling <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6 inline" viewBox="0 0 24 24">
+	  <path fill="#206016" stroke="#206016" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 1 0-7.605-4.185L3 21l4.185-1.395A8.96 8.96 0 0 0 12 21" />
+    </svg></p>
+  </button>
   </div>
   </div>
   

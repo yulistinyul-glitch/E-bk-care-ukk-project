@@ -30,7 +30,6 @@ class Siswa extends Model
         'alamat',
     ];
 
-<<<<<<< HEAD
     protected function casts():array
     {
         return[
@@ -40,8 +39,6 @@ class Siswa extends Model
     }
     
 
-=======
->>>>>>> 098a2476afb3c6d271f5c6d5d0ee5e4dc20902d5
     public function kelas()
     {
         return $this->belongsTo(Kelas::class, 'id_kelas', 'id_kelas');

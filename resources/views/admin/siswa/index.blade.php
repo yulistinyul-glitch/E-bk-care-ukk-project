@@ -67,7 +67,6 @@ body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; }
 
 <div class="container-fluid py-4">
 
-    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4 px-2">
         <h4 class="header-title mb-0">Manajemen Data Siswa</h4>
         <div class="d-flex gap-2">
@@ -82,7 +81,6 @@ body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; }
 
     <div class="main-wrapper shadow">
 
-        <!-- FILTER -->
         <div class="filter-area">
             <form action="{{ route('admin.siswa.index') }}" method="GET">
                 <div class="row g-2 align-items-center">
@@ -117,7 +115,6 @@ body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; }
                 </div>
             </form>
 
-            <!-- IMPORT -->
             <div class="import-box">
                 <form action="{{ route('admin.siswa.import') }}" method="POST" enctype="multipart/form-data" class="row g-2 align-items-center">
                     @csrf
@@ -133,7 +130,6 @@ body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; }
             </div>
         </div>
 
-        <!-- TABLE -->
         <div class="table-container">
             <div class="table-responsive">
                 <table class="table text-center align-middle">

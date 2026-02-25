@@ -1,27 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\KotakSaranController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\TentangController;
+// SISWA, GURU, ADMIN
 
-<<<<<<< HEAD
-// Mengarahkan ke view/tentang.blade.php melalui TentangController
-Route::get('/home', function () { return view('home'); })->name('home');
-=======
->>>>>>> 957644ee89040ee092b747323a3d7de854820c46
-Route::get('/tentang', [TentangController::class, 'index'])->name('tentang.index');
 
-Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
-Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('layanan.show');
-
-Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
-
-Route::get('/kotaksaran', [KotakSaranController::class, 'index'])->name('kotaksaran');
-
+use App\Http\Controllers\Admin\AdminAuthController; 
+use App\Http\Controllers\Siswa\SiswaAuthController;
+use App\Http\Controllers\Gurubk\GuruAuthController;
 use App\Http\Controllers\Admin\DashboardAdminController;
+use App\Http\Controllers\Siswa\DashboardSiswaController;
 use App\Http\Controllers\Admin\GurubkController;
 use App\Http\Controllers\Admin\SiswaController;
 use App\Http\Controllers\Admin\KelasController;
@@ -34,62 +25,41 @@ use App\Http\Controllers\Gurubk\DashboardbkController;
 use App\Http\Controllers\Gurubk\ChatController;
 use App\Http\Controllers\Gurubk\E_SuratController;
 use App\Http\Controllers\Gurubk\RiwayatPelanggaranController;
+use Illuminate\Support\Facades\App;
 
 
-<<<<<<< HEAD
-=======
-Route::get('/home', function () {
-    return view('home');
-});
->>>>>>> 957644ee89040ee092b747323a3d7de854820c46
+// Mengarahkan ke view/tentang.blade.php melalui TentangController
+Route::get('/home', function () { return view('home'); })->name('home');
+Route::get('/tentang', [TentangController::class, 'index'])->name('tentang.index');
+
+Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
+Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('layanan.show');
+
+Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
+
+Route::get('/kotaksaran', [KotakSaranController::class, 'index'])->name('kotaksaran');
 
 Route::get('/', function () {
     return view('auth.login'); 
 })->name('login');
-<<<<<<< HEAD
 /*
 |--------------------------------------------------------------------------
-| AUTH
+| ADMIN AUTH & FUNCTION
 |--------------------------------------------------------------------------
 */
-=======
-
-Route::get('/login/{role}', [AuthController::class, 'login'])->name('login');
-Route::post('/login-proses', [AuthController::class, 'loginProses'])->name('login.proses');
->>>>>>> 957644ee89040ee092b747323a3d7de854820c46
-
-// Route::middleware('guest')->group(function () {
-//     Route::get('/login/{role}', [AuthController::class, 'login'])->name('login');
-//     Route::post('/login-proses', [AuthController::class, 'loginProses'])->name('login.proses');
-
-//     Route::get('/', [AuthController::class, 'showLogin'])->name('login');
-//     Route::get('/login', [AuthController::class, 'showLogin']);
-//     Route::post('/login', [AuthController::class, 'login'])->name('login.process');
-
-//     Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
-//     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
-
-//     Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
-//     Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
-
-//     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-// });
-
-Route::get('/login', function() {return view('auth.login');})->name('login');
-Route::get('/newPass', function() {return view('auth.new-pass');})->name('newPass');
-Route::get('/resetPass', function() {return view('auth.reset-pass');})->name('resetPass');
-Route::get('/forgetPw', function() {return view('auth.forgetpw');})->name('forgetPw');
-Route::get('/verify', function() {return view('auth.verify-code');})->name('verify');
-
-
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
 
-    Route::get('/dashboard', [DashboardAdminController::class, 'dashboard'])
-        ->name('dashboard');
+    Route::middleware('guest')->group(function() {
+        Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit'); 
+    });
 
-// 1. Rute Khusus (Wajib di atas Resource)
+    Route::middleware(['auth', 'role:admin'])->group(function () {
+        Route::get('/dashboard', [DashboardAdminController::class, 'dashboard'])->name('dashboard');
+
+
     Route::get('siswa/history', [SiswaController::class, 'history'])
         ->name('siswa.history');
 
@@ -99,7 +69,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('siswa/import', [SiswaController::class, 'import'])
         ->name('siswa.import');
 
-    // 2. Rute untuk Restore & Force Delete (Jika diperlukan nanti)
+  
     Route::post('siswa/{id}/restore', [SiswaController::class, 'restore'])
         ->name('siswa.restore');
 
@@ -132,67 +102,56 @@ Route::prefix('admin')->name('admin.')->group(function () {
     )->name('pelanggaran.import');
 
     Route::resource('pelanggaran', PelanggaranController::class);
-});
+    });
 
+});
 
 /*
 |--------------------------------------------------------------------------
 | GURU BK ROUTES
 |--------------------------------------------------------------------------
 */
-
+// 1. Rute LOGIN (Bisa diakses tanpa login)
 Route::prefix('gurubk')->name('gurubk.')->group(function () {
+    Route::get('/login', [GuruAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [GuruAuthController::class, 'login'])->name('login.submit');
+});
 
-    Route::get('/dashboard', [DashboardbkController::class, 'dashboard'])
-        ->name('dashboard');
+// 2. Rute FITUR (Wajib Login & Role GuruBK)
+Route::middleware(['auth', 'role:GuruBK'])->prefix('gurubk')->name('gurubk.')->group(function () {
+    
+    // Dashboard & Chat
+    Route::get('/dashboard', [DashboardbkController::class, 'dashboard'])->name('dashboard');
+    Route::get('chat', [ChatController::class, 'index'])->name('chat.index');
+    Route::post('chat/{id}/reply', [ChatController::class, 'reply'])->name('chat.reply');
+    Route::post('chat/{id}/read', [ChatController::class, 'markRead'])->name('chat.read');
 
-    Route::get('chat', [ChatController::class,'index'])->name('chat.index');
-    Route::post('chat/{id}/reply', [ChatController::class,'reply'])->name('chat.reply');
-    Route::post('chat/{id}/read', [ChatController::class,'markRead'])->name('chat.read');
-
-    Route::get('/get-siswa/{id_kelas}', [RiwayatPelanggaranController::class, 'getSiswa']) ->name('gurubk.riwayatpelanggaran.getSiswa'); 
-    Route::get('/get-pelanggaran/{id}', [RiwayatPelanggaranController::class, 'getPelanggaran']) ->name('gurubk.riwayatpelanggaran.getPelanggaran'); 
-    Route::post('/riwayatpelanggaran/store', [RiwayatPelanggaranController::class, 'store']) ->name('gurubk.riwayatpelanggaran.store'); 
+    // Riwayat Pelanggaran
+    Route::get('/get-siswa/{id_kelas}', [RiwayatPelanggaranController::class, 'getSiswa'])->name('riwayatpelanggaran.getSiswa'); 
+    Route::get('/get-pelanggaran/{id}', [RiwayatPelanggaranController::class, 'getPelanggaran'])->name('riwayatpelanggaran.getPelanggaran'); 
+    Route::post('/riwayatpelanggaran/store', [RiwayatPelanggaranController::class, 'store'])->name('riwayatpelanggaran.store'); 
     Route::resource('riwayatpelanggaran', RiwayatPelanggaranController::class);
 
+    // Self Report
     Route::prefix('selfreport')->name('selfreport.')->group(function () {
-
-        Route::get('/', [SelfReportController::class, 'index'])
-            ->name('index');
-
-        Route::get('/arsip', [SelfReportController::class, 'arsip'])
-            ->name('arsip');
-
-        Route::get('/{id}', [SelfReportController::class, 'show'])
-            ->name('show');
+        Route::get('/', [SelfReportController::class, 'index'])->name('index');
+        Route::get('/arsip', [SelfReportController::class, 'arsip'])->name('arsip');
+        Route::get('/{id}', [SelfReportController::class, 'show'])->name('show');
     });
 
-    Route::get('/siswa/cetak/semua',
-        [GuruBkSiswaController::class, 'cetakSemua'])
-        ->name('siswa.cetak.semua');
+    // Data Siswa
+    Route::get('/siswa/cetak/semua', [GuruBkSiswaController::class, 'cetakSemua'])->name('siswa.cetak.semua');
+    Route::get('/siswa', [GuruBkSiswaController::class, 'index'])->name('siswa.index');
+    Route::get('/siswa/{id}', [GuruBkSiswaController::class, 'show'])->name('siswa.show');
 
-    Route::get('/siswa',
-        [GuruBkSiswaController::class, 'index'])
-        ->name('siswa.index');
-
-    Route::get('/siswa/{id}',
-        [GuruBkSiswaController::class, 'show'])
-        ->name('siswa.show');
-
-    Route::get('e_surat/{id}/export',
-        [E_SuratController::class, 'export'])
-        ->name('e_surat.export');
-
-    Route::get('e_surat/{id}/email',
-        [E_SuratController::class, 'sendEmail'])
-        ->name('e_surat.email');
-
-    Route::get('e_surat/{id}/selesai',
-        [E_SuratController::class, 'selesai'])
-        ->name('e_surat.selesai');
-
-    Route::resource('e_surat', E_SuratController::class)
-        ->except(['destroy']);
+    // E-Surat
+    Route::get('e_surat/{id}/export', [E_SuratController::class, 'export'])->name('e_surat.export');
+    Route::get('e_surat/{id}/email', [E_SuratController::class, 'sendEmail'])->name('e_surat.email');
+    Route::get('e_surat/{id}/selesai', [E_SuratController::class, 'selesai'])->name('e_surat.selesai');
+    Route::resource('e_surat', E_SuratController::class)->except(['destroy']);
+    
+    // Logout
+    Route::post('/logout', [GuruAuthController::class, 'logout'])->name('logout');
 });
 
 /*
@@ -200,19 +159,24 @@ Route::prefix('gurubk')->name('gurubk.')->group(function () {
 | SISWA ROUTES
 |--------------------------------------------------------------------------
 */
-
-<<<<<<< HEAD
-Route::prefix('siswa')->name('siswa')->group(function () {
-    Route::get('/home', function () { return view('siswa.home');})->name('home');
-    Route::get('/profile', function () { return view('siswa.profile');})->name('profile');
-    Route::get('/history', function () { return view('siswa.history');})->name('history');
-    Route::get('/chat', function () { return view('siswa.room-chat');})->name('chat');
-
-});
-=======
 Route::prefix('siswa')->name('siswa.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('siswa.home');
-    })->name('home');
+    // --- AUTH SISWA ---
+    Route::get('/login', [SiswaAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [SiswaAuthController::class, 'login'])->name('login.submit');
+
+    Route::get('/forgot-password', [SiswaAuthController::class, 'showForgotForm'])->name('forgot-password');
+    Route::post('/forgot-password', [SiswaAuthController::class, 'sendOtp'])->name('forgot-password.submit');
+
+    Route::get('/verify-otp/{username}', [SiswaAuthController::class, 'showVerifyOtpForm'])->name('verify-otp-page');
+    Route::post('/verify-code', [SiswaAuthController::class, 'checkOtp'])->name('verify-code.submit');
+
+    Route::get('/reset-password/{username}/{otp}', [SiswaAuthController::class, 'showResetPasswordForm'])->name('reset-password');
+    Route::post('/reset-password', [SiswaAuthController::class, 'verifyOtp'])->name('reset-password.submit'); 
+    
+    Route::middleware(['auth', 'role:Siswa'])->group(function () {
+        Route::get('/setup-password', [SiswaAuthController::class, 'showSetupForm'])->name('setup-password');
+        Route::post('/update-setup-password', [SiswaAuthController::class, 'updatePassword'])->name('update-password');
+        
+        Route::get('/home', function() { return view('siswa.home'); })->name('home');
+    });
 });
->>>>>>> 957644ee89040ee092b747323a3d7de854820c46

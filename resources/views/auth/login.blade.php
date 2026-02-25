@@ -31,10 +31,12 @@
      <div class="bg-white w-full max-w-95 shadow-2xl rounded-4xl p-8 md:p-10">
         <h2 class="text-3xl text-center text-[#1A374D] font-bold text-md mb-3">Login</h2>
 
+        @if(!isset($isStepTwo))
+            
         <div class="mb-8">
-                <h4 class="text-gray-500 font-semibold text-[10px] uppercase tracking-widest mb-3 ml-1">Choose Your Role</h4>
-                <div class="relative bg-gray-100 p-1 rounded-2xl flex items-center h-14 overflow-hidden">
-                    <div id="sliding-bg" class="absolute top-1 left-1 bottom-1 w-[calc(50%-4px)] bg-[#1A374D] rounded-xl transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) shadow-lg"></div>
+            <h4 class="text-gray-500 font-semibold text-[10px] uppercase tracking-widest mb-3 ml-1">Choose Your Role</h4>
+            <div class="relative bg-gray-100 p-1 rounded-2xl flex items-center h-14 overflow-hidden">
+                <div id="sliding-bg" class="absolute top-1 left-1 bottom-1 w-[calc(50%-4px)] bg-[#1A374D] rounded-xl transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) shadow-lg"></div>
                     
                     <button onclick="switchRole('siswa')" id="btn-siswa" class="relative flex-1 z-10 text-sm font-bold tab-active">
                         Siswa
@@ -44,17 +46,40 @@
                     </button>
                 </div>
             </div>
+            @endif
 
             <div id="form-siswa" class="space-y-4 transition-all duration-300">
-                <form action="#" method="POST">
+                <h2 class="text-[#1A374D] font-bold text-center mb-4">Login Siswa</h2>
+                
+                @if($errors->any())
+                    <div class="bg-red-100 text-red-600 p-3 rounded-xl text-xs mb-2">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+                @if(session('success'))
+                    <div class="bg-green-100 text-green-600 p-3 rounded-xl text-xs mb-2">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <form action="{{ route('siswa.login.submit')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="role" value="siswa">
                     <div class="mb-4">
-                        <label class="text-gray-700 text-xs font-bold mb-1 block ml-1">Username Siswa</label>
-                        <input type="text" placeholder="Full name as username" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 bg-gray-50 focus:border-[#1A374D] focus:outline-none transition-all text-sm">
+                        <label class="text-gray-700 text-xs font-bold mb-1 block ml-1">Full name / NIPD</label>
+                        <input type="text" name="username" required placeholder="type username here" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 bg-gray-50 focus:border-[#1A374D] focus:outline-none transition-all text-sm">
                     </div>
-                    <div class="mb-6">
-                        <label class="text-gray-700 text-xs font-bold mb-1 block ml-1">NIPD</label>
-                        <input type="password" placeholder="Type your NIPD" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 bg-gray-50 focus:border-[#1A374D] focus:outline-none transition-all text-sm">
+                    <div class="mb-2">
+                        <label class="text-gray-700 text-xs font-bold mb-1 block ml-1">Password (NIPD for first login)</label>
+                        <input type="password" name="password" required placeholder="Your password" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 bg-gray-50 focus:border-[#1A374D] focus:outline-none transition-all text-sm">
                     </div>
+
+                    <div class="mb-6 text-right">
+                        <a href="{{ route('siswa.forgot-password') }}" class="text-xs text-[#1A374D] font-bold hover:underline">
+                            Lupa Password?
+                        </a>
+                    </div>
+
                     <button type="submit" class="w-full bg-[#1A374D] text-white font-bold py-4 rounded-2xl hover:bg-[#2c4e66] transition-all transform active:scale-95 shadow-xl">
                         Login as student
                     </button>
@@ -62,14 +87,16 @@
             </div>
 
             <div id="form-guru" class="hidden space-y-4 transition-all duration-300">
-                <form action="#" method="POST">
+                <form action="{{ route('gurubk.login.submit')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="role" value="guru">
                     <div class="mb-4">
                         <label class="text-gray-700 text-xs font-bold mb-1 block ml-1">Username</label>
-                        <input type="text" placeholder="Your NIP" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 bg-gray-50 focus:border-[#1A374D] focus:outline-none transition-all text-sm">
+                        <input type="text" name="username" placeholder="Your NIP" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 bg-gray-50 focus:border-[#1A374D] focus:outline-none transition-all text-sm">
                     </div>
                     <div class="mb-6">
                         <label class="text-gray-700 text-xs font-bold mb-1 block ml-1">Password</label>
-                        <input type="password" placeholder="Teacher password" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 bg-gray-50 focus:border-[#1A374D] focus:outline-none transition-all text-sm">
+                        <input type="password" name="password" placeholder="Teacher password" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 bg-gray-50 focus:border-[#1A374D] focus:outline-none transition-all text-sm">
                     </div>
                     <button type="submit" class="w-full bg-[#1A374D] text-white font-bold py-4 rounded-2xl hover:bg-[#2c4e66] transition-all transform active:scale-95 shadow-xl">
                         Login as teacher
@@ -125,6 +152,12 @@
                 formSiswa.classList.add('hidden');
                 formGuru.classList.remove('hidden');
             }
+        }
+
+        window.onload = function() {
+            @if ($errors->any() && old('role') == 'guru')
+                switchRole('guru');
+            @endif
         }
     </script>
   

@@ -11,7 +11,8 @@ return new class extends Migration
         Schema::create('self_reports', function (Blueprint $table) {
             $table->string('id_report', 8)->primary();
 
-            $table->string('id_gurubk', 6);
+            $table->string('id_gurubk', 6)->nullable();
+
             $table->dateTime('tanggal_lapor');
 
             $table->enum('kategori_masalah', [
@@ -35,7 +36,7 @@ return new class extends Migration
             $table->foreign('id_gurubk')
                   ->references('id_gurubk')
                   ->on('gurubks')
-                  ->onDelete('cascade');
+                  ->onDelete('set null');
         });
     }
 

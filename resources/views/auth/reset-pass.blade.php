@@ -21,27 +21,38 @@
         </div>
 
         <div class="bg-white w-full md:flex-1 p-8 md:p-10 rounded-[40px] shadow-3xl md:shrink-0">
-          
+          <form action="{{ route('siswa.reset-password.submit') }}" method="POST" class="space-y-6">
+                @csrf
+                
+                <input type="hidden" name="username" value="{{ $username }}">
+                <input type="hidden" name="otp" value="{{ $otp }}">
 
-            <form action="#" class="space-y-6">
+                @if ($errors->any())
+                    <div class="text-red-500 text-sm bg-red-100 p-3 rounded-xl">
+                        @foreach ($errors->all() as $error)
+                            <p>• {{ $error }}</p>
+                        @endforeach
+                    </div>
+                @endif
+
                 <div>
-                    <label class="block text-black font-bold mb-2 ml-1">New Passwors</label>
-                    <input type="text" 
-                           class="w-full px-4 py-3 rounded-xl border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-400"
-                           placeholder="type your new password here">
+                    <label class="block text-black font-bold mb-2 ml-1">New Password</label>
+                    <input type="password" name="new_password" 
+                        class="w-full px-4 py-3 rounded-xl border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        placeholder="Type your new password" required>
                 </div>
 
                 <div class="relative">
-                    <label class="block text-black font-bold mb-2 ml-1">Password</label>
-                    <input type="password" 
-                           class="w-full px-4 py-3 rounded-xl border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-400"
-                           placeholder="Repeat your password">
+                    <label class="block text-black font-bold mb-2 ml-1">Confirm Password</label>
+                    <input type="password" name="new_password_confirmation"
+                        class="w-full px-4 py-3 rounded-xl border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        placeholder="Repeat your password" required>
                 </div>
 
                 <div class="pt-4">
                     <button type="submit" 
                             class="w-full bg-[#1A374D] text-white font-bold py-4 rounded-3xl hover:bg-[#2c4e66] transition-all transform active:scale-95 shadow-lg">
-                        Submit
+                        Update Password
                     </button>
                 </div>
             </form>

@@ -14,7 +14,7 @@ class User extends Authenticatable
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = ['id_pengguna', 'username', 'password', 'role', 'image'];
+    protected $fillable = ['id_pengguna', 'username', 'password', 'role', 'image', 'email', 'otp_code', 'otp_expires_at', 'is_first_login'];
     protected $hidden = ['password', 'remember_token'];
 
     public function siswa() {

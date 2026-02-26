@@ -1,167 +1,165 @@
-{{-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <style>
-    body {
-      background: linear-gradient(to bottom, #FFFFFF, #A9CCE7, #669FC9, #7BA0B4, #1A374D);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .login-container {
-      max-width: 900px;
-      width: 100%;
-    }
-
-    .login-card {
-      border-radius: 30px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-    }
-
-    .btn-custom {
-      background-color: #1A374D;
-      color: white;
-      border-radius: 30px;
-      padding: 12px;
-      font-weight: bold;
-    }
-
-    .btn-custom:hover {
-      background-color: #2c4e66;
-      color: white;
-    }
-  </style>
-</head>
-<body>
-
-<div class="container login-container">
-  <div class="row align-items-center">
-
-    <div class="col-md-6 text-center text-md-start text-white mb-4 mb-md-0">
-      <h1 class="fw-bold text-dark text-uppercase">Heloo!!</h1>
-      <p class="fs-5">
-        make sure your username and password are correct okay!
-      </p>
-    </div>
-
-    <div class="col-md-6">
-      <div class="card p-4 login-card">
-        <h3 class="text-center fw-bold mb-4">Log in</h3>
-
-        <form action="{{ route('login.process') }}" method="POST">
-          @csrf
-
-          <div class="mb-3">
-            <label class="form-label fw-bold">Username</label>
-            <input type="text" name="username" class="form-control" placeholder="type your username here">
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label fw-bold">Password</label>
-            <input type="password" name="password" class="form-control" placeholder="type your password here">
-          </div>
-
-          <div class="text-end mb-3">
-            <a href="auth.forgot" class="text-muted small">Forgot password?</a>
-          </div>
-
-          <button type="submit" class="btn btn-custom w-100">
-            Login
-          </button>
-
-        </form>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html> --}}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login</title>
-    @vite('resources/css/app.css')
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Login</title>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;900&family=Poppins:wght@400;500;600;700&family=Qwigley&display=swap" rel="stylesheet">
+
+   @vite('resources/css/app.css')
+
+
 </head>
-<body class="">
-    <div class="min-h-screen flex items-center justify-center p-6" 
-         style="background: linear-gradient(to bottom, #FFFFFF, #A9CCE7, #669FC9, #7BA0B4, #1A374D);">
-        
-        <div class="w-full max-w-md md:max-w-4xl flex flex-col md:flex-row md:gap-16 items-center p-4 md:p-8 md:border-2 md:border-white/40 md:rounded-[40px] md:backdrop-blur-sm ">
+<body class="font-['Poppins'] min-h-screen flex items-center justify-center p-4"
+      style="background: linear-gradient(to bottom, #FFFFFF, #A9CCE7, #669FC9, #7BA0B4, #1A374D);">
+
+ <div class="w-full max-w-md md:max-w-4xl flex flex-col 
+            md:flex-row md:gap-16 items-center p-4 md:p-8 md:border-2
+           md:border-white/40 md:rounded-[40px] md:backdrop-blur-sm ">
+
+     <div class="text-center mb-10 md:mb-0 md:flex-1 flex flex-col justify-center ">
+        <h1 class="text-[#1A374D] text-4xl md:text-5xl font-bold mb-4 uppercase">Heloo!!</h1>
+        <p class="text-white text-xl font-medium leading-tight px-10">
+                make sure your username and password are correct okay!
+        </p>
+    </div>
+
+     <div class="bg-white w-full max-w-95 shadow-2xl rounded-4xl p-8 md:p-10">
+        <h2 class="text-3xl text-center text-[#1A374D] font-bold text-md mb-3">Login</h2>
+
+        @if(!isset($isStepTwo))
             
-            <div class="text-center mb-5 md:mb-0 md:flex-1 flex flex-col justify-center ">
-                <h1 class="text-[#1A374D] text-4xl md:text-5xl font-bold mb-4 uppercase">Hello!!</h1>
-                <p class="text-white text-xl font-medium leading-tight px-10">
-                    make sure your username and password are correct okay!
-                </p>
+        <div class="mb-8">
+            <h4 class="text-gray-500 font-semibold text-[10px] uppercase tracking-widest mb-3 ml-1">Choose Your Role</h4>
+            <div class="relative bg-gray-100 p-1 rounded-2xl flex items-center h-14 overflow-hidden">
+                <div id="sliding-bg" class="absolute top-1 left-1 bottom-1 w-[calc(50%-4px)] bg-[#1A374D] rounded-xl transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) shadow-lg"></div>
+                    
+                    <button onclick="switchRole('siswa')" id="btn-siswa" class="relative flex-1 z-10 text-sm font-bold tab-active">
+                        Siswa
+                    </button>
+                    <button onclick="switchRole('guru')" id="btn-guru" class="relative flex-1 z-10 text-sm font-bold tab-inactive">
+                        Guru BK
+                    </button>
+                </div>
             </div>
+            @endif
 
-            <div class="bg-white w-full md:flex-1 p-8 md:p-10 rounded-[40px] shadow-3xl md:shrink-0">
-                <h2 class="text-center text-3xl font-bold text-black mb-10">Log in</h2>
-
-                {{-- Menampilkan Alert Error jika ada --}}
-                @if(session('error'))
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm">
-                        {{ session('error') }}
+            <div id="form-siswa" class="space-y-4 transition-all duration-300">
+                <h2 class="text-[#1A374D] font-bold text-center mb-4">Login Siswa</h2>
+                
+                @if($errors->any())
+                    <div class="bg-red-100 text-red-600 p-3 rounded-xl text-xs mb-2">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+                @if(session('success'))
+                    <div class="bg-green-100 text-green-600 p-3 rounded-xl text-xs mb-2">
+                        {{ session('success') }}
                     </div>
                 @endif
 
-                <form action="{{ url('/login-proses') }}" method="POST" class="space-y-6">
+                <form action="{{ route('siswa.login.submit')}}" method="POST">
                     @csrf
-                    
-                    {{-- Hidden input role dengan pengaman null coalescing --}}
-                    <input type="hidden" name="role" value="{{ $role ?? '' }}">
-
-                    <div>
-                        <label class="block text-black font-bold mb-2 ml-1">Username</label>
-                        <input type="text" 
-                               name="username"
-                               required
-                               value="{{ old('username') }}"
-                               class="w-full px-4 py-3 rounded-xl border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-400"
-                               placeholder="type your username here">
+                    <input type="hidden" name="role" value="siswa">
+                    <div class="mb-4">
+                        <label class="text-gray-700 text-xs font-bold mb-1 block ml-1">Full name / NIPD</label>
+                        <input type="text" name="username" required placeholder="type username here" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 bg-gray-50 focus:border-[#1A374D] focus:outline-none transition-all text-sm">
+                    </div>
+                    <div class="mb-2">
+                        <label class="text-gray-700 text-xs font-bold mb-1 block ml-1">Password (NIPD for first login)</label>
+                        <input type="password" name="password" required placeholder="Your password" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 bg-gray-50 focus:border-[#1A374D] focus:outline-none transition-all text-sm">
                     </div>
 
-                    <div class="relative">
-                        <label class="block text-black font-bold mb-2 ml-1">Password</label>
-                        <input type="password" 
-                               name="password"
-                               required
-                               class="w-full px-4 py-3 rounded-xl border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-400"
-                               placeholder="type your password here">
-                        
-                        <div class="text-right mt-2">
-                            <a href="{{ route('password.request') }}" class="text-gray-400 text-sm hover:underline">
-                                Forgot password?
-                            </a>
-                        </div>
+                    <div class="mb-6 text-right">
+                        <a href="{{ route('siswa.forgot-password') }}" class="text-xs text-[#1A374D] font-bold hover:underline">
+                            Lupa Password?
+                        </a>
                     </div>
 
-                    <div class="pt-4">
-                        <button type="submit" 
-                                class="w-full bg-[#1A374D] text-white font-bold py-4 rounded-3xl hover:bg-[#2c4e66] transition-all transform active:scale-95 shadow-lg">
-                            Login
-                        </button>
-                    </div>
+                    <button type="submit" class="w-full bg-[#1A374D] text-white font-bold py-4 rounded-2xl hover:bg-[#2c4e66] transition-all transform active:scale-95 shadow-xl">
+                        Login as student
+                    </button>
                 </form>
-
             </div>
+
+            <div id="form-guru" class="hidden space-y-4 transition-all duration-300">
+                <form action="{{ route('gurubk.login.submit')}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="role" value="guru">
+                    <div class="mb-4">
+                        <label class="text-gray-700 text-xs font-bold mb-1 block ml-1">Username</label>
+                        <input type="text" name="username" placeholder="Your NIP" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 bg-gray-50 focus:border-[#1A374D] focus:outline-none transition-all text-sm">
+                    </div>
+                    <div class="mb-6">
+                        <label class="text-gray-700 text-xs font-bold mb-1 block ml-1">Password</label>
+                        <input type="password" name="password" placeholder="Teacher password" class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 bg-gray-50 focus:border-[#1A374D] focus:outline-none transition-all text-sm">
+                    </div>
+                    <button type="submit" class="w-full bg-[#1A374D] text-white font-bold py-4 rounded-2xl hover:bg-[#2c4e66] transition-all transform active:scale-95 shadow-xl">
+                        Login as teacher
+                    </button>
+                </form>
+            </div>
+
         </div>
-    </div>
+      </div>  
+          
+  </div>
+
+  {{-- style --}}
+  <style>
+    .tab-active { 
+      color: white !important;
+      transition: color 0.3s ease;
+     }
+
+     .tab-inactive {
+      color: #6b7280 !important;
+      transition: color 0.3s ease;
+     }
+  </style>
+
+  {{-- js --}}
+  <script>
+        function switchRole(role) {
+            const slidingBg = document.getElementById('sliding-bg');
+            const btnSiswa = document.getElementById('btn-siswa');
+            const btnGuru = document.getElementById('btn-guru');
+            const formSiswa = document.getElementById('form-siswa');
+            const formGuru = document.getElementById('form-guru');
+
+            if (role === 'siswa') {
+                
+                slidingBg.style.transform = 'translateX(0)';
+                
+                
+                btnSiswa.className = 'relative flex-1 z-10 text-sm font-bold tab-active';
+                btnGuru.className = 'relative flex-1 z-10 text-sm font-bold tab-inactive';
+
+                
+                formSiswa.classList.remove('hidden');
+                formGuru.classList.add('hidden');
+            } else {
+               
+                slidingBg.style.transform = 'translateX(100%)';
+                            
+                btnSiswa.className = 'relative flex-1 z-10 text-sm font-bold tab-inactive';
+                btnGuru.className = 'relative flex-1 z-10 text-sm font-bold tab-active';
+
+                formSiswa.classList.add('hidden');
+                formGuru.classList.remove('hidden');
+            }
+        }
+
+        window.onload = function() {
+            @if ($errors->any() && old('role') == 'guru')
+                switchRole('guru');
+            @endif
+        }
+    </script>
+  
 </body>
 </html>

@@ -33,11 +33,11 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <form action="{{ route('password.verify')}}" method="POST" class="space-y-6">
+            <form action="{{ route('siswa.forgot-password.submit')}}" method="POST" class="space-y-6">
                 @csrf
                 <div>
                     <label class="block text-black font-bold mb-2 ml-1">Username</label>
-                    <input type="text" name="nipd" required
+                    <input type="text" name="username" required
                            class="w-full px-4 py-3 rounded-xl border-2 border-black focus:outline-none focus:ring-2 focus:ring-blue-400"
                            placeholder="type your NIPD here">
                 </div>
@@ -46,7 +46,7 @@
                 <div class="pt-4">
                     <button type="submit" 
                             class="w-full bg-[#1A374D] text-white font-bold py-4 rounded-3xl hover:bg-[#2c4e66] transition-all transform active:scale-95 shadow-lg">
-                        Confirm account
+                        Verifikasi akun
                     </button>
                 </div>
             </form>

@@ -134,7 +134,7 @@
             </ul>
             <div class="divider-white"></div>
             <div class="logout-btn">
-                <form method="POST" action="">
+                <form method="POST" action="{{ route('admin.logout.admin')}}">
                     @csrf
                     <button type="submit" class="btn btn-light px-4">
                         <i class="feather-log-out me-1"></i> Logout

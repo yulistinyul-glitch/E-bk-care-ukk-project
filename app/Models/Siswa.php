@@ -30,6 +30,15 @@ class Siswa extends Model
         'alamat',
     ];
 
+    protected function casts():array
+    {
+        return[
+            'tanggal_lahir' => 'date',
+            'delete_at' => 'datetime',
+        ];
+    }
+    
+
     public function kelas()
     {
         return $this->belongsTo(Kelas::class, 'id_kelas', 'id_kelas');

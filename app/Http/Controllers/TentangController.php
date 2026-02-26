@@ -13,8 +13,9 @@ class TentangController extends Controller
     public function index()
     {
         // Mengambil data visi misi pertama dari database
-        $aboutData = About::first();
+        // $aboutData = About::first();
 
-        return view('tentang', compact('aboutData'));
-    }
+        return view('tentang');
+        // compact('aboutData'
+        }
 }

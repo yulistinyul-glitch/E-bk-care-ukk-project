@@ -16,34 +16,43 @@
 
         <div class="bg-white max-w-lg w-lg md:flex-1 p-8 md:p-10 rounded-[40px] shadow-3xl md:shrink-0">
             <h2 class="text-center text-3xl font-bold text-black mb-10">Verify code</h2>
-
-            <form action="{{ route('otp.post')}}" method="POST" class="space-y-6">
+            <form action="{{ route('siswa.verify-code.submit')}}" method="POST" class="space-y-6">
                 @csrf
+                
+                <input type="hidden" name="username" value="{{ $username }}">
+
                 @if (session('error'))
                     <div class="text-red-500 text-sm text-center bg-red-100 p-2 rounded-xl">
                         {{ session('error')}}
                     </div>
                 @endif
-             
+
+                @error('otp')
+                    <div class="text-red-500 text-sm text-center bg-red-100 p-2 rounded-xl">
+                        {{ $message }}
+                    </div>
+                @enderror
+
                 <div class="flex gap-2 items-center justify-center">
-                   <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
-                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
-                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
-                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
-                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
-                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">                
+                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1" required>
+                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1" required>
+                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1" required>
+                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1" required>
+                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1" required>
+                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1" required>                
                 </div>
 
                 <input type="hidden" name="otp" id="real-otp">
 
-      
                 <div class="pt-4">
                     <button type="submit" 
                             class="w-full bg-[#1A374D] text-white font-bold py-4 rounded-3xl hover:bg-[#2c4e66] transition-all transform active:scale-95 shadow-lg">
-                        Submit
+                        Verify Code
                     </button>
                 </div>
             </form>
+
+           
         </div>
     </div>
 </div>

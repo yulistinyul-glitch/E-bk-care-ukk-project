@@ -26,12 +26,12 @@
 </head>
 
 <body class="font-['Poppins']">
-  <section class="flex flex-col h-screen max-w-2xl mx-auto bg-white shadow-xl relative">
+  <section class="flex flex-col h-screen max-w-2xl md:max-w-5xl lg:max-w-full mx-auto bg-white shadow-xl relative">
 
     <div class="flex items-center justify-between px-4 py-3 border-b bg-white sticy top-0 z-20">
       <div class="flex items-center gap-3">
 
-        <a href="#" class="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors">
+        <a href="{{ route('siswa.home')}}" class="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         </a>
         <div class="relative">
@@ -50,6 +50,11 @@
   </div>
 
   <div id="chat-box" class="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f0f2f5] no-scrollbar">
+
+      <div class="flex justify-center">
+                <span class="px-3 py-1 bg-slate-200 text-slate-500 text-[10px] font-bold rounded-full uppercase tracking-tighter">Hari Ini</span>
+            </div>
+
     <div class="flex items-end gap-2 animate-pop">
       <div class="max-w-[80%] bg-white text-gray-800 px-4 py-2.5 rounded-2xl rounded-bl-none shadow-sm border border-gray-200">
         <p class="text-[13px] leading-relaxed">Halo! Selamat pagi</p>
@@ -58,7 +63,7 @@
     </div>
 
     <div class="flex items-end justify-end gap-2 animate-pop">
-      <div class="max-w-[80%] bg-blue-600 text-white px-4 py-2.5 rounded-2xl rounded-bt-none shadow-md">
+      <div class="max-w-[80%] bg-blue-950 text-white px-4 py-2.5 rounded-t-2xl rounded-bl-2xl  shadow-md">
         <p class="text-[13px] leading-relaxed">pagi mr.james</p>
         <div class="flex items-center justify-end gap-1 mt-1">
           <span class="text-[9px] text-blue-100">08:33 AM</span>
@@ -150,7 +155,7 @@
         
         const myMessage = `
             <div class="flex items-end justify-end gap-2 animate-pop">
-                <div class="max-w-[80%] bg-blue-600 text-white px-3 py-2.5 rounded-2xl rounded-br-none shadow-md">
+                <div class="max-w-[80%] bg-blue-950 text-white px-3 py-2.5 rounded-2xl rounded-br-none shadow-md">
                     ${contentHtml}
                     <div class="flex items-center justify-end gap-1 mt-1">
                         <span class="text-[9px] text-blue-100">${time}</span>

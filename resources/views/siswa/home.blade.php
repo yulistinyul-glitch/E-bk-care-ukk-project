@@ -97,86 +97,66 @@
 
 
 {{-- kotak surat - bar point - btn mulai chat baru --}}
-<div class="my-10 mx-5 grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 font-['Poppins']">
+  <div class="my-10 mx-5 font-['Poppins']">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+    
+    <div class="flex flex-col gap-2">
+      <p class="text-slate-500 text-xs md:text-sm font-medium ml-1">Mail box</p>
+      <button class="aspect-square flex flex-col items-center justify-center gap-3 p-4 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-[2rem] shadow-sm border border-blue-100 transition-all active:scale-95 group">
+        <div class="p-3 bg-white rounded-2xl shadow-sm group-hover:scale-110 transition-transform">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+        </div>
+        <p class="font-semibold text-sm text-center leading-tight">Pesan<br>Masuk</p>
+      </button>
+    </div>
 
-  <!-- Pesan/surat -->
-  <div class="flex flex-col ">
-    <p class="text-blue-950 text-md font-semibold ml-1">Mail box</p>
-    <button class="row-span-2 
-    aspect-square lg:aspect-auto
-    bg-red-500 hover:bg-red-600 
-    text-white 
-    p-6 
-    rounded-2xl 
-                 flex flex-col items-center justify-center 
-                 gap-3 
-                 shadow-lg shadow-red-200 
-                 transition-all duration-300 
-                 active:scale-95">
+    <div class="flex flex-col gap-2">
+      <p class="text-slate-500 text-xs md:text-sm font-medium ml-1">Mail box</p>
+      <button class="aspect-square flex flex-col items-center justify-center gap-3 p-4 bg-teal-50 hover:bg-teal-100 text-teal-600 rounded-[2rem] shadow-sm border border-teal-100 transition-all active:scale-95 group">
+        <div class="p-3 bg-white rounded-2xl shadow-sm group-hover:scale-110 transition-transform">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </div>
+        <p class="font-semibold text-sm text-center leading-tight">Kotak<br>Saran</p>
+      </button>
+    </div>
 
-    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" class="fill-current">
-      <path d="m20 8l-8 5l-8-5V6l8 5l8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2"/>
-    </svg>
+    <div class="col-span-2 flex flex-col gap-4 justify-end">
+      
+      <div class="flex flex-col gap-2">
+        <p class="text-slate-500 text-xs md:text-sm font-medium ml-1">Status Siswa</p>
+        <div class="bg-orange-50 border border-orange-100 p-4 flex items-center justify-between rounded-2xl shadow-sm">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-orange-200 text-orange-700 rounded-lg">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
+            <p class="text-orange-800 font-medium text-sm md:text-base">Poin Pelanggaran</p>
+          </div>
+          <p class="font-bold text-xl text-orange-600">50</p>
+        </div>
+      </div>
 
-    <p class="font-semibold text-center uppercase">
-      See your <br> mail here
-    </p>
-  </button>
-</div>
+      <form action="{{ route('siswa.chat')}}" method="GET" >
+        @csrf
+        <button class="w-full bg-emerald-500 hover:bg-emerald-600 text-white p-4 flex items-center justify-center gap-3 rounded-2xl shadow-lg shadow-emerald-100 transition-all hover:-translate-y-1 active:scale-95">
+          <span class="font-bold tracking-wide">MULAI KONSELING</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+          </svg>
+        </button>
+      </form>
 
-    <div class="flex flex-col">
-    <p class="text-blue-950 text-md font-semibold ml-1">Mail box</p>
-    <button class="row-span-2 
-    aspect-square lg:aspect-auto
-    bg-red-500 hover:bg-red-600 
-    text-white 
-    p-6 
-    rounded-2xl 
-                 flex flex-col items-center justify-center 
-                 gap-3 
-                 shadow-lg shadow-red-200 
-                 transition-all duration-300 
-                 active:scale-95">
-
-    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" class="fill-current">
-      <path d="m20 8l-8 5l-8-5V6l8 5l8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2"/>
-    </svg>
-
-    <p class="font-semibold text-center uppercase">
-      See your <br> mail here
-    </p>
-  </button>
-</div>
-
-  <!-- Bar pelanggaran -->
-  <div class="flex md:flex-col gap-2 justify-center col-span-2 lg:col-span-1">
-   <div class="flex flex-col">
-     <p>poin pelanggaran</p>
-    <button class="bg-blue-400 text-white p-4 flex items-center gap-3 rounded-2xl shadow-md shadow-blue-200">
-    <svg width="28" height="28" viewBox="0 0 512 512">
-      <path fill="#fff" d="..."/>
-    </svg>
-    <p class="font-bold">50</p>
-  </button>
-   </div>
-
-  <!-- mulai chat -->
-  <div class="flex flex-col">
-    <p class="text-xs md:text-sm lg:text-base font-semibold">Mulai konseling</p>
-    <button class="bg-[#d9ffb6] text-[#1a541f] border-2 border-[#083710] p-2 md:p-3 lg:p-4 flex items-center md:gap-3 rounded-full shadow-md shadow-blue-200 transition-all hover:scale-105 active:scale-95">
-    <svg class="w-6 h-6 md:w-7 md:h-7" viewBox="0 0 512 512">
-      <path fill="#fff" d="..."/>
-    </svg>
-    <p class="font-bold text-xs md:text-sm lg:text-base">Start Counseling <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6 inline" viewBox="0 0 24 24">
-	  <path fill="#206016" stroke="#206016" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 1 0-7.605-4.185L3 21l4.185-1.395A8.96 8.96 0 0 0 12 21" />
-    </svg></p>
-  </button>
+    </div>
   </div>
-  </div>
-  
-
 </div>
-
 
 {{-- Recent chat --}}
 <div class="mt-8 font-['poppins']">

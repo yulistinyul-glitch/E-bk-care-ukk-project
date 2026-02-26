@@ -13,19 +13,24 @@ class AdminAuthController extends Controller
     }
 
     public function login(Request $request) {
-        $credentials = $request->validate([
-            'username' => 'required',
-            'password' => 'required',
-        ]);
+    $credentials = $request->validate([
+        'username' => 'required',
+        'password' => 'required',
+    ]);
 
-        if (Auth::attempt(['username' => $credentials['username'], 'password' => $credentials['password'], 'role' => 'Admin'])) {
-        $request->session()->regenerate();
-        return redirect()->intended(route('admin.dashboard'));
+    if (Auth::attempt(['username' => $credentials['username'], 'password' => $credentials['password']])) {
+        
+        if (Auth::user()->role !== 'Admin') {
+            Auth::logout();
+            return back()->withErrors(['username' => 'Anda bukan Admin!']);
         }
 
-        return back()->withErrors([
-            'username' => 'username atau password admin salah',
-        ])->withInput($request->only('username'));
-
+        $request->session()->regenerate();
+        return redirect()->intended(route('admin.dashboard'));
     }
+
+    return back()->withErrors([
+        'username' => 'Username atau password salah',
+    ])->withInput();
+}
 }

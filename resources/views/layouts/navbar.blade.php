@@ -1,93 +1,201 @@
-{{-- Navbar & Hero Container --}}
-<div class="relative w-full min-h-screen bg-cover bg-center bg-no-repeat overflow-hidden flex flex-col"
-     style="background-image: url('{{ asset('img/hero.jpg') }}');">
-    
-    {{-- Overlay Blur --}}
-    <div class="absolute inset-0 bg-white/40 backdrop-blur-[2px] z-0"></div>
+<style>
+    /* --- NAVBAR STYLE --- */
+    .custom-navbar {
+        padding: 20px 0;
+        background-color: transparent;
+        transition: all 0.4s ease;
+        z-index: 1050; /* Memastikan di atas elemen lain */
+    }
 
-    {{-- Desktop Header --}}
-    <header class="hidden md:flex flex-col items-center justify-center bg-white/70 py-4 gap-4 relative z-50 shadow-sm">
-        <button class="absolute top-5 right-6 px-6 py-2 text-white bg-[#1A374D] text-sm font-bold rounded-full hover:bg-blue-900 transition-colors">LOGIN</button>
-        <div class="w-20 h-20 rounded-full bg-white border-2 border-blue-950 flex items-center justify-center shadow-md">
-            <p class="text-center font-bold text-[#1A374D]">LOGO</p>
-        </div>
+    /* State saat discroll */
+    .custom-navbar.scrolled {
+        background: rgba(3, 8, 49, 0.95);
+        padding: 10px 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
 
-        <nav class="flex gap-16 text-[#1A374D] font-bold text-lg">
-            <a href="/" class="relative group">BERANDA<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#1A374D] transition-all duration-300 group-hover:w-full"></span></a>
-            <a href="/about" class="relative group">TENTANG KAMI<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#1A374D] transition-all duration-300 group-hover:w-full"></span></a>
-            <a href="/artikel" class="relative group">ARTIKEL<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#1A374D] transition-all duration-300 group-hover:w-full"></span></a>
-            <a href="/layanan" class="relative group">LAYANAN<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#1A374D] transition-all duration-300 group-hover:w-full"></span></a>
-        </nav>
-    </header>
+    .brand-text span {
+        font-size: 1.2rem;
+        line-height: 1;
+        color: white;
+    }
 
-    {{-- Mobile Nav (Toggle & Sidebar) --}}
-    <button id="menu-toggle" class="fixed top-5 left-5 z-[110] bg-blue-950 p-3 rounded-full text-white md:hidden">
-        <svg id="icon-open" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
-        <svg id="icon-close" class="h-6 w-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-    </button>
-    <div id="mobile-sidebar" class="fixed top-0 left-0 z-[100] h-screen p-6 bg-blue-950/95 backdrop-blur-md w-64 md:hidden transform -translate-x-full transition-transform duration-300 pt-24">
-        <nav class="flex flex-col gap-6 text-white">
-            <h3 class="text-2xl font-['Qwigley'] text-blue-200 border-b border-white/20 pb-4">E-BK CARE</h3>
-            <a href="/" class="text-lg font-medium">BERANDA</a>
-            <a href="/about" class="text-lg font-medium">TENTANG KAMI</a>
-            <a href="/artikel" class="text-lg font-medium">ARTIKEL</a>
-            <a href="/layanan" class="text-lg font-medium">LAYANAN</a>
-        </nav>
-    </div>
+    .custom-navbar .nav-link {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: rgba(255,255,255,0.8) !important;
+        margin: 0 10px;
+        transition: 0.3s;
+    }
 
-    {{-- Content Hero --}}
-    <div class="relative z-10 flex-grow flex flex-col justify-center items-center text-center px-6 md:items-start md:text-left md:pl-20">
-        <h1 class="text-5xl lg:text-7xl font-['Qwigley'] text-blue-950 leading-tight" data-aos="fade-right">
-            Your safety is our priority,<br>Your voice is your power
-        </h1>
-        <p class="mt-4 text-[#1A374D] md:text-white font-['Poppins'] font-semibold text-base md:text-xl max-w-2xl drop-shadow-sm" data-aos="fade-up" data-aos-delay="200">
-            We ensure that your identity remains strictly confidential while providing you the platform to speak up. You are never alone in this journey.
-        </p>
-        <a href="#artikel" id="btn-see-more" class="mt-8 px-8 py-3 border-2 border-[#1A374D] md:border-white rounded-full flex text-[#1A374D] md:text-white font-bold text-lg gap-3 items-center hover:bg-white hover:text-blue-950 transition-all duration-300">
-            See more 
-            <svg class="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-        </a>
-    </div>
-</div>
+    .custom-navbar .nav-link:hover {
+        color: #B89551 !important;
+    }
 
-<script>
-    const sidebar = document.getElementById('mobile-sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    const toggleBtn = document.getElementById('menu-toggle');
-    const iconOpen = document.getElementById('icon-open');
-    const iconClose = document.getElementById('icon-close');
-
-    let isMenuOpen = false;
-
-    function toggleMenu() {
-        isMenuOpen = !isMenuOpen;
-
-        if (isMenuOpen) {
-            sidebar.classList.remove('-translate-x-full');
-            overlay.classList.remove('hidden');
-            setTimeout(() => overlay.classList.add('opacity-100'), 10);
-            
-            iconOpen.classList.add('hidden');
-            iconClose.classList.remove('hidden');
-            
-            toggleBtn.classList.remove('left-5');
-            toggleBtn.classList.add('left-[45%]', 'sm:left-[45%]'); 
-        } else {
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.remove('opacity-100');
-            
-            iconOpen.classList.remove('hidden');
-            iconClose.classList.add('hidden');
-            
-            toggleBtn.classList.remove('left-[45%]', 'sm:left-[45%]');
-            toggleBtn.classList.add('left-5');
-
-            setTimeout(() => {
-                if (!isMenuOpen) overlay.classList.add('hidden');
-            }, 300);
+    /* --- MOBILE RESPONSIVE --- */
+    @media (max-width: 991px) {
+        .navbar-collapse {
+            background: rgba(3, 8, 49, 0.98); /* Background menu mobile */
+            margin-top: 15px;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(184, 149, 81, 0.2);
+        }
+        
+        .custom-navbar .nav-link {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin: 0;
         }
     }
 
-    toggleBtn.addEventListener('click', toggleMenu);
-    overlay.addEventListener('click', toggleMenu);
+    /* --- HERO STYLE --- */
+    .hero-slider {
+        position: relative;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(3, 8, 49, 0.6); 
+        z-index: 1;
+    }
+
+    .hero-caption-centered {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+        width: 90%;
+        text-align: center;
+    }
+
+    .hero-caption-centered h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.8rem;
+        letter-spacing: -1px;
+        color: white;
+        animation: fadeInUp 1.2s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .object-fit-cover {
+        object-fit: cover;
+    }
+
+    .carousel-indicators button {
+        width: 30px !important; 
+        height: 3px !important;
+        margin: 0 5px;
+        background-color: #fff !important;
+        border: none !important;
+        opacity: 0.5;
+        transition: all 0.3s ease;
+    }
+
+    .carousel-indicators button.active {
+        opacity: 1;
+        background-color: #B89551 !important;
+        width: 45px !important; 
+    }
+</style>
+
+<div class="hero-slider">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="home.html">
+                <img src="logo-anda.png" alt="Logo" width="40" class="me-2">
+                <div class="brand-text">
+                    <span class="d-block fw-bold" style="letter-spacing: 2px;">LEGAL EDGE</span>
+                    <small class="d-block text-uppercase" style="font-size: 0.6rem; letter-spacing: 3px; color: #B89551;">Law Firm</small>
+                </div>
+            </a>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="home">HOME</a></li>
+                    <li class="nav-item"><a class="nav-link" href="tentang">TENTANG</a></li>
+                    <li class="nav-item"><a class="nav-link" href="artikel">ARTIKEL</a></li>
+                    <li class="nav-item"><a class="nav-link" href="layanan">LAYANAN</a></li>
+                    <li class="nav-item"><a class="nav-link" href="kotaksaran">KOTAK SARAN</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+        </div>
+
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="5000">
+                <div class="overlay"></div>
+                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop" class="d-block w-100 vh-100 object-fit-cover">
+            </div>
+            <div class="carousel-item" data-bs-interval="5000">
+                <div class="overlay"></div>
+                <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=2069&auto=format&fit=crop" class="d-block w-100 vh-100 object-fit-cover">
+            </div>
+            <div class="carousel-item" data-bs-interval="5000">
+                <div class="overlay"></div>
+                <img src="https://images.unsplash.com/photo-1453928582365-b6ad33cbcf64?q=80&w=2073&auto=format&fit=crop" class="d-block w-100 vh-100 object-fit-cover">
+            </div>
+        </div>
+
+        <div class="hero-caption-centered">
+            <h1 id="hero-title" class="display-1 fw-bold">LEGAL EDGE</h1>
+        </div>
+    </div>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Inisialisasi Carousel
+        var myCarousel = document.querySelector('#heroCarousel');
+        var carousel = new bootstrap.Carousel(myCarousel, {
+            interval: 5000,
+            ride: 'carousel',
+            pause: false
+        });
+
+        // Logika Ganti Teks Berdasarkan URL
+        var titleElement = document.getElementById('hero-title');
+        var path = window.location.pathname.toLowerCase();
+
+        if (path.includes('layanan')) {
+            titleElement.innerText = 'LAYANAN';
+        } else if (path.includes('tentang')) {
+            titleElement.innerText = 'TENTANG KAMI';
+        } else if (path.includes('artikel')) {
+            titleElement.innerText = 'ARTIKEL';
+        } else if (path.includes('kotaksaran')) {
+            titleElement.innerText = 'KOTAK SARAN';
+        } else {
+            titleElement.innerText = 'LEGAL EDGE'; 
+        }
+        
+        // Navbar scroll effect
+        var nav = document.getElementById('mainNav');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    });
 </script>

@@ -7,32 +7,16 @@ use Illuminate\Http\Request;
 
 class LayananController extends Controller
 {
-    /**
-     * Menampilkan halaman utama layanan
-     */
-
     public function index()
     {
-        
-        return view('layanan');
+        $semua_layanan = Service::all();
+        return view('layanan', compact('semua_layanan'));
     }
-    // public function index()
-    // {
-    //     // Mengambil semua data layanan
-    //     $semua_layanan = Service::all();
 
-    //     // Mengirim data ke resources/views/layanan.blade.php
-    //     return view('layanan', compact('semua_layanan'));
-    // }
+    public function show($slug)
+    {
+        $layanan = Service::where('slug', $slug)->firstOrFail();
 
-    // /**
-    //  * Menampilkan detail layanan berdasarkan slug
-    //  */
-    // public function show($slug)
-    // {
-    //     // Mencari layanan berdasarkan slug
-    //     $layanan = Service::where('slug', $slug)->firstOrFail();
-
-    //     return view('layanan_detail', compact('layanan'));
-    // }
+        return view('layanan_detail', compact('layanan'));
+    }
 }

@@ -115,7 +115,12 @@
         background-color: #111; 
         color: #fff; 
         border-color: #111; 
-        }
+    }
+
+    /* Penambahan animasi halus untuk filtering */
+    .article-item {
+        transition: all 0.4s ease-in-out;
+    }
 </style>
 
 <div class="container py-5">
@@ -161,7 +166,7 @@
             <h3 class="fw-bold mb-4">Explore Our Latest <span class="text-teal">Articles</span></h3>
             
             <div class="d-flex justify-content-center gap-2 flex-wrap mb-5">
-            <button class="btn btn-outline-dark filter-btn active" data-filter="all">All</button>
+                <button class="btn btn-outline-dark filter-btn active" data-filter="all">All</button>
                 <button class="btn btn-outline-dark filter-btn" data-filter="mental-health">Mental Health</button>
                 <button class="btn btn-outline-dark filter-btn" data-filter="career">Career & Future</button>
                 <button class="btn btn-outline-dark filter-btn" data-filter="self-growth">Self Growth</button>
@@ -192,10 +197,6 @@
             </div>
             @endforeach
         </div>
-
-        {{-- <div class="text-center mt-5">
-            <button class="btn btn-dark px-5 py-2 fw-bold shadow-sm">View All Articles</button>
-        </div> --}}
     </div>
 </div>
 
@@ -206,20 +207,21 @@
 
         filterButtons.forEach(button => {
             button.addEventListener('click', function() {
-                // 1. Ubah tampilan tombol aktif
+                // 1. Update active button UI
                 filterButtons.forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
 
-                // 2. Ambil nilai filter
-                const filterValue = this.getAttribute('data-filter');
+                // 2. Get filter value
+                const filterValue = this.getAttribute('data-filter').trim();
 
-                // 3. Filter Artikel
+                // 3. Filter Articles with simple display logic
                 articles.forEach(article => {
+                    const category = article.getAttribute('data-category').trim();
+                    
                     if (filterValue === 'all') {
                         article.style.display = 'block';
                     } else {
-                        // Jika kategori artikel cocok dengan tombol filter
-                        if (article.getAttribute('data-category') === filterValue) {
+                        if (category === filterValue) {
                             article.style.display = 'block';
                         } else {
                             article.style.display = 'none';

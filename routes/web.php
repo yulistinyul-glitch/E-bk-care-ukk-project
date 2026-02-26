@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\KotakSaranController;
 use App\Http\Controllers\LayananController;
@@ -39,7 +41,9 @@ Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index
 
 Route::get('/kotaksaran', [KotakSaranController::class, 'index'])->name('kotaksaran');
 
-Route::get('/', function () {
+Route::get('/', function () {return view('welcome'); });
+
+Route::get('/login', function () {
     return view('auth.login'); 
 })->name('login');
 /*
@@ -107,6 +111,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::resource('pelanggaran', PelanggaranController::class);
     });
+
+    Route::post('/logout-admin', function (Request $request) { Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect()->route('admin.login');
+    })->name('logout.admin');
 
 });
 
@@ -182,5 +192,15 @@ Route::prefix('siswa')->name('siswa.')->group(function () {
         Route::post('/update-setup-password', [SiswaAuthController::class, 'updatePassword'])->name('update-password');
         
         Route::get('/home', function() { return view('siswa.home'); })->name('home');
+        Route::get('/chat', function() { return view('siswa.room-chat'); })->name('chat');
     });
 });
+
+// logout all role
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/');
+})->name('logout');
+

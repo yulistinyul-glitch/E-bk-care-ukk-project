@@ -26,7 +26,6 @@
                         {{ session('error')}}
                     </div>
                 @endif
-<<<<<<< HEAD
 
                 @error('otp')
                     <div class="text-red-500 text-sm text-center bg-red-100 p-2 rounded-xl">
@@ -41,16 +40,6 @@
                     <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1" required>
                     <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1" required>
                     <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1" required>                
-=======
-             
-                <div class="flex gap-2 items-center justify-center">
-                   <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
-                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
-                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
-                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
-                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">
-                    <input type="text" class="otp-input w-12 h-12 text-center rounded-xl border-2 border-black" maxlength="1">                
->>>>>>> 098a2476afb3c6d271f5c6d5d0ee5e4dc20902d5
                 </div>
 
                 <input type="hidden" name="otp" id="real-otp">

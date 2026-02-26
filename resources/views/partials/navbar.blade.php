@@ -83,14 +83,21 @@
             <span class="absolute left-16 scale-0 group-hover:scale-100 transition-all origin-left bg-white text-[#1A374D] text-xs font-bold px-3 py-1.5 rounded-lg shadow-lg whitespace-nowrap z-[60]">Riwayat</span>
         </div>
 
-        <div class="group relative flex items-center justify-center border-t border-white/20 pt-4">
-            <a href="/logout" class="p-3 hover:bg-red-400/20 rounded-full transition-all text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 14 14">
-                    <path fill="currentColor" fill-rule="evenodd" d="M0 1.5A1.5 1.5 0 0 1 1.5 0h7A1.5 1.5 0 0 1 10 1.5v1.939a2 2 0 0 0-.734 1.311H5.75a2.25 2.25 0 1 0 0 4.5h3.516A2 2 0 0 0 10 10.561V12.5A1.5 1.5 0 0 1 8.5 14h-7A1.5 1.5 0 0 1 0 12.5" />
-                </svg>
-            </a>
-            <span class="absolute left-16 scale-0 group-hover:scale-100 transition-all origin-left bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-lg whitespace-nowrap z-[60]">Keluar</span>
-        </div>
+      <div class="group relative flex items-center justify-center border-t border-white/20 pt-4">
+        <form id="logout-form-sidebar" action="{{ route('logout') }}" method="POST" class="hidden">
+            @csrf
+        </form>
+    
+        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();" 
+          class="p-3 hover:bg-red-500/40 rounded-full transition-all text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M5 21q-.825 0-1.413-.587T3 19V5q0-.825.587-1.413T5 3h7v2H5v14h7v2zm11-4l-1.375-1.45l2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5z"/>
+            </svg>
+        </a>
+        <span class="absolute left-16 scale-0 group-hover:scale-100 transition-all origin-left bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-lg whitespace-nowrap z-[60]">
+            Keluar
+        </span>
+      </div>
     </nav>
   </aside>
 </div>

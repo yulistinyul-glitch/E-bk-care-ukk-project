@@ -12,7 +12,7 @@
             --dark-blue: #0f2744;
             --gold: #B89551;
             --navy: #1A374D;
-            --faq-bg: #0a0a0a;
+            --faq-bg: #f8fafc;
         }
 
         body { font-family: 'Montserrat', sans-serif; margin: 0; overflow-x: hidden; background-color: #fff; }
@@ -140,22 +140,23 @@
         .user-details h6 { margin: 0; font-weight: 800; color: var(--dark-blue); font-size: 0.9rem; }
         .user-details p { margin: 0; color: #94a3b8; font-size: 0.75rem; }
 
-        /* --- FAQ SECTION UPDATED --- */
-        .faq-section { background-color: #fff; padding: 100px 0; color: #000; }
-        .faq-title { color: #000 font-weight: 800; font-size: 2.5rem; margin-bottom: 60px; text-align: center; }
+        /* --- FAQ SECTION RE-FIXED --- */
+        .faq-section { background-color: #f1f5f9; padding: 100px 0; }
+        .faq-title { color: var(--dark-blue); font-weight: 800; font-size: 2.5rem; margin-bottom: 60px; text-align: center; }
         
         .faq-section .accordion-item { 
-            background: transparent; 
+            background: #fff; 
             border: none; 
-            border-bottom: 1px solid #333; 
+            border-bottom: 1px solid #e2e8f0; 
             margin-bottom: 10px; 
+            box-shadow: none !important;
         }
         
         .faq-section .accordion-button { 
             background: transparent; 
-            color: #000; 
-            font-weight: 600; 
-            font-size: 1rem; 
+            color: var(--dark-blue); 
+            font-weight: 700; 
+            font-size: 1.05rem; 
             padding: 25px 10px;
             box-shadow: none !important;
         }
@@ -166,14 +167,14 @@
         }
 
         .faq-section .accordion-button::after {
-            filter: brightness(0) invert(1);
+            filter: grayscale(1) brightness(0.5); /* Membuat panah terlihat di background terang */
         }
 
         .faq-section .accordion-body { 
-            color: #aaa; 
-            font-size: 0.9rem; 
+            color: #64748b; 
+            font-size: 0.95rem; 
             line-height: 1.8; 
-            padding-bottom: 30px;
+            padding: 0 10px 30px 10px;
         }
 
         /* FOOTER CTA LINK */
@@ -290,58 +291,39 @@
                 <img src="https://images.pexels.com/photos/1438072/pexels-photo-1438072.jpeg?auto=compress&cs=tinysrgb&w=600" class="card-img-top">
                 <div class="card-body-text"><h5>Menghadapi Insecurity: Kamu Lebih Dari Sekadar Angka.</h5></div>
                 <div class="card-footer-box">
-                    <div class="author-group">
-                        <div class="author-icon"></div>
-                        <span class="author-name">direct by lisa 2025</span>
-                    </div>
+                    <div class="author-group"><div class="author-icon"></div><span class="author-name">direct by lisa 2025</span></div>
                     <div class="arrow-icon">→</div>
                 </div>
             </div>
-
             <div class="custom-card">
                 <img src="https://images.pexels.com/photos/1438072/pexels-photo-1438072.jpeg?auto=compress&cs=tinysrgb&w=600" class="card-img-top">
                 <div class="card-body-text"><h5>Building Resilience: Cara Bangkit Setelah Masa Sulit.</h5></div>
                 <div class="card-footer-box">
-                    <div class="author-group">
-                        <div class="author-icon"></div>
-                        <span class="author-name">direct by lisa 2025</span>
-                    </div>
+                    <div class="author-group"><div class="author-icon"></div><span class="author-name">direct by lisa 2025</span></div>
                     <div class="arrow-icon">→</div>
                 </div>
             </div>
-
             <div class="custom-card">
                 <img src="https://images.pexels.com/photos/3184311/pexels-photo-3184311.jpeg?auto=compress&cs=tinysrgb&w=1260" class="card-img-top">
                 <div class="card-body-text"><h5>Cyberbullying: Langkah Melindungi Jejak Digitalmu.</h5></div>
                 <div class="card-footer-box">
-                    <div class="author-group">
-                        <div class="author-icon"></div>
-                        <span class="author-name">direct by lisa 2025</span>
-                    </div>
+                    <div class="author-group"><div class="author-icon"></div><span class="author-name">direct by lisa 2025</span></div>
                     <div class="arrow-icon">→</div>
                 </div>
             </div>
-
             <div class="custom-card">
                 <img src="https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg?auto=compress&cs=tinysrgb&w=600" class="card-img-top">
                 <div class="card-body-text"><h5>Pentingnya Kesehatan Mental di Era Digital.</h5></div>
                 <div class="card-footer-box">
-                    <div class="author-group">
-                        <div class="author-icon"></div>
-                        <span class="author-name">direct by lisa 2025</span>
-                    </div>
+                    <div class="author-group"><div class="author-icon"></div><span class="author-name">direct by lisa 2025</span></div>
                     <div class="arrow-icon">→</div>
                 </div>
             </div>
-
             <div class="custom-card">
                 <img src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600" class="card-img-top">
                 <div class="card-body-text"><h5>Manajemen Waktu Agar Belajar Lebih Efektif.</h5></div>
                 <div class="card-footer-box">
-                    <div class="author-group">
-                        <div class="author-icon"></div>
-                        <span class="author-name">direct by lisa 2025</span>
-                    </div>
+                    <div class="author-group"><div class="author-icon"></div><span class="author-name">direct by lisa 2025</span></div>
                     <div class="arrow-icon">→</div>
                 </div>
             </div>
@@ -356,66 +338,41 @@
                 <h2>Dampak Positif e-BK Care</h2>
                 <p>Inilah feedback tulus dari mereka yang telah menggunakan berbagai layanan kami.</p>
             </div>
-
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="feedback-card">
                         <i class="fas fa-quote-right quote-icon-top"></i>
-                        <div class="stars-row">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                        </div>
-                        <p class="feedback-text">
-                            "Sistem anonimitasnya luar biasa. Saya merasa sangat aman saat melakukan konseling pribadi tanpa takut identitas tersebar."
-                        </p>
+                        <div class="stars-row"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="feedback-text">"Sistem anonimitasnya luar biasa. Saya merasa sangat aman saat melakukan konseling pribadi tanpa takut identitas tersebar."</p>
                         <div class="user-info">
                             <div class="avatar" style="background-color: #0f2744;">AN</div>
-                            <div class="user-details">
-                                <h6>Anonim</h6>
-                                <p>Layanan Konseling</p>
-                            </div>
+                            <div class="user-details"><h6>Anonim</h6><p>Layanan Konseling</p></div>
                         </div>
                     </div>
                 </div>
-
                 <div class="col-md-4">
                     <div class="feedback-card">
                         <i class="fas fa-quote-right quote-icon-top"></i>
-                        <div class="stars-row">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                        </div>
-                        <p class="feedback-text">
-                            "Kotak saran ini benar-benar didengar! Masalah di kelas saya selesai dalam seminggu setelah melapor di sini. Sangat solutif."
-                        </p>
+                        <div class="stars-row"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="feedback-text">"Kotak saran ini benar-benar didengar! Masalah di kelas saya selesai dalam seminggu setelah melapor di sini."</p>
                         <div class="user-info">
                             <div class="avatar" style="background-color: #B89551;">S</div>
-                            <div class="user-details">
-                                <h6>Siswa Kelas XI</h6>
-                                <p>Layanan Kotak Saran</p>
-                            </div>
+                            <div class="user-details"><h6>Siswa Kelas XI</h6><p>Layanan Kotak Saran</p></div>
                         </div>
                     </div>
                 </div>
-
                 <div class="col-md-4">
                     <div class="feedback-card">
                         <i class="fas fa-quote-right quote-icon-top"></i>
-                        <div class="stars-row">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                        </div>
-                        <p class="feedback-text">
-                            "Artikel edukasinya sangat mencerahkan. Saya jadi lebih paham cara mengelola stres saat ujian akhir. Sangat bermanfaat!"
-                        </p>
+                        <div class="stars-row"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="feedback-text">"Artikel edukasinya sangat mencerahkan. Saya jadi lebih paham cara mengelola stres saat ujian akhir. Sangat bermanfaat!"</p>
                         <div class="user-info">
                             <div class="avatar" style="background-color: #1A374D;">R</div>
-                            <div class="user-details">
-                                <h6>Rizka Amelia</h6>
-                                <p>Layanan Artikel</p>
-                            </div>
+                            <div class="user-details"><h6>Rizka Amelia</h6><p>Layanan Artikel</p></div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="feedback-footer-link">
                 <a href="#" class="btn-feedback-cta">Bantu Kami Berkembang, Kirim Feedback Anda &rarr;</a>
             </div>
@@ -425,10 +382,10 @@
     <section class="faq-section">
         <div class="container px-4">
             <h2 class="faq-title">Have any questions?</h2>
-            <div class="row g-5">
+            <div class="row g-4">
                 <div class="col-lg-6">
                     <div class="accordion accordion-flush" id="faqAccordionLeft">
-                        <div class="accordion-item shadow">
+                        <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#leftOne">
                                     Bagaimana cara melakukan konseling anonim?
@@ -440,7 +397,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item shadow">
+                        <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#leftTwo">
                                     Berapa lama respon kotak saran diproses?
@@ -452,7 +409,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item shadow">
+                        <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#leftThree">
                                     Apakah layanan ini berbayar?
@@ -469,7 +426,7 @@
 
                 <div class="col-lg-6">
                     <div class="accordion accordion-flush" id="faqAccordionRight">
-                        <div class="accordion-item shadow">
+                        <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rightOne">
                                     Bagaimana cara mengganti kata sandi?
@@ -481,7 +438,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item shadow">
+                        <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rightTwo">
                                     Siapa yang akan membaca laporan saya?
@@ -493,7 +450,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item shadow">
+                        <div class="accordion-item">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rightThree">
                                     Lupa akun atau kendala teknis?
@@ -510,6 +467,7 @@
             </div>
         </div>
     </section>
+
     @include('layouts.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -535,27 +493,29 @@
         let currentIndex = 2; 
         let autoPlayTimer;
 
-        cards.forEach((_, i) => {
-            const dot = document.createElement('button');
-            dot.classList.add('dot');
-            if(i === currentIndex) dot.classList.add('active');
-            dot.onclick = () => { currentIndex = i; updateSlider(); resetAutoPlay(); };
-            dotsContainer.appendChild(dot);
-        });
+        if(cards.length > 0) {
+            cards.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.classList.add('dot');
+                if(i === currentIndex) dot.classList.add('active');
+                dot.onclick = () => { currentIndex = i; updateSlider(); resetAutoPlay(); };
+                dotsContainer.appendChild(dot);
+            });
+        }
 
         const dots = document.querySelectorAll('.dot');
         function updateSlider() {
             const n = cards.length;
             cards.forEach((card, i) => {
                 card.classList.remove('pos-left-2', 'pos-left-1', 'pos-center', 'pos-right-1', 'pos-right-2');
-                dots[i].classList.remove('active');
+                if(dots[i]) dots[i].classList.remove('active');
                 let diff = (i - currentIndex + n) % n;
                 if (diff === 0) card.classList.add('pos-center');
                 else if (diff === 1) card.classList.add('pos-right-1');
                 else if (diff === 2) card.classList.add('pos-right-2');
                 else if (diff === n - 1) card.classList.add('pos-left-1');
                 else if (diff === n - 2) card.classList.add('pos-left-2');
-                if (i === currentIndex) dots[i].classList.add('active');
+                if (i === currentIndex && dots[i]) dots[i].classList.add('active');
             });
         }
 

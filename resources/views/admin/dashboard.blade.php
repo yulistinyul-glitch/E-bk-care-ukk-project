@@ -192,17 +192,9 @@
                     </div>
                 </div>
 
-                <div class="card border-0 shadow p-4 mb-4 text-center" style="border-radius: 20px; background: #fff;">
-                    <div class="bg-light p-3 rounded-4 text-start mb-3" style="font-size: 11px;">
-                    </div>
-
-                    <form method="POST" action="{{ route('admin.logout.admin') }}">
-                        @csrf
-                        <button type="submit" class="btn btn-danger w-100 rounded-3 fw-bold py-2 border-0 shadow-sm" style="background: #ef4444;">
-                            <i class="feather-power me-2"></i>Logout Sesi
-                        </button>
-                    </form>
-                </div>
+                <button class="btn btn-danger w-100 rounded-3 fw-bold py-2 border-0 shadow-sm" style="background: #ef4444;">
+                    <i class="feather-power me-2"></i>Logout Sesi
+                </button>
             </div>
 
             <div class="card border-0 shadow p-3 mb-4" style="border-radius: 20px;">
@@ -287,11 +279,13 @@
 </div>
 
 <style>
+    /* Terapkan font Poppins ke seluruh halaman */
     body { 
         font-family: 'Poppins', sans-serif !important;
         background-color: #f8fafc !important; 
     }
 
+    /* Card & Hover Effects */
     .card { 
         transition: transform 0.2s; 
         font-family: 'Poppins', sans-serif;

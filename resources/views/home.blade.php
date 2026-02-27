@@ -12,11 +12,7 @@
             --dark-blue: #0f2744;
             --gold: #B89551;
             --navy: #1A374D;
-<<<<<<< HEAD
             --faq-bg: #0a0a0a;
-=======
-            --faq-bg: #f8fafc;
->>>>>>> fix-tailwind-conflict
         }
 
         body { font-family: 'Montserrat', sans-serif; margin: 0; overflow-x: hidden; background-color: #fff; }
@@ -144,41 +140,22 @@
         .user-details h6 { margin: 0; font-weight: 800; color: var(--dark-blue); font-size: 0.9rem; }
         .user-details p { margin: 0; color: #94a3b8; font-size: 0.75rem; }
 
-<<<<<<< HEAD
         /* --- FAQ SECTION UPDATED --- */
         .faq-section { background-color: #fff; padding: 100px 0; color: #000; }
         .faq-title { color: #000 font-weight: 800; font-size: 2.5rem; margin-bottom: 60px; text-align: center; }
-        
-        .faq-section .accordion-item { 
-            background: transparent; 
-            border: none; 
-            border-bottom: 1px solid #333; 
-            margin-bottom: 10px; 
-=======
-        /* --- FAQ SECTION RE-FIXED --- */
-        .faq-section { background-color: #f1f5f9; padding: 100px 0; }
-        .faq-title { color: var(--dark-blue); font-weight: 800; font-size: 2.5rem; margin-bottom: 60px; text-align: center; }
         
         .faq-section .accordion-item { 
             background: #fff; 
             border: none; 
             border-bottom: 1px solid #e2e8f0; 
             margin-bottom: 10px; 
-            box-shadow: none !important;
->>>>>>> fix-tailwind-conflict
         }
         
         .faq-section .accordion-button { 
             background: transparent; 
-<<<<<<< HEAD
             color: #000; 
             font-weight: 600; 
             font-size: 1rem; 
-=======
-            color: var(--dark-blue); 
-            font-weight: 700; 
-            font-size: 1.05rem; 
->>>>>>> fix-tailwind-conflict
             padding: 25px 10px;
             box-shadow: none !important;
         }
@@ -189,25 +166,14 @@
         }
 
         .faq-section .accordion-button::after {
-<<<<<<< HEAD
             filter: brightness(0) invert(1);
-        }
-
-        .faq-section .accordion-body { 
-            color: #aaa; 
-            font-size: 0.9rem; 
-            line-height: 1.8; 
-            padding-bottom: 30px;
-=======
-            filter: grayscale(1) brightness(0.5); /* Membuat panah terlihat di background terang */
         }
 
         .faq-section .accordion-body { 
             color: #64748b; 
             font-size: 0.95rem; 
             line-height: 1.8; 
-            padding: 0 10px 30px 10px;
->>>>>>> fix-tailwind-conflict
+            padding-bottom: 30px;
         }
 
         /* FOOTER CTA LINK */
@@ -371,68 +337,17 @@
                 <h2>Dampak Positif e-BK Care</h2>
                 <p>Inilah feedback tulus dari mereka yang telah menggunakan berbagai layanan kami.</p>
             </div>
-<<<<<<< HEAD
 
-=======
->>>>>>> fix-tailwind-conflict
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="feedback-card">
                         <i class="fas fa-quote-right quote-icon-top"></i>
-<<<<<<< HEAD
                         <div class="stars-row">
                             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                         </div>
                         <p class="feedback-text">
                             "Sistem anonimitasnya luar biasa. Saya merasa sangat aman saat melakukan konseling pribadi tanpa takut identitas tersebar."
                         </p>
-                        <div class="user-info">
-                            <div class="avatar" style="background-color: #0f2744;">AN</div>
-                            <div class="user-details">
-                                <h6>Anonim</h6>
-                                <p>Layanan Konseling</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="feedback-card">
-                        <i class="fas fa-quote-right quote-icon-top"></i>
-                        <div class="stars-row">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                        </div>
-                        <p class="feedback-text">
-                            "Kotak saran ini benar-benar didengar! Masalah di kelas saya selesai dalam seminggu setelah melapor di sini. Sangat solutif."
-                        </p>
-                        <div class="user-info">
-                            <div class="avatar" style="background-color: #B89551;">S</div>
-                            <div class="user-details">
-                                <h6>Siswa Kelas XI</h6>
-                                <p>Layanan Kotak Saran</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="feedback-card">
-                        <i class="fas fa-quote-right quote-icon-top"></i>
-                        <div class="stars-row">
-                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                        </div>
-                        <p class="feedback-text">
-                            "Artikel edukasinya sangat mencerahkan. Saya jadi lebih paham cara mengelola stres saat ujian akhir. Sangat bermanfaat!"
-                        </p>
-                        <div class="user-info">
-                            <div class="avatar" style="background-color: #1A374D;">R</div>
-                            <div class="user-details">
-                                <h6>Rizka Amelia</h6>
-                                <p>Layanan Artikel</p>
-                            </div>
-=======
-                        <div class="stars-row"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                        <p class="feedback-text">"Sistem anonimitasnya luar biasa. Saya merasa sangat aman saat melakukan konseling pribadi tanpa takut identitas tersebar."</p>
                         <div class="user-info">
                             <div class="avatar" style="background-color: #0f2744;">AN</div>
                             <div class="user-details"><h6>Anonim</h6><p>Layanan Konseling</p></div>
@@ -457,16 +372,15 @@
                         <p class="feedback-text">"Artikel edukasinya sangat mencerahkan. Saya jadi lebih paham cara mengelola stres saat ujian akhir. Sangat bermanfaat!"</p>
                         <div class="user-info">
                             <div class="avatar" style="background-color: #1A374D;">R</div>
-                            <div class="user-details"><h6>Rizka Amelia</h6><p>Layanan Artikel</p></div>
->>>>>>> fix-tailwind-conflict
+                            <div class="user-details">
+                                <h6>Rizka Amelia</h6>
+                                <p>Layanan Artikel</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-<<<<<<< HEAD
 
-=======
->>>>>>> fix-tailwind-conflict
             <div class="feedback-footer-link">
                 <a href="#" class="btn-feedback-cta">Bantu Kami Berkembang, Kirim Feedback Anda &rarr;</a>
             </div>
@@ -476,17 +390,10 @@
     <section class="faq-section">
         <div class="container px-4">
             <h2 class="faq-title">Have any questions?</h2>
-<<<<<<< HEAD
             <div class="row g-5">
                 <div class="col-lg-6">
                     <div class="accordion accordion-flush" id="faqAccordionLeft">
                         <div class="accordion-item shadow">
-=======
-            <div class="row g-4">
-                <div class="col-lg-6">
-                    <div class="accordion accordion-flush" id="faqAccordionLeft">
-                        <div class="accordion-item">
->>>>>>> fix-tailwind-conflict
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#leftOne">
                                     Bagaimana cara melakukan konseling anonim?
@@ -498,11 +405,7 @@
                                 </div>
                             </div>
                         </div>
-<<<<<<< HEAD
                         <div class="accordion-item shadow">
-=======
-                        <div class="accordion-item">
->>>>>>> fix-tailwind-conflict
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#leftTwo">
                                     Berapa lama respon kotak saran diproses?
@@ -514,11 +417,7 @@
                                 </div>
                             </div>
                         </div>
-<<<<<<< HEAD
                         <div class="accordion-item shadow">
-=======
-                        <div class="accordion-item">
->>>>>>> fix-tailwind-conflict
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#leftThree">
                                     Apakah layanan ini berbayar?
@@ -535,11 +434,7 @@
 
                 <div class="col-lg-6">
                     <div class="accordion accordion-flush" id="faqAccordionRight">
-<<<<<<< HEAD
                         <div class="accordion-item shadow">
-=======
-                        <div class="accordion-item">
->>>>>>> fix-tailwind-conflict
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rightOne">
                                     Bagaimana cara mengganti kata sandi?
@@ -551,11 +446,7 @@
                                 </div>
                             </div>
                         </div>
-<<<<<<< HEAD
                         <div class="accordion-item shadow">
-=======
-                        <div class="accordion-item">
->>>>>>> fix-tailwind-conflict
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rightTwo">
                                     Siapa yang akan membaca laporan saya?
@@ -567,11 +458,7 @@
                                 </div>
                             </div>
                         </div>
-<<<<<<< HEAD
                         <div class="accordion-item shadow">
-=======
-                        <div class="accordion-item">
->>>>>>> fix-tailwind-conflict
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rightThree">
                                     Lupa akun atau kendala teknis?
@@ -588,10 +475,6 @@
             </div>
         </div>
     </section>
-<<<<<<< HEAD
-=======
-
->>>>>>> fix-tailwind-conflict
     @include('layouts.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

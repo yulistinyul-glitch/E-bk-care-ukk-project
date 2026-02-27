@@ -65,8 +65,8 @@ public function index(Request $request)
     {
         $request->validate([
             'nama_siswa' => 'required',
-            'NIPD' => 'required|unique:siswas,NIPD',
-            'NISN' => 'required',
+            'NIPD' => 'required|unique:siswas,NIPD|max:9',
+            'NISN' => 'required|max:10',
             'id_kelas' => 'required|exists:kelas,id_kelas',
             'jk' => 'required',
             'tempat_lahir' => 'required',
@@ -138,7 +138,7 @@ public function index(Request $request)
             'nama_siswa'    => $request->nama_siswa,
             'NIPD'          => $request->NIPD,
             'NISN'          => $request->NISN,
-            'JK'            => $request->jk, // 🔥 fix null error
+            'JK'            => $request->jk, 
             'tempat_lahir'  => $request->tempat_lahir,
             'tanggal_lahir' => $request->tanggal_lahir,
             'no_telp'       => $request->no_telp,

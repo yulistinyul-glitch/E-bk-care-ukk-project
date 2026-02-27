@@ -55,10 +55,8 @@ Route::get('/login', function () {
 
 Route::prefix('admin')->name('admin.')->group(function () {
 
-    Route::middleware('guest')->group(function() {
-        Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
+    Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit'); 
-    });
 
     Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/dashboard', [DashboardAdminController::class, 'dashboard'])->name('dashboard');

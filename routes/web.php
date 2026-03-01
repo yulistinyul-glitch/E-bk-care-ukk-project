@@ -68,9 +68,21 @@ Route::get('siswa/history', [SiswaController::class, 'history'])->name('siswa.hi
     Route::resource('siswa', SiswaController::class);
 
     Route::resource('kelas', KelasController::class);
+// 1. Route Khusus History harus diletakkan SEBELUM Resource
+Route::get('template_surats/history', [TemplateSuratController::class, 'history'])
+    ->name('template_surats.history');
 
-    Route::resource('template_surats', TemplateSuratController::class);
+// 2. Route Aksi Restore & Force Delete
+Route::post('template_surats/{id}/restore', [TemplateSuratController::class, 'restore'])
+    ->name('template_surats.restore');
+    
+Route::delete('template_surats/{id}/force-delete', [TemplateSuratController::class, 'forceDelete'])
+    ->name('template_surats.forceDelete');
 
+// 3. Route Resource (Letakkan paling bawah)
+Route::resource('template_surats', TemplateSuratController::class)->parameters([
+    'template_surats' => 'id'
+]);
     Route::resource('gurubk', GurubkController::class);
 
     Route::post('walikelas/import',
@@ -170,3 +182,4 @@ Route::prefix('siswa')->name('siswa.')->group(function () {
         return view('siswa.home');
     })->name('home');
 });
+

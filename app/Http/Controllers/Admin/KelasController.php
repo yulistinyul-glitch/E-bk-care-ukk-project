@@ -17,6 +17,7 @@ class KelasController extends Controller
                       ->orWhere('jurusan', 'like', "%{$search}%")
                       ->orWhere('nomor_ruang', 'like', "%{$search}%");
             })
+            ->latest()
             ->paginate(20);
 
         return view('admin.kelas.index', compact('kelas'));
@@ -41,17 +42,19 @@ class KelasController extends Controller
 
     public function edit($id)
     {
-        $kelas = Kelas::findOrFail($id);
+        // Menggunakan where karena ID adalah string (KLS001)
+        $kelas = Kelas::where('id_kelas', $id)->firstOrFail();
 
         return view('admin.kelas.edit', compact('kelas'));
     }
 
     public function update(Request $request, $id)
     {
-        $kelas = Kelas::findOrFail($id);
+        // Cari berdasarkan kolom id_kelas agar tepat sasaran
+        $kelas = Kelas::where('id_kelas', $id)->firstOrFail();
 
         $request->validate([
-            'id_kelas' => 'required|unique:kelas,id_kelas,' . $id,
+            'id_kelas' => 'required|unique:kelas,id_kelas,' . $id . ',id_kelas',
             'nama_kelas' => 'required|integer',
             'jurusan' => 'required',
             'nomor_ruang' => 'required|integer',
@@ -67,12 +70,11 @@ class KelasController extends Controller
 
     public function destroy($id)
     {
-        $kelas = Kelas::findOrFail($id);
+        // Gunakan where agar Laravel mencari di kolom id_kelas, bukan 'id'
+        $kelas = Kelas::where('id_kelas', $id)->firstOrFail();
 
         $kelas->delete();
 
         return back()->with('success', 'Data kelas berhasil dihapus');
     }
 }
-
-   

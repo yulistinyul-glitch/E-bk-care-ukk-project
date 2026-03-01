@@ -9,87 +9,54 @@
 
 <style>
     body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; } 
-
     .header-title { font-size: 24px; font-weight: 700; color: #333; } 
 
-    .btn-catat {
-        background-color: #5d5fef;
-        color: white; padding: 8px 18px;
-        border-radius: 10px; font-weight: 600;
-        font-size: 13px;
-        text-decoration: none; transition: 0.3s;
-        box-shadow: 0 4px 15px rgba(93, 95, 239, 0.2);
-    }
+    /* BUTTONS */
+    .btn-catat { background-color: #5d5fef; color: white; padding: 8px 18px; border-radius: 10px; font-weight: 600; font-size: 13px; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(93, 95, 239, 0.2); }
     .btn-catat:hover { color: white; opacity: 0.9; transform: translateY(-2px); }
 
-    .btn-history {
-        background-color: #b5b5b5;
-        color: white; padding: 8px 20px;
-        border-radius: 10px; font-weight: 500;
-        font-size: 13px;
-        text-decoration: none; display: inline-flex;
-        align-items: center; gap: 8px; transition: 0.3s;
-    }
+    .btn-history { background-color: #b5b5b5; color: white; padding: 8px 20px; border-radius: 10px; font-weight: 500; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; }
     .btn-history:hover { background-color: #999; color: white; transform: translateY(-2px); }
 
-    .main-wrapper {
-        background: white; border-radius: 20px;
-        padding: 0; overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-    }
+    .btn-export-solid { height: 34px; background: #5bcb65; color: white; border: none; border-radius: 10px; font-size: 12px; padding: 0 15px; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; transition: 0.3s; }
+    .btn-export-solid:hover { background: #4eb658; color: white; transform: translateY(-2px); }
 
+    .btn-search-outline { height: 34px; border: 2px solid #3b82f6; color: #3b82f6; border-radius: 10px; font-size: 12px; padding: 0 20px; background: white; font-weight: 600; transition: 0.3s; }
+    .btn-search-outline:hover { background: #3b82f6; color: white; }
+
+    /* WRAPPERS */
+    .main-wrapper { background: white; border-radius: 20px; padding: 0; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
     .filter-area { padding: 20px; }
-    
-    .input-group-custom {
-        background: #fff; border: 1px solid #e2e8f0;
-        border-radius: 10px; height: 32px;
-        padding: 0 12px; font-size: 12px;
-        width: 100%; outline: none;
-    }
+    .input-group-custom { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; height: 34px; padding: 0 12px; font-size: 12px; width: 100%; outline: none; }
 
+    /* TABLE */
     .table-container { padding: 0 15px 15px 15px; }
-    .table thead th { 
-        background-color: #f8fafc; border: none; 
-        font-size: 12px; color: #888; 
-        font-weight: 600; padding: 12px;
-    }
+    .table thead th { background-color: #f8fafc; border: none; font-size: 12px; color: #888; font-weight: 600; padding: 12px; }
     .table tbody td { padding: 12px; color: #444; font-size: 12.5px; border-bottom: 1px solid #f8f9fa; }
     
+    /* BADGES */
     .badge-tingkat { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; display: inline-block; }
     .ringan { background: #e3f2fd; color: #1976d2; }
     .sedang { background: #fff3e0; color: #ef6c00; }
     .berat { background: #ffebee; color: #c62828; }
 
-    .btn-action-icon { border: none; background: none; padding: 0; font-size: 1.1rem; transition: 0.2s; cursor: pointer; }
+    /* ACTIONS */
+    .btn-action-icon { border: none; background: none; padding: 0; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; font-size: 1.1rem; }
     .icon-edit { color: #ffb74d; }
     .icon-delete { color: #ff7070; }
     .btn-action-icon:hover { transform: scale(1.15); }
     
-    .pagination-wrapper {
-        display: flex !important; justify-content: center !important;
-        padding: 20px 0;
-    }
+    .pagination-wrapper { display: flex !important; justify-content: center !important; padding: 20px 0; }
     .page-link { padding: 3px 10px !important; font-size: 11px !important; border-radius: 5px !important; }
 
-    .import-box {
-        background: #f8fafc; border: 1px dashed #cbd5e1;
-        border-radius: 10px; padding: 12px; margin-top: 12px;
-    }
+    .import-box { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 12px; margin-top: 12px; }
 
-    /* KUSTOMISASI MODAL POPUP (LEBIH KECIL) */
-    .my-swal-popup { 
-        border-radius: 18px !important; 
-        padding: 1.5em !important; 
-        width: 320px !important; 
-    }
+    /* SWAL CUSTOM */
+    .my-swal-popup { border-radius: 18px !important; padding: 1.5em !important; width: 320px !important; }
     .swal2-title { font-size: 18px !important; font-weight: 700 !important; }
     .swal2-html-container { font-size: 13px !important; }
     .swal2-icon { transform: scale(0.7); margin: 10px auto 5px !important; }
-    .swal-button-custom {
-        border-radius: 8px !important; 
-        padding: 6px 20px !important; 
-        font-size: 12px !important;
-    }
+    .swal-button-custom { border-radius: 8px !important; padding: 6px 20px !important; font-size: 12px !important; }
 </style>
 
 <div class="container-fluid py-4">
@@ -118,20 +85,22 @@
                                 style="padding-left: 35px;">
                         </div>
                     </div>
+                    <div class="col text-end">
+                        <a href="" class="btn-export-solid">
+                            <i class="bi bi-file-earmark-pdf"></i> Export PDF
+                        </a>
+                    </div>
                 </div>
             </form>
 
             <div class="import-box">
                 <form action="{{ route('admin.pelanggaran.import') }}" method="POST" enctype="multipart/form-data" class="row g-2 align-items-center">
                     @csrf
-                    <div class="col-auto">
-                        <span class="small fw-bold text-muted" style="font-size: 11px;"><i class="bi bi-file-earmark-excel"></i> IMPORT:</span>
-                    </div>
                     <div class="col-md-4">
-                        <input type="file" name="file" class="form-control form-control-sm" style="font-size: 11px;" required>
+                        <input type="file" name="file" class="form-control form-control-sm" required>
                     </div>
                     <div class="col-auto">
-                        <button class="btn btn-success btn-sm px-3" style="border-radius: 6px; font-size: 11px;">
+                        <button type="submit" class="btn btn-success btn-sm">
                             <i class="bi bi-upload"></i> Upload
                         </button>
                     </div>
@@ -171,11 +140,13 @@
                                     <a href="{{ route('admin.pelanggaran.edit', $p->id_pelanggaran) }}" class="btn-action-icon icon-edit">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <form id="delete-form-{{ $p->id_pelanggaran }}" action="{{ route('admin.pelanggaran.destroy', $p->id_pelanggaran) }}" method="POST" class="d-inline">
+
+                                    <button type="button" class="btn-action-icon icon-delete" onclick="confirmDelete('{{ $p->id_pelanggaran }}', '{{ $p->jenis_kegiatan }}')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+
+                                    <form id="delete-form-{{ $p->id_pelanggaran }}" action="{{ route('admin.pelanggaran.destroy', $p->id_pelanggaran) }}" method="POST" style="display:none;">
                                         @csrf @method('DELETE')
-                                        <button type="button" class="btn-action-icon icon-delete" onclick="confirmDelete('{{ $p->id_pelanggaran }}', '{{ $p->jenis_kegiatan }}')">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
                                     </form>
                                 </div>
                             </td>
@@ -220,7 +191,7 @@
 
 function confirmDelete(id, nama) {
     Swal.fire({
-        title: 'Hapus?',
+        title: 'Hapus Data?',
         text: "Yakin ingin menghapus " + nama + "?",
         icon: 'warning',
         iconColor: '#ff7070',
@@ -233,7 +204,7 @@ function confirmDelete(id, nama) {
         customClass: {
             popup: 'my-swal-popup',
             confirmButton: 'swal-button-custom',
-            cancelButton: 'swal-button-custom swal-btn-cancel',
+            cancelButton: 'swal-button-custom',
             title: 'swal2-title',
             htmlContainer: 'swal2-html-container'
         }
@@ -244,6 +215,5 @@ function confirmDelete(id, nama) {
     })
 }
 </script>
-
 
 @endsection

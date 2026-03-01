@@ -23,7 +23,7 @@
 
     .form-box { 
         width: 100%;
-        max-width: 550px; /* Diperkecil sedikit lebarnya */
+        max-width: 550px; 
         background: white; 
         padding: 30px; 
         border-radius: 20px; 
@@ -34,22 +34,22 @@
         font-weight: 600; 
         color: #2D3436; 
         margin-bottom: 20px; 
-        font-size: 1.25rem; /* Ukuran judul diperkecil */
+        font-size: 1.25rem; 
     }
 
     .form-label { 
         font-weight: 500; 
         color: #2D3436; 
         margin-bottom: 6px; 
-        font-size: 0.85rem; /* Label lebih kecil */
+        font-size: 0.85rem; 
     }
 
     .form-control, .form-select {
         border: 1.5px solid #DFE6E9;
         border-radius: 10px;
-        padding: 8px 12px; /* Padding input diperkecil */
+        padding: 8px 12px; 
         color: #2D3436;
-        font-size: 0.85rem; /* Text input lebih kecil */
+        font-size: 0.85rem; 
     }
 
     .form-control[readonly] {
@@ -63,6 +63,10 @@
         box-shadow: 0 0 0 3px rgba(93, 95, 239, 0.1);
         border-color: #5D5FEF;
         outline: none;
+    }
+
+    .is-invalid {
+        border-color: #dc3545 !important;
     }
 
     .button-group { 
@@ -83,7 +87,7 @@
         align-items: center; 
         justify-content: center;
         font-weight: 500; 
-        font-size: 0.85rem; /* Text tombol lebih kecil */
+        font-size: 0.85rem; 
         transition: 0.3s;
     }
 
@@ -98,7 +102,7 @@
         align-items: center; 
         justify-content: center;
         font-weight: 500; 
-        font-size: 0.85rem; /* Text tombol lebih kecil */
+        font-size: 0.85rem; 
         transition: 0.3s;
     }
 
@@ -112,14 +116,15 @@
         color: white; 
     }
 
-    /* Penyesuaian Alert */
     .alert {
         font-size: 0.8rem;
         padding: 10px;
         border-radius: 10px;
     }
 </style>
+</head>
 
+<body>
 <div class="center-wrapper">
     <div class="form-box">
         <h4 class="text-center">Input Data Siswa</h4>
@@ -150,27 +155,32 @@
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">NIPD</label>
-                    <input type="text" name="NIPD" id="NIPD" class="form-control" placeholder="Contoh: 232410...">
+                    <label class="form-label">NIPD (9 Digit)</label>
+                    <input type="text" name="NIPD" id="NIPD" class="form-control @error('NIPD') is-invalid @enderror" 
+                        placeholder="Contoh: 232410..." value="{{ old('NIPD') }}" maxlength="9" 
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">NISN</label>
-                    <input type="text" name="NISN" class="form-control" placeholder="10 digit nomor">
+                    <label class="form-label">NISN (10 Digit)</label>
+                    <input type="text" name="NISN" class="form-control @error('NISN') is-invalid @enderror" 
+                        placeholder="10 digit nomor" value="{{ old('NISN') }}" maxlength="10" 
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                 </div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Nama Lengkap</label>
-                <input type="text" name="nama_siswa" class="form-control" placeholder="Masukkan nama siswa" required>
+                <input type="text" name="nama_siswa" class="form-control @error('nama_siswa') is-invalid @enderror" 
+                    placeholder="Masukkan nama siswa" value="{{ old('nama_siswa') }}" required>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Kelas</label>
-                    <select name="id_kelas" id="id_kelas" class="form-select" required>
+                    <select name="id_kelas" id="id_kelas" class="form-select @error('id_kelas') is-invalid @enderror" required>
                         <option value="">Pilih Kelas</option>
                         @foreach($kelas as $k)
-                            <option value="{{ $k->id_kelas }}">
+                            <option value="{{ $k->id_kelas }}" {{ old('id_kelas') == $k->id_kelas ? 'selected' : '' }}>
                                 {{ $k->nama_kelas == 10 ? 'X' : ($k->nama_kelas == 11 ? 'XI' : 'XII') }}
                                 {{ $k->jurusan }}
                                 {{ $k->nomor_ruang }}
@@ -181,10 +191,10 @@
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Jenis Kelamin</label>
-                    <select name="jk" class="form-select" required>
+                    <select name="jk" class="form-select @error('jk') is-invalid @enderror" required>
                         <option value="">Pilih JK</option>
-                        <option value="L">Laki-laki</option>
-                        <option value="P">Perempuan</option>
+                        <option value="L" {{ old('jk') == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                        <option value="P" {{ old('jk') == 'P' ? 'selected' : '' }}>Perempuan</option>
                     </select>
                 </div>
             </div>
@@ -192,49 +202,33 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Tempat Lahir</label>
-                    <input type="text" name="tempat_lahir" class="form-control" placeholder="Kota lahir">
+                    <input type="text" name="tempat_lahir" class="form-control" placeholder="Kota lahir" value="{{ old('tempat_lahir') }}">
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Tanggal Lahir</label>
-                    <input type="date" name="tanggal_lahir" class="form-control">
+                    <input type="date" name="tanggal_lahir" class="form-control" value="{{ old('tanggal_lahir') }}">
                 </div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">No. Telepon</label>
-                <input type="text" name="no_telp" class="form-control" placeholder="08...">
+                <input type="text" name="no_telp" class="form-control" placeholder="08..." value="{{ old('no_telp') }}">
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Alamat Lengkap</label>
-                <textarea name="alamat" class="form-control" rows="2" placeholder="Tulis alamat rumah..." style="font-size: 0.85rem;"></textarea>
+                <textarea name="alamat" class="form-control" rows="2" placeholder="Tulis alamat rumah..." style="font-size: 0.85rem;">{{ old('alamat') }}</textarea>
             </div>
 
             <div class="button-group">
-                <a href="{{ route('admin.siswa.index') }}" class="btn-kembali">
-                    Batal
-                </a>
-
-                <button type="submit" class="btn-simpan">
-                    Simpan Data Siswa
-                </button>
+                <a href="{{ route('admin.siswa.index') }}" class="btn-kembali">Batal</a>
+                <button type="submit" class="btn-simpan">Simpan Data Siswa</button>
             </div>
-
         </form>
     </div>
 </div>
 
-<script>
-    // Fungsi tetap sama, hanya memastikan ID sesuai
-    function generateID() {
-        const nipd = document.getElementById('NIPD').value;
-        const idSiswa = document.getElementById('id_siswa');
-        
-        if (nipd.length > 0) {
-            idSiswa.value = "SIS" + nipd.trim();
-        }
-    }
-</script>
-</head>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

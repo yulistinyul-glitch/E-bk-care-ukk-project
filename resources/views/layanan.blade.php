@@ -14,24 +14,10 @@
     .text-teal { color: var(--teal-color) !important; }
     .section-padding { padding: 100px 0; }
 
-    /* Hero Section */
     .hero-service { background-color: var(--light-bg); padding: 80px 0; position: relative; overflow: hidden;}
+    .hero-service::after { content: "✕"; position: absolute; top: -50px; right: -30px;  font-size: 300px; color: #f1f1f1; z-index: 0; font-weight: bold; opacity: 0.5; pointer-events: none; }
+    .why-choose::before { content: "✕"; position: absolute; bottom: -50px; left: -30px; font-size: 250px; color: #f8f9fa; z-index: 0; font-weight: bold; pointer-events: none; }
 
-    /* Responsive Decoration X */
-    .hero-service::after {
-        content: "✕"; position: absolute; top: -50px; right: -30px; 
-        font-size: 300px; color: #f1f1f1; z-index: 0; font-weight: bold; opacity: 0.5;
-        pointer-events: none;
-    }
-
-    /* Why Choose Decoration X */
-    .why-choose::before {
-        content: "✕"; position: absolute; bottom: -50px; left: -30px; 
-        font-size: 250px; color: #f8f9fa; z-index: 0; font-weight: bold;
-        pointer-events: none;
-    }
-
-    /* Fix Overlap on Responsive */
     @media (max-width: 991.98px) {
         .hero-service::after, .why-choose::before {
             display: none; 
@@ -42,7 +28,6 @@
 
     .hero-img-box { position: relative; z-index: 1; }
     .hero-img-box img { border-radius: 0; box-shadow: 15px 15px 0px var(--light-bg), 15px 15px 0px 1px #ddd; }
-    
     .title-accent { border-left: 3px solid var(--gold-accent); padding-left: 15px; }
 
     .focus-areas {
@@ -53,8 +38,6 @@
     }
 
     .area-sub { letter-spacing: 2px; font-size: 0.8rem; font-weight: 700; color: #aaa; text-transform: uppercase; }
-
-    /* Feature Cards */
     .service-card-minimal {
         padding: 40px 20px;
         text-align: left;
@@ -66,16 +49,10 @@
         transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 
-    .service-card-minimal:hover { 
-        background: rgba(255,255,255,0.05); 
-        border-color: var(--teal-color);
-        transform: translateY(-5px);
-    }
-
+    .service-card-minimal:hover {  background: rgba(255,255,255,0.05); border-color: var(--teal-color); transform: translateY(-5px); }
     .icon-box { font-size: 2.5rem; margin-bottom: 30px; color: white; opacity: 0.9; }
     .service-title { font-size: 1rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
     .service-desc { font-size: 0.85rem; color: #ccc; line-height: 1.8; margin-bottom: 25px; }
-    
     .learn-more-link { 
         color: var(--gold-accent); 
         text-decoration: none; 
@@ -86,11 +63,8 @@
     }
 
     .why-choose { background-color: white; position: relative; overflow: hidden; }
-
-    /* Interactive List Styles */
     .list-bordered { list-style: none; padding: 0; position: relative; z-index: 1; }
     .list-bordered li { border-bottom: 1px solid #eee; }
-
     .list-trigger {
         width: 100%;
         padding: 18px 0;
@@ -107,7 +81,6 @@
     }
 
     .list-trigger:hover { color: var(--teal-color); }
-
     .list-trigger i { 
         color: var(--teal-color); 
         font-size: 0.75rem; 
@@ -115,18 +88,8 @@
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         display: inline-block;
     }
-
     .list-trigger[aria-expanded="true"] i { transform: rotate(90deg); }
-    
-    .desc-collapse {
-        font-size: 0.88rem;
-        color: #666;
-        line-height: 1.7;
-        padding-bottom: 20px;
-        padding-left: 28px;
-    }
-
-    /* Label Button */
+    .desc-collapse { font-size: 0.88rem; color: #666; line-height: 1.7; padding-bottom: 20px; padding-left: 28px; }
     .btn-label {
         display: inline-flex;
         align-items: center;
@@ -145,7 +108,6 @@
         position: relative;
         z-index: 1;
     }
-
     .btn-label:hover {
         background-color: var(--teal-color);
         color: white;
@@ -223,7 +185,7 @@
                         </button>
                         <div class="collapse" id="desc1">
                             <div class="desc-collapse">
-                                Membantu siswa memahami lingkungan sekolah baru, aturan, serta menyediakan informasi karir dan pendidikan lanjutan.
+                                Fokus pada pembekalan siswa mengenai pemahaman lingkungan sekolah, kurikulum, dan informasi pengembangan diri. Tujuannya agar siswa memiliki literasi informasi yang cukup untuk mengambil keputusan strategis terkait masa depan akademik mereka.
                             </div>
                         </div>
                     </li>
@@ -233,7 +195,7 @@
                         </button>
                         <div class="collapse" id="desc2">
                             <div class="desc-collapse">
-                                Sesi privat rahasia antara siswa dan guru BK untuk memecahkan masalah pribadi, sosial, atau hambatan belajar.
+                                Merupakan layanan bantuan profesional yang bersifat pribadi dan rahasia. Guru BK menyediakan ruang aman bagi siswa untuk mengeksplorasi dan menuntaskan masalah pribadi melalui pendekatan psikologis demi mencapai stabilitas emosional.
                             </div>
                         </div>
                     </li>
@@ -243,7 +205,7 @@
                         </button>
                         <div class="collapse" id="desc3">
                             <div class="desc-collapse">
-                                Diskusi kelompok terbimbing untuk berbagi pengalaman dan mencari solusi bersama dalam lingkungan yang suportif.
+                                Layanan ini memanfaatkan dinamika interaksi antar siswa yang memiliki masalah serupa. Melalui diskusi terbimbing, siswa dapat saling berbagi pengalaman, meningkatkan empati, dan mencari solusi bersama sehingga mereka tidak merasa berjuang sendirian.
                             </div>
                         </div>
                     </li>
@@ -253,7 +215,7 @@
                         </button>
                         <div class="collapse" id="desc4">
                             <div class="desc-collapse">
-                                Membantu siswa dalam pemilihan jurusan, minat bakat, ekstra kurikuler, hingga persiapan karir di masa depan.
+                               Layanan ini difokuskan pada pemetaan potensi, minat, dan bakat siswa. Tujuannya adalah menempatkan siswa pada wadah yang tepat, seperti jurusan, kegiatan ekstrakurikuler, atau program pengembangan lainnya agar potensi individu dapat berkembang optimal.
                             </div>
                         </div>
                     </li>
@@ -263,7 +225,7 @@
                         </button>
                         <div class="collapse" id="desc5">
                             <div class="desc-collapse">
-                                Menjamin hak-hak siswa dalam proses pendidikan agar tetap terpenuhi dengan adil dan tanpa diskriminasi.
+                               Berfungsi untuk melindungi dan memulihkan hak-hak siswa yang mungkin terabaikan atau terdampak oleh kebijakan yang tidak adil. Guru BK bertindak sebagai pembela kepentingan siswa untuk memastikan mereka mendapatkan perlindungan hukum dan moral.
                             </div>
                         </div>
                     </li>

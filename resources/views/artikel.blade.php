@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Our Insightful Blog')
+@section('title', 'Artikel - E-BK Care')
 
 @section('content')
 <style>

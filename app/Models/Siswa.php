@@ -10,11 +10,9 @@ class Siswa extends Model
     use SoftDeletes;
 
     protected $table = 'siswas';
-
     protected $primaryKey = 'id_siswa';
-
-    public $incrementing = false; // karena ID kamu bukan auto increment
-    protected $keyType = 'string'; // karena id_siswa varchar
+    public $incrementing = false; 
+    protected $keyType = 'string';
 
     protected $fillable = [
         'id_siswa',

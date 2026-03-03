@@ -100,82 +100,131 @@
   <div class="my-10 mx-5 font-['Poppins']">
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
     
-    <div class="flex flex-col gap-2">
-      <p class="text-slate-500 text-xs md:text-sm font-medium ml-1">Mail box</p>
-      <button class="aspect-square flex flex-col items-center justify-center gap-3 p-4 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-[2rem] shadow-sm border border-blue-100 transition-all active:scale-95 group">
-        <div class="p-3 bg-white rounded-2xl shadow-sm group-hover:scale-110 transition-transform">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-            <polyline points="22,6 12,13 2,6"></polyline>
-          </svg>
-        </div>
-        <p class="font-semibold text-sm text-center leading-tight">Pesan<br>Masuk</p>
-      </button>
+    <div class="flex flex-col gap-4">
+      <div>
+        <p class="text-slate-500 text-xs md:text-sm font-medium ml-1 mb-2">Pesan</p>
+        <a href="{{ route('siswa.kotaksurat') }}" class="relative inline-block p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:bg-gray-50 transition-all">
+          <i class="fas fa-envelope text-2xl text-[#1A374C]"></i>
+          @if ($unreadMessages > 0)
+            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-bounce">
+              {{ $unreadMessages }}
+            </span>
+          @endif
+        </a>
+      </div>
+
+      <div class="bg-white p-5 rounded-4xl shadow-sm border border-gray-100">
+        <h3 class="text-sm font-bold text-[#1A374C] mb-3">Jadwal Terdekat</h3>
+        @if ($jadwalTerdekat)
+          <div class="bg-blue-50 p-3 rounded-2xl border border-blue-100">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="bg-blue-500 text-white p-2 rounded-lg text-xs">
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <p class="text-xs font-bold text-blue-900">
+                {{ \Carbon\Carbon::parse($jadwalTerdekat->scheduled_date)->format('d M Y') }}
+              </p>
+            </div>
+            <p class="text-[10px] text-blue-700 font-medium ml-1">
+              {{ $jadwalTerdekat->scheduled_time }} • {{ $jadwalTerdekat->location_link }}
+            </p>
+          </div>
+        @else
+          <p class="text-gray-400 text-[10px] italic text-center py-2">Belum ada jadwal.</p>
+        @endif
+      </div>
     </div>
 
-    <div class="flex flex-col gap-2">
-      <p class="text-slate-500 text-xs md:text-sm font-medium ml-1">Mail box</p>
-      <button class="aspect-square flex flex-col items-center justify-center gap-3 p-4 bg-teal-50 hover:bg-teal-100 text-teal-600 rounded-[2rem] shadow-sm border border-teal-100 transition-all active:scale-95 group">
-        <div class="p-3 bg-white rounded-2xl shadow-sm group-hover:scale-110 transition-transform">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
+   <div class="flex flex-col gap-2">
+    <p class="text-slate-500 text-xs md:text-sm font-medium ml-1">Layanan</p>
+    <div class="grid grid-cols-1 gap-3">
+        <a href="{{ route('siswa.konseling.create') }}" class="flex flex-col items-center justify-center gap-2 p-4 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-[2rem] shadow-sm border border-blue-100 transition-all active:scale-95 group">
+            <div class="p-2 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <line x1="19" y1="8" x2="19" y2="14"></line>
+                    <line x1="16" y1="11" x2="22" y2="11"></line>
+                </svg>
+            </div>
+            <p class="font-bold text-[10px] text-center leading-tight uppercase">Ajukan<br>Jadwal</p>
+        </a>
+
+        <button class="flex flex-col items-center justify-center gap-2 p-4 bg-teal-50 hover:bg-teal-100 text-teal-600 rounded-[2rem] shadow-sm border border-teal-100 transition-all active:scale-95 group">
+            <div class="p-2 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-teal-500">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </div>
+            <p class="font-bold text-[10px] text-center leading-tight uppercase">Kotak<br>Saran</p>
+        </button>
         </div>
-        <p class="font-semibold text-sm text-center leading-tight">Kotak<br>Saran</p>
-      </button>
-    </div>
+   </div>
 
     <div class="col-span-2 flex flex-col gap-4 justify-end">
-      
       <div class="flex flex-col gap-2">
-        <p class="text-slate-500 text-xs md:text-sm font-medium ml-1">Status Siswa</p>
+        <p class="text-slate-500 text-xs md:text-sm font-medium ml-1">Poin Pelanggaran</p>
         <div class="bg-orange-50 border border-orange-100 p-4 flex items-center justify-between rounded-2xl shadow-sm">
           <div class="flex items-center gap-3">
             <div class="p-2 bg-orange-200 text-orange-700 rounded-lg">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5 text-orange-600">
                 <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                <line x1="12" y1="9" x2="12" y2="13"></line>
-                <line x1="12" y1="17" x2="12.01" y2="17"></line>
               </svg>
             </div>
-            <p class="text-orange-800 font-medium text-sm md:text-base">Poin Pelanggaran</p>
+            <p class="text-orange-800 font-bold text-sm">Status Poin</p>
           </div>
-          <p class="font-bold text-xl text-orange-600">50</p>
+          <p class="font-black text-2xl text-orange-600">50</p>
         </div>
       </div>
 
-      <form action="{{ route('siswa.chat')}}" method="GET" >
-        @csrf
-        <button class="w-full bg-emerald-500 hover:bg-emerald-600 text-white p-4 flex items-center justify-center gap-3 rounded-2xl shadow-lg shadow-emerald-100 transition-all hover:-translate-y-1 active:scale-95">
-          <span class="font-bold tracking-wide">MULAI KONSELING</span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <form action="{{ route('siswa.chat')}}" method="GET">
+        <button class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-5 flex items-center justify-center gap-3 rounded-[1.5rem] shadow-lg shadow-emerald-100 transition-all hover:-translate-y-1 active:scale-95">
+          <span class="font-bold tracking-widest text-sm">MULAI KONSELING</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
           </svg>
         </button>
       </form>
-
     </div>
   </div>
 </div>
 
-{{-- Recent chat --}}
-<div class="mt-8 font-['poppins']">
-  <h4 class="text-black font-bold text-sm">Recent Chat</h4>
-  <div class="bg-white border-2 border-blue-950 flex p-4 items-center mx-auto rounded-2xl gap-6 shadow-sm">
-    <div class="w-10 h-10 shrink-0 bg-blue-100 rounded-full items-center justify-center overflow-hidden border border-blue-200">
-        {{-- <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
-                <g fill="#132645" fill-rule="evenodd" clip-rule="evenodd">
-                    <path d="M16 9a4 4 0 1 1-8 0a4 4 0 0 1 8 0m-2 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0" />
-                    <path d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1M3 12c0 2.09.713 4.014 1.908 5.542A8.99 8.99 0 0 1 12.065 14a8.98 8.98 0 0 1 7.092 3.458A9 9 0 1 0 3 12m9 9a8.96 8.96 0 0 1-5.672-2.012A6.99 6.99 0 0 1 12.065 16a6.99 6.99 0 0 1 5.689 2.92A8.96 8.96 0 0 1 12 21" />
-                </g>
-            </svg> --}}
+{{-- Message Preview --}}
+<div class="mx-5 mt-8 font-['Poppins']">
+    <div class="flex justify-between items-center mb-3">
+        <h4 class="text-slate-500 text-xs md:text-sm font-medium ml-1">Percakapan Terbaru</h4>
+        <a href="{{ route('siswa.chat') }}" class="text-blue-600 text-[10px] font-bold hover:underline tracking-widest">BUKA CHAT</a>
     </div>
 
-    <div class="flex-1 min-w-0">
-      <h5 class="text-lg uppercase font-bood text-[#132645] leading-tight truncate"> mr. james</h5>
-      <p class="text-sm italic text-gray-500">Pesan masuk</p>
+    @if($lastChat)
+    <a href="{{ route('siswa.chat') }}" class="flex items-center gap-4 bg-white p-4 rounded-3xl shadow-sm border border-gray-100 hover:bg-gray-50 transition-all active:scale-[0.98]">
+        <div class="relative">
+            <img src="{{ asset('img/guruProfile.jpg') }}" alt="Guru BK" class="w-12 h-12 rounded-full object-cover shadow-sm border border-gray-100">
+            @if($lastChat->sender_type == 'guru' && !$lastChat->is_read)
+                <span class="absolute top-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full"></span>
+            @endif
+        </div>
+
+        <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-center">
+                <p class="text-sm font-bold text-[#1A374C] truncate">Mr. James Chao, S.Pd</p>
+                <p class="text-[10px] text-gray-400">{{ $lastChat->created_at->diffForHumans() }}</p>
+            </div>
+            <div class="flex items-center gap-1 mt-0.5">
+                @if($lastChat->sender_type == 'siswa')
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M20 6 9 17l-5-5"/></svg>
+                @endif
+                <p class="text-[11px] {{ !$lastChat->is_read && $lastChat->sender_type == 'guru' ? 'font-bold text-slate-800' : 'text-slate-500' }} truncate">
+                    {{ $lastChat->message }}
+                </p>
+            </div>
+        </div>
+    </a>
+    @else
+    <div class="bg-gray-50 border-2 border-dashed border-gray-200 p-6 rounded-3xl text-center">
+        <p class="text-gray-400 text-xs italic">Belum ada percakapan dengan Guru BK.</p>
     </div>
-  </div>
+    @endif
 </div>
 
 {{-- Self report - status laporan --}}

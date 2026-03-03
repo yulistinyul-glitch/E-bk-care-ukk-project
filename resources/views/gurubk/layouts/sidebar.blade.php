@@ -106,6 +106,13 @@
                     </a>
                 </li>
 
+                 <li class="nxl-item">
+                    <a class="nxl-link {{ Route::is('gurubk.konseling.*') ? 'active' : '' }}" href="{{ route('gurubk.konseling.index') }}">
+                        <span class="nxl-micon"><i class="feather-message-circle"></i></span>
+                        <span class="nxl-mtext">Request Konseling</span>
+                    </a>
+                </li>
+
                 <li class="nxl-item">
                     <a href="{{ route('gurubk.selfreport.index') }}" class="nxl-link">
                         <span class="nxl-micon"><i class="feather-edit"></i></span>

@@ -15,9 +15,13 @@
         </div>
 
          <div class="hidden md:flex flex-col justify-end pb-1">
-          <h1 class="text-xl font-bold text-white uppercase tracking-wide">Martin Edwards</h1>
+          <h1 class="text-xl font-bold text-white uppercase tracking-wide">
+             {{ Auth::user()->siswa->nama_siswa ?? 'Nama siswa'}}
+          </h1>
           <p class="text-blue-100 text-sm font-semibold mt-1">STUDENT</p>
-          <p class="text-blue-100 font-bold mt-1">0000123/23240001</p>
+          <p class="text-blue-100 font-bold mt-1">
+            {{ Auth::user()->username }} / {{ Auth::user()->siswa->NISN ?? 'Tidak terdeteksi'}}
+          </p>
           <button onclick="openEditPhotoModal()" class="underline text-sm mt-2 text-white">Edit profile🪄</button>
         </div>
       </div>
@@ -30,9 +34,13 @@
     </div>
 
    <div class="text-center md:hidden mt-4">
-      <h1 class="text-2xl font-bold text-[#1e3a52] uppercase tracking-wide">Martin Edwards</h1>
+      <h1 class="text-2xl font-bold text-[#1e3a52] uppercase tracking-wide">
+        {{ Auth::user()->siswa->nama_siswa ?? 'Nama siswa'}}
+      </h1>
       <p class="text-gray-500 text-sm font-semibold mt-1">STUDENT</p>
-      <p class="text-[#1e3a52] font-bold mt-1">0000123/23240001</p>
+      <p class="text-[#1e3a52] font-bold mt-1">
+        {{ Auth::user()->siswa->NIPD ?? 'Tidak terdeteksi'}} / {{ Auth::user()->siswa->NISN ?? 'Tidak terdeteksi'}}
+      </p>
       <button onclick="openEditPhotoModal()" class="underline text-sm mt-2 text-blue-950">Edit profile🪄</button>
     </div>
 
@@ -48,48 +56,64 @@
                 <div class="grid grid-cols-1 gap-4">
                     <div class="group border-b border-gray-600 pb-2 transition-all hover:border-blue-400">
                         <span class="text-[10px] text-blue-300 font-bold uppercase tracking-wider">NIS / NISN</span>
-                        <p class="text-sm md:text-base font-semibold">0000123 / 23240001</p>
+                        <p class="text-sm md:text-base font-semibold">
+                            {{ Auth::user()->siswa->NIPD ?? 'Tidak terdeteksi'}} / {{ Auth::user()->siswa->NISN ?? 'tidak terdeteksi'}}
+                        </p>
                     </div>
 
                     <div class="group border-b border-gray-600 pb-2 transition-all hover:border-blue-400">
                         <span class="text-[10px] text-blue-300 font-bold uppercase tracking-wider">Kelas</span>
-                        <p class="text-sm md:text-base font-semibold">XII RPL 1</p>
+                        <p class="text-sm md:text-base font-semibold">
+                            {{ Auth::user()->siswa->kelas->nama_kelas ?? 'tidak terdeteksi'}}
+                        </p>
                     </div>
 
                     <div class="group border-b border-gray-600 pb-2 transition-all hover:border-blue-400">
                         <span class="text-[10px] text-blue-300 font-bold uppercase tracking-wider">Jenis Kelamin</span>
-                        <p class="text-sm md:text-base font-semibold">Laki-laki</p>
+                        <p class="text-sm md:text-base font-semibold">
+                            {{ Auth::user()->siswa->JK}}
+                        </p>
                     </div>
 
                     <div class="group border-b border-gray-600 pb-2 transition-all hover:border-blue-400">
                         <span class="text-[10px] text-blue-300 font-bold uppercase tracking-wider">Tempat, Tanggal Lahir</span>
-                        <p class="text-sm md:text-base font-semibold">Bandung, 12 Januari 2007</p>
+                        <p class="text-sm md:text-base font-semibold">
+                            {{ Auth::user()->siswa->tempat_lahir}}, {{Auth::user()->siswa->tanggal_lahir}}
+                        </p>
                     </div>
 
                     <div class="group border-b border-gray-600 pb-2 transition-all hover:border-blue-400">
                         <span class="text-[10px] text-blue-300 font-bold uppercase tracking-wider">Alamat Lengkap</span>
-                        <p class="text-sm md:text-base font-semibold leading-snug">Jl. Kenangan No. 40, Cileunyi, Jawa Barat</p>
+                        <p class="text-sm md:text-base font-semibold leading-snug">
+                            {{ Auth::user()->siswa->alamat ?? 'tidak terdeteksi'}}
+                        </p>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div class="group border-b border-gray-600 pb-2">
                             <span class="text-[10px] text-blue-300 font-bold uppercase tracking-wider">Wali Kelas</span>
-                            <p class="text-xs md:text-sm font-semibold italic">Bpk. Neil aderson, S.Pd</p>
+                            <p class="text-xs md:text-sm font-semibold italic">
+                                {{ Auth::user()->siswa->kelas->walikelas->nama_guru ?? 'tidak terdeteksi'}}
+                            </p>
                         </div>
-                        <div class="group border-b border-gray-600 pb-2">
+                        {{-- <div class="group border-b border-gray-600 pb-2">
                             <span class="text-[10px] text-blue-300 font-bold uppercase tracking-wider">Nama Orang Tua</span>
                             <p class="text-xs md:text-sm font-semibold">MR. Edwards</p>
-                        </div>
+                        </div> --}}
                     </div>
 
                     <div class="flex gap-6 mt-2">
                         <div>
                             <span class="text-[10px] text-blue-300 font-bold uppercase tracking-wider block">Phone</span>
-                            <p class="text-sm font-semibold text-green-400">+62 812-3456-7890</p>
+                            <p class="text-sm font-semibold text-green-400">
+                                +62-{{ Auth::user()->siswa->no_telp ?? 'Belum ada'}}
+                            </p>
                         </div>
                         <div>
                             <span class="text-[10px] text-blue-300 font-bold uppercase tracking-wider block">Email</span>
-                            <p class="text-sm font-semibold">martin.ed@student.sch.id</p>
+                            <p class="text-sm font-semibold">
+                                {{ Auth::user()->email}}
+                            </p>
                         </div>
                     </div>
                 </div>

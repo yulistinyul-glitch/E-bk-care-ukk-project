@@ -8,15 +8,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Siswa extends Model
 {
     use SoftDeletes;
-
     protected $table = 'siswas';
-
     protected $primaryKey = 'id_siswa';
+    public $incrementing = false; 
+    protected $keyType = 'string';
 
-    public $incrementing = false; // karena ID kamu bukan auto increment
-    protected $keyType = 'string'; // karena id_siswa varchar
-
-    protected $fillable = [
+    protected $fillable = [ 
         'id_siswa',
         'id_pengguna',
         'id_kelas',
@@ -30,11 +27,12 @@ class Siswa extends Model
         'alamat',
     ];
 
+
     protected function casts():array
     {
         return[
             'tanggal_lahir' => 'date',
-            'delete_at' => 'datetime',
+            'deleted_at' => 'datetime',
         ];
     }
     
@@ -48,3 +46,4 @@ class Siswa extends Model
         return $this->belongsTo(User::class, 'id_pengguna', 'id_pengguna');
     }
 }
+

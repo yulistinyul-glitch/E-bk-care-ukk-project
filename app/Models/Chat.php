@@ -9,10 +9,10 @@ class Chat extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['konseling_id','sender_type','message','is_read'];
+    protected $fillable = ['konseling_id','sender_type','message', 'file_path', 'is_read'];
 
     public function konseling()
     {
-        return $this->belongsTo(Konseling::class, 'konseling_id', 'id_konseling');
+        return $this->belongsTo(CounselingRequest::class, 'konseling_id', 'id');
     }
 }

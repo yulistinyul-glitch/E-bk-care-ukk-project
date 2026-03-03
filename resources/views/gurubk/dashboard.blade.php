@@ -114,87 +114,143 @@
         </div>
     </div>
 
+   @php
+    date_default_timezone_set('Asia/Jakarta');
+    
+    $month = date('n'); 
+    $year = date('Y');  
+    $today = date('j'); 
+    
+    $monthName = strtoupper(date('F')); 
+    
+    $prevMonth = strtoupper(date('M', strtotime("-1 month")));
+    $nextMonth = strtoupper(date('M', strtotime("+1 month")));
+
+    $firstDayOfMonth = date('w', strtotime("$year-$month-01"));
+    $daysInMonth = date('t'); // 't' otomatis mengambil jumlah hari dalam bulan berjalan
+@endphp
+
 <div class="col-xxl-4 col-lg-5">
-    <div class="card h-100"
-         style="
-            background-color: #A9C9DB;
-            border-radius: 45px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            overflow: hidden;
-         ">
+    <div class="card h-100" style="background-color: #A9C9DB; border-radius: 45px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); overflow: hidden;">
 
         <div class="card-body p-4 d-flex flex-column text-start">
-
             <div class="d-flex justify-content-between align-items-center mb-4 px-2 text-dark">
-                <span class="fw-bold small opacity-50">JAN</span>
-
+                <span class="fw-bold small opacity-50">{{ $prevMonth }}</span>
                 <div class="text-center">
-                    <span class="badge bg-dark rounded-pill px-3 mb-1">2026</span>
-                    <h4 class="fw-bold m-0">FEBRUARI</h4>
+                    <span class="badge bg-dark rounded-pill px-3 mb-1">{{ $year }}</span>
+                    <h4 class="fw-bold m-0">{{ $monthName }}</h4>
                 </div>
-
-                <span class="fw-bold small opacity-50">MAR</span>
+                <span class="fw-bold small opacity-50">{{ $nextMonth }}</span>
             </div>
 
-            <div class="d-grid text-center mb-2"
-                 style="grid-template-columns: repeat(7, 1fr);">
+            <div class="d-grid text-center mb-2" style="grid-template-columns: repeat(7, 1fr);">
                 @foreach(['Min','Sen','Sel','Rab','Kam','Jum','Sab'] as $d)
-                    <div class="small fw-bold text-dark opacity-50"
-                         style="font-size: 11px;">{{$d}}</div>
+                    <div class="small fw-bold text-dark opacity-50" style="font-size: 11px;">{{$d}}</div>
                 @endforeach
             </div>
 
-            <div class="d-grid text-center"
-                 style="grid-template-columns: repeat(7, 1fr); gap: 2px;">
-                @for($i=1; $i<=28; $i++)
-                    <div onclick="updateSchedule({{$i}})"
-                         id="date-{{$i}}"
-                         class="calendar-day {{ $i == 24 ? 'active-date' : '' }}"
+            <div class="d-grid text-center" style="grid-template-columns: repeat(7, 1fr); gap: 2px;">
+                @for($i = 0; $i < $firstDayOfMonth; $i++)
+                    <div style="padding: 10px 0;"></div>
+                @endfor
+
+                @for($d = 1; $d <= $daysInMonth; $d++)
+                    <div onclick="updateSchedule({{ $d }})"
+                         id="date-{{ $d }}"
+                         class="calendar-day {{ $d == $today ? 'active-date' : '' }}"
                          style="padding: 10px 0;">
-                        {{$i}}
+                        {{ $d }}
                     </div>
                 @endfor
             </div>
 
             <div class="d-flex justify-content-center mt-4">
                 <button class="btn bg-white rounded-pill px-4 py-2 shadow-sm fw-bold text-primary border-0 text-uppercase"
-                        style="font-size: 11px;">
+                        style="font-size: 11px;"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalTambahJadwal">
                     <i class="feather-plus me-1"></i> TAMBAH JADWAL
                 </button>
             </div>
 
             <div style="height:2px; background:white; margin:30px 0;"></div>
 
-            <div class="rounded-4"
-                 style="border:2px solid white; overflow:hidden;">
-
-                <div class="d-flex fw-bold small text-dark"
-                     style="border-bottom:2px solid white;">
-                    <div class="w-25 text-center py-2"
-                         style="border-right:2px solid white;">
-                        JAM ⏰
-                    </div>
-                    <div class="w-75 text-center py-2">
-                        Konseling siswa
-                    </div>
+            <div class="rounded-4" style="border:2px solid white; overflow:hidden;">
+                <div class="d-flex fw-bold small text-dark" style="border-bottom:2px solid white;">
+                    <div class="w-25 text-center py-2" style="border-right:2px solid white;">JAM ⏰</div>
+                    <div class="w-75 text-center py-2">Konseling siswa</div>
                 </div>
-
-                @for($i=0; $i<4; $i++)
-                <div class="d-flex"
-                     style="border-bottom:2px solid white;">
-                    <div class="w-25 py-3"
-                         style="border-right:2px solid white;"></div>
-                    <div class="w-75 py-3"></div>
-                </div>
-                @endfor
-
+                <div id="schedule-content">
+                    </div>
             </div>
+        
+        </div>
+    </div>
+</div>
 
+
+{{-- modal popup input jadwal --}}
+
+<div class="modal fade" id="modalTambahJadwal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 30px; overflow: hidden;">
+            <div class="modal-header border-0 p-4" style="background-color: #1A374D; color:white;">
+                <h5 class="modal-title fw-bold" style="color: #ffffff"><i class="feather-calendar me-2" style="color: #ffffff"></i>BUAT JADWAL KONSELING</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form id="formTambahJadwal">
+                <div class="modal-body p-4 bg-light">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Nama Siswa</label>
+                        <input type="text" class="form-control border-0 shadow-sm rounded-4 py-2" placeholder="Masukkan nama siswa..." required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Tanggal</label>
+                            <input type="date" id="inputTgl" class="form-control border-0 shadow-sm rounded-4 py-2" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold text-muted text-uppercase">Jam</label>
+                            <input type="time" class="form-control border-0 shadow-sm rounded-4 py-2" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Kategori Masalah</label>
+                        <select class="form-select border-0 shadow-sm rounded-4 py-2">
+                            <option value="Pribadi">Masalah Pribadi (Curhat)</option>
+                            <option value="Akademik">Akademik / Belajar</option>
+                            <option value="Sosial">Bullying / Masalah Sosial</option>
+                            <option value="Aspirasi">Aspirasi Sekolah</option>
+                        </select>
+                    </div>
+
+                    <div class="p-3 rounded-4" style="background-color: rgba(26, 55, 77, 0.05); border: 1px dashed #1A374D;">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="isPrivat">
+                            <label class="form-check-label small fw-bold text-dark" for="isPrivat">
+                                <i class="feather-lock me-1"></i> Mode Sangat Privat
+                            </label>
+                        </div>
+                        <small class="text-muted d-block mt-1" style="font-size: 10px;">
+                            Jika aktif, nama siswa hanya akan terlihat oleh Anda dan tidak muncul di statistik umum.
+                        </small>
+                    </div>
+                </div>
+                
+                <div class="modal-footer border-0 p-4 bg-light">
+                    <button type="button" class="btn btn-link text-muted fw-bold text-decoration-none" data-bs-dismiss="modal">BATAL</button>
+                    <button type="submit" class="btn px-4 py-2 rounded-pill fw-bold text-white shadow" style="background-color: #1A374D;">SIMPAN JADWAL</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 </div>
+
 
 <div class="theme-customizer">
     <div class="customizer-handle"><a href="javascript:void(0);" class="cutomizer-open-trigger bg-primary"><i class="feather-settings"></i></a></div>
@@ -264,6 +320,67 @@
             grid: { show: false }
         };
         new ApexCharts(document.querySelector("#traffic-line-chart"), options).render();
+    });
+
+// calendar
+    let selectedDay = {{ $today }};
+
+    function updateSchedule(day) {
+        selectedDay = day; 
+
+        document.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('active-date'));
+        const targetDate = document.getElementById('date-' + day);
+        if (targetDate) {
+            targetDate.classList.add('active-date');
+        }
+
+        const container = document.getElementById('schedule-content');
+        
+        if (day == {{ $today }}) { 
+            container.innerHTML = `
+            <div class="d-flex animate__animated animate__fadeIn" style="border-bottom:2px solid white;">
+                <div class="w-25 text-center py-2 small" style="border-right:2px solid white;">10:00</div>
+                <div class="w-75 px-3 py-2 small font-weight-bold">Aspirasi Siswa Kelas XI</div>
+            </div>`;
+        } else {
+            container.innerHTML = '<div class="text-center py-4 opacity-50 small text-dark">Tidak ada jadwal untuk tanggal ini</div>';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        updateSchedule(selectedDay);
+    });
+
+    const modalElement = document.getElementById('modalTambahJadwal');
+    if (modalElement) {
+        modalElement.addEventListener('show.bs.modal', function () {
+            const year = {{ $year }};
+            const month = String({{ $month }}).padStart(2, '0');
+            const day = String(selectedDay).padStart(2, '0'); // Menggunakan selectedDay yang aktif
+            
+            const inputTgl = document.getElementById('inputTgl');
+            if (inputTgl) {
+                inputTgl.value = `${year}-${month}-${day}`;
+            }
+        });
+    }
+
+    const formJadwal = document.getElementById('formTambahJadwal');
+    if (formJadwal) {
+        formJadwal.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Jadwal berhasil disimpan secara privat ke database!');
+            
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('modalTambahJadwal');
+        document.body.appendChild(modal);
     });
 </script>
 @endsection

@@ -26,7 +26,9 @@ use App\Http\Controllers\GuruBk\SelfReportController;
 use App\Http\Controllers\Gurubk\DashboardbkController;
 use App\Http\Controllers\Gurubk\ChatController;
 use App\Http\Controllers\Gurubk\E_SuratController;
+use App\Http\Controllers\Gurubk\KonselingController;
 use App\Http\Controllers\Gurubk\RiwayatPelanggaranController;
+use App\Http\Controllers\Siswa\KonselingSiswaController;
 use Illuminate\Support\Facades\App;
 
 
@@ -129,14 +131,17 @@ Route::prefix('gurubk')->name('gurubk.')->group(function () {
     Route::post('/login', [GuruAuthController::class, 'login'])->name('login.submit');
 });
 
-// 2. Rute FITUR (Wajib Login & Role GuruBK)
 Route::middleware(['auth', 'role:GuruBK'])->prefix('gurubk')->name('gurubk.')->group(function () {
-    
+
     // Dashboard & Chat
     Route::get('/dashboard', [DashboardbkController::class, 'dashboard'])->name('dashboard');
     Route::get('chat', [ChatController::class, 'index'])->name('chat.index');
     Route::post('chat/{id}/reply', [ChatController::class, 'reply'])->name('chat.reply');
     Route::post('chat/{id}/read', [ChatController::class, 'markRead'])->name('chat.read');
+
+    // Konseling
+    Route::get('/conseling-request', [KonselingController::class, 'index'])->name('konseling.index');
+    Route::post('/counseling-requests/{id}/approve', [KonselingController::class, 'approve'])->name('counseling.approve');
 
     // Riwayat Pelanggaran
     Route::get('/get-siswa/{id_kelas}', [RiwayatPelanggaranController::class, 'getSiswa'])->name('riwayatpelanggaran.getSiswa'); 
@@ -188,9 +193,21 @@ Route::prefix('siswa')->name('siswa.')->group(function () {
     Route::middleware(['auth', 'role:Siswa'])->group(function () {
         Route::get('/setup-password', [SiswaAuthController::class, 'showSetupForm'])->name('setup-password');
         Route::post('/update-setup-password', [SiswaAuthController::class, 'updatePassword'])->name('update-password');
+
+        Route::get('/mailbox', [KonselingSiswaController::class, 'index'])->name('kotaksurat');
+
+        Route::get('/ajukan-konseling', [KonselingSiswaController::class, 'create'])->name('konseling.create');
+        Route::post('/ajukan-konseling', [KonselingSiswaController::class, 'store'])->name('konseling.store');
+        Route::post('/mailbox/{id}/read', [KonselingSiswaController::class, 'markAsRead'])->name('mailbox.read');
+
+        Route::get('/home', [KonselingSiswaController::class, 'home'])->name('home');
+        Route::get('/history', function() { return view('siswa.history'); })->name('history');
+        Route::get('/profile', function() { return view('siswa.profile'); })->name('profile');
+
+        // chat
+        Route::get('/chat', [DashboardSiswaController::class, 'chat'])->name('chat');
+        Route::post('/chat/send', [KonselingSiswaController::class, 'storeChat'])->name('chat.send');
         
-        Route::get('/home', function() { return view('siswa.home'); })->name('home');
-        Route::get('/chat', function() { return view('siswa.room-chat'); })->name('chat');
     });
 });
 

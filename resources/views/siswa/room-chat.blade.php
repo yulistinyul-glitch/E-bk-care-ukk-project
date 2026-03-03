@@ -53,25 +53,43 @@
 
       <div class="flex justify-center">
                 <span class="px-3 py-1 bg-slate-200 text-slate-500 text-[10px] font-bold rounded-full uppercase tracking-tighter">Hari Ini</span>
+      </div>
+
+      @foreach ($chats as $chat )
+        @if ($chat->sender_type == 'bot')
+          <div class="flex justify-center my-2 animate-pop">
+            <div class="bg-amber-50 border border-amber-100 text-amber-800 text-[10px] px-4 py-2 rounded-2xl shadow-sm text-center italic max-w-[85%]">
+              <i class="fas fa-info-circle mr-1"></i> {{ $chat->message }}
+              <span class="block text-[8px] text-amber-400 mt-1 uppercase font-bold">{{ $chat->created_at->format('H:i') }}</span>
             </div>
+          </div>
+        
+        @elseif ($chat->sender_type == 'siswa')
+          <div class="flex item-md justify-end gap-2 animate-pop">
+            <div class="max-w-[80%] bg-blue-950 text-white px-3 py-2.5 rounded-2xl rounded-br-none shadow-md">
+              @if ($chat->file_path)
+                <img src="{{ asset('storage/' . $chat->file_path) }}" alt="" class="max-w-full rounded-lg mb-2 border border-blue-800"> 
+              @endif
+              <p class="text-[13px] leading-relaxed">{{ $chat->message}}</p>
+              <div class="flex items-center justify-end gap-1 mt-1">
+               <span class="text-[9px] text-blue-200">{{ $chat->created_at->format('H:i') }}</span>
+               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-300"><path d="M20 6 9 17l-5-5"/></svg>
+              </div>
+            </div>
+          </div>
 
-    <div class="flex items-end gap-2 animate-pop">
-      <div class="max-w-[80%] bg-white text-gray-800 px-4 py-2.5 rounded-2xl rounded-bl-none shadow-sm border border-gray-200">
-        <p class="text-[13px] leading-relaxed">Halo! Selamat pagi</p>
-        <span class="text-[9px] text-gray-400 block text-right mt-1">08:30 AM</span>
-      </div>
-    </div>
-
-    <div class="flex items-end justify-end gap-2 animate-pop">
-      <div class="max-w-[80%] bg-blue-950 text-white px-4 py-2.5 rounded-t-2xl rounded-bl-2xl  shadow-md">
-        <p class="text-[13px] leading-relaxed">pagi mr.james</p>
-        <div class="flex items-center justify-end gap-1 mt-1">
-          <span class="text-[9px] text-blue-100">08:33 AM</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-100"><path d="M20 6 9 17l-5-5"/></svg>
-        </div>
-      </div>
-    </div>
-
+          @else
+            <div class="flex items-end gap-2 animate-pop">
+                <div class="max-w-[80%] bg-white text-gray-800 px-3 py-2.5 rounded-2xl rounded-bl-none shadow-sm border border-gray-200">
+                    @if($chat->file_path)
+                        <img src="{{ asset('storage/' . $chat->file_path) }}" class="max-w-full rounded-lg mb-2">
+                    @endif
+                    <p class="text-[13px] leading-relaxed">{{ $chat->message }}</p>
+                    <span class="text-[9px] text-gray-400 block text-right mt-1">{{ $chat->created_at->format('H:i') }}</span>
+                </div>
+            </div>
+        @endif  
+      @endforeach
   </div>
 
   <div class="p-3 bg-white border-t">
@@ -132,45 +150,56 @@
         previewContainer.classList.add('hidden');
     }
 
-    // Simulasi Kirim Pesan (Teks & Foto)
-    chatForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const message = userInput.value.trim();
-        const hasFile = fileInput.files.length > 0;
-        
-        if (!message && !hasFile) return;
+    chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        let contentHtml = "";
+      const message = userInput.value.trim();
+      const file = fileInput.files[0];
 
-        // Jika ada file gambar
-        if (hasFile) {
-            contentHtml += `<img src="${previewImg.src}" class="max-w-full rounded-lg mb-2 shadow-sm border border-blue-400">`;
-        }
-        
-        // Jika ada teks
-        if (message) {
-            contentHtml += `<p class="text-[13px] leading-relaxed">${message}</p>`;
-        }
-        
-        const myMessage = `
-            <div class="flex items-end justify-end gap-2 animate-pop">
+      if (!message && !file) return;
+
+      const formData = new FormData();
+      formData.append('message', message);
+      if (file) formData.append('file', file);
+      formData.append('_token', '{{ csrf_token() }}');
+
+      try {
+        const response = await fetch("{{ route('siswa.chat.send') }}" , {
+          method:'POST',
+          body:formData
+        });
+
+        const result = await response.json();
+
+        if (result.status === 'success') {
+          let contentHtml = "";
+          if (result.file_url) {
+            contentHtml += `<img src="${result.file_url}" class="max-w-full rounded-lg mb-2 shadow-sm border border-blue-400">`
+          }
+          if (result.message) {
+            contentHtml += `<p class="text-[13px] leading-relaxed">${result.message}</p>`;
+          }
+
+          const myMessage = `
+            <div class="flex items-end justify-end gap-2 animate-pop mr-6">
                 <div class="max-w-[80%] bg-blue-950 text-white px-3 py-2.5 rounded-2xl rounded-br-none shadow-md">
-                    ${contentHtml}
+                  ${contentHtml}
                     <div class="flex items-center justify-end gap-1 mt-1">
-                        <span class="text-[9px] text-blue-100">${time}</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-100"><path d="M20 6 9 17l-5-5"/></svg>
+                      <span class="text-[9px] text-blue-100">${result.time}</span>
+                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-100"><path d="M20 6 9 17l-5-5"/></svg>
                     </div>
                 </div>
-            </div>
-        `;
-        
-        chatBox.insertAdjacentHTML('beforeend', myMessage);
-        
-        // Reset form
-        userInput.value = '';
-        removePreview();
-        scrollToBottom();
+           </div>
+          `;
+
+          chatBox.insertAdjacentHTML('beforeend', myMessage);
+          userInput.value = '';
+          removePreview();
+          scrollToBottom();
+        }
+      } catch (error) {
+        alert("Gagal mengirim pesan, coba lagi. ");
+      }
     });
 
     // Auto resize textarea

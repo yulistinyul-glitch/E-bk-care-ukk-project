@@ -13,35 +13,27 @@ use Illuminate\Support\Str;
 
 class SiswaController extends Controller
 {
-    // =============================
-    // INDEX (Ditambahkan Filter Search & Kelas)
-    // =============================
-public function index(Request $request)
-{
-    $query = Siswa::query()->with('kelas.walikelas');
+    public function index(Request $request)
+    {
+        $query = Siswa::query()->with('kelas.walikelas');
 
-    // Filter pencarian
-    if ($request->filled('search')) {
-        $search = $request->input('search');
-        $query->where(function($q) use ($search) {
-            $q->where('nama_siswa', 'like', "%{$search}%")
-              ->orWhere('NIPD', 'like', "%{$search}%");
-        });
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('nama_siswa', 'like', "%{$search}%")
+                  ->orWhere('NIPD', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('kelas')) {
+            $query->where('id_kelas', $request->kelas);
+        }
+
+        $siswa = $query->paginate(10)->withQueryString();
+        $kelas = \App\Models\Kelas::all();
+
+        return view('admin.siswa.index', compact('siswa', 'kelas'));
     }
-
-    // Filter kelas
-    if ($request->filled('kelas')) {
-        $query->where('id_kelas', $request->kelas);
-    }
-
-    // Ambil data dengan pagination
-    $siswa = $query->paginate(10)->withQueryString();
-
-    // Ambil semua kelas untuk dropdown
-    $kelas = \App\Models\Kelas::all();
-
-    return view('admin.siswa.index', compact('siswa', 'kelas'));
-}
 
     public function create()
     {
@@ -64,18 +56,30 @@ public function index(Request $request)
     public function store(Request $request)
     {
         $request->validate([
+<<<<<<< HEAD
             'nama_siswa' => 'required',
             'NIPD' => 'required|unique:siswas,NIPD|max:9',
             'NISN' => 'required|max:10',
             'id_kelas' => 'required|exists:kelas,id_kelas',
             'jk' => 'required',
             'tempat_lahir' => 'required',
+=======
+            'nama_siswa'    => 'required|string|max:255',
+            'NIPD'          => 'required|digits:9|unique:siswas,NIPD',
+            'NISN'          => 'required|digits:10',
+            'id_kelas'      => 'required|exists:kelas,id_kelas',
+            'jk'            => 'required',
+            'tempat_lahir'  => 'required',
+>>>>>>> be06502cc53335a928d4fdcb27d989ade4d688d7
             'tanggal_lahir' => 'required|date',
-            'no_telp' => 'required',
-            'alamat' => 'required',
+            'no_telp'       => 'required',
+            'alamat'        => 'required',
+        ], [
+            'NIPD.digits'   => 'NIPD harus berjumlah 9 digit angka.',
+            'NIPD.unique'   => 'NIPD sudah terdaftar.',
+            'NISN.digits'   => 'NISN harus berjumlah 10 digit angka.',
         ]);
 
-        // Auto Generate ID lagi untuk keamanan data bersamaan
         $lastSiswa = Siswa::withTrashed()->latest('id_siswa')->first();
         $nextSiswaID = 'SIS' . str_pad($lastSiswa ? (int) substr($lastSiswa->id_siswa, 3) + 1 : 1, 3, '0', STR_PAD_LEFT);
 
@@ -84,7 +88,7 @@ public function index(Request $request)
 
         $user = User::create([
             'id_pengguna' => $nextPenggunaID,
-            'nama'        => $request->nama_siswa, // DIUBAH ke 'nama' sesuai error database Anda
+            'nama'        => $request->nama_siswa,
             'username'    => $request->NIPD,
             'email'       => $request->NIPD . '@example.com',
             'password'    => Hash::make('12345678'),
@@ -107,9 +111,7 @@ public function index(Request $request)
 
         return redirect()->route('admin.siswa.index')->with('success', 'Data siswa berhasil ditambahkan!');
     }
-    // =============================
-    // EDIT
-    // =============================
+
     public function edit($id)
     {
         $siswa = Siswa::where('id_siswa', $id)->firstOrFail();
@@ -118,20 +120,25 @@ public function index(Request $request)
         return view('admin.siswa.edit', compact('siswa', 'kelas'));
     }
 
-
-    // =============================
-    // UPDATE
-    // =============================
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'nama_siswa' => 'required',
-            'NIPD'       => 'required',
-            'id_kelas'   => 'required',
-            'jk'         => 'required',
-        ]);
-
         $siswa = Siswa::where('id_siswa', $id)->firstOrFail();
+
+        $request->validate([
+            'nama_siswa'    => 'required|string|max:255',
+            'NIPD'          => 'required|digits:9|unique:siswas,NIPD,' . $siswa->id_siswa . ',id_siswa',
+            'NISN'          => 'required|digits:10',
+            'id_kelas'      => 'required',
+            'jk'            => 'required',
+            'tempat_lahir'  => 'required',
+            'tanggal_lahir' => 'required|date',
+            'no_telp'       => 'required',
+            'alamat'        => 'required',
+        ], [
+            'NIPD.digits'   => 'NIPD harus berjumlah 9 digit angka.',
+            'NIPD.unique'   => 'NIPD sudah digunakan oleh siswa lain.',
+            'NISN.digits'   => 'NISN harus berjumlah 10 digit angka.',
+        ]);
 
         $siswa->update([
             'id_kelas'      => $request->id_kelas,
@@ -148,55 +155,47 @@ public function index(Request $request)
         return redirect()->route('admin.siswa.index')
             ->with('success', 'Data siswa berhasil diperbarui');
     }
-    // =============================
-    // SOFT DELETE → HISTORY
-    // =============================
+
     public function destroy($id)
     {
-$siswa = Siswa::where('id_siswa', $id)->firstOrFail();
-$siswa->delete();
+        $siswa = Siswa::where('id_siswa', $id)->firstOrFail();
+        $siswa->delete();
 
-return redirect()->route('admin.siswa.history')
-    ->with('success', 'Data ' . $siswa->nama_siswa . ' berhasil dipindahkan ke history');
+        return redirect()->route('admin.siswa.history')
+            ->with('success', 'Data ' . $siswa->nama_siswa . ' berhasil dipindahkan ke history');
     }
 
-    // =============================
-    // HISTORY
-    // =============================
     public function history()
     {
         $siswa = Siswa::onlyTrashed()->with('kelas')->paginate(10);
         return view('admin.siswa.history', compact('siswa'));
     }
 
-    // =============================
-    // RESTORE
-    // =============================
     public function restore($id)
     {
-    $siswa = Siswa::withTrashed()->where('id_siswa', $id)->firstOrFail();
-    $siswa->restore();
+        $siswa = Siswa::withTrashed()->where('id_siswa', $id)->firstOrFail();
+        $siswa->restore();
 
-    return redirect()->route('admin.siswa.index')
-        ->with('success', 'Data berhasil dikembalikan.');
+        return redirect()->route('admin.siswa.index')
+            ->with('success', 'Data berhasil dikembalikan.');
+    }
+
+    public function forceDelete($id)
+    {
+        $siswa = Siswa::onlyTrashed()->where('id_siswa', $id)->firstOrFail();
+
+        if ($siswa->id_pengguna) {
+            User::where('id_pengguna', $siswa->id_pengguna)->delete();
+        }
+
+        $siswa->forceDelete();
+
+        return redirect()->route('admin.siswa.history')->with('success', 'Data dihapus permanen');
     }
 
     // =============================
-    // FORCE DELETE
+    // IMPORT & PDF
     // =============================
-public function forceDelete($id)
-{
-    $siswa = Siswa::onlyTrashed()->where('id_siswa', $id)->firstOrFail();
-
-    if ($siswa->id_pengguna) {
-        User::where('id_pengguna', $siswa->id_pengguna)->delete();
-    }
-
-    $siswa->forceDelete();
-
-    return redirect()->route('admin.siswa.history')->with('success', 'Data dihapus permanen');
-}
-
     public function import(Request $request)
     {
         $file = $request->file('file');
@@ -205,7 +204,7 @@ public function forceDelete($id)
         $rows = array_map('str_getcsv', file($file->getRealPath()));
 
         foreach ($rows as $i => $row) {
-            if ($i == 0) continue; // Lewati Header
+            if ($i == 0) continue; 
 
             $id_siswa      = trim($row[0] ?? null); 
             $id_kelas      = trim($row[2] ?? null); 

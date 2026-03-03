@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Visi & Misi - E-BK Care')
+@section('title', 'Tentang Kami - E-BK Care')
 
 @section('content')
 

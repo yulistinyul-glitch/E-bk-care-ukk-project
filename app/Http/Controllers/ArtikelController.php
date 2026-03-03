@@ -7,7 +7,6 @@ class ArtikelController extends Controller
 {
     public function index()
     {
-        // Data Dummy untuk Artikel Unggulan (Besar di kiri)
         $unggulan = (object)[
             'title' => 'Exploring Future Renewable Energy Innovations',
             'date' => 'December 11, 2023',
@@ -15,7 +14,6 @@ class ArtikelController extends Controller
             'image' => 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80'
         ];
 
-        // Data Dummy untuk Sidebar (Kecil di kanan)
         $sidebar = [
             (object)[
                 'title' => 'From Ideas to Impact in a Startups Journey',
@@ -73,7 +71,6 @@ class ArtikelController extends Controller
             ],
         ];
 
-        // Dummy untuk footer agar tidak error
         $locations = (object)[
             'email' => 'info@example.com',
             'phone' => '(+62)-822-4545-2882',

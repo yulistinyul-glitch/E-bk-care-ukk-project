@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BK Care - Kotak Saran</title>
+    <title>Home - E-BK Care</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -16,8 +16,6 @@
         }
 
         body { font-family: 'Montserrat', sans-serif; margin: 0; overflow-x: hidden; background-color: #fff; }
-
-        /* --- HERO SECTION --- */
         .hero-section { position: relative; min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         .hero-slideshow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
         .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.5s ease-in-out; }
@@ -110,27 +108,11 @@
         .feedback-header h2 { font-weight: 800; color: var(--dark-blue); font-size: 2.4rem; }
         .feedback-header p { color: #64748b; font-size: 1rem; max-width: 650px; margin: 15px auto 0; line-height: 1.6; }
 
-        .feedback-card { 
-            background: #f8fafc; 
-            border-radius: 35px; 
-            padding: 40px; 
-            height: 100%; 
-            border: 2px solid transparent; 
-            position: relative;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            cursor: pointer;
-        }
-
-        .feedback-card:hover { 
-            transform: translateY(-10px); 
-            border-color: var(--gold);
-            background: #fff;
-            box-shadow: 0 20px 40px rgba(184, 149, 81, 0.15);
-        }
-
+        .feedback-card { background: #f8fafc; border-radius: 35px; padding: 40px; height: 100%; border: 2px solid transparent; 
+            position: relative;box-shadow: 0 4px 20px rgba(0,0,0,0.02);transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); cursor: pointer; }
+        .feedback-card:hover { transform: translateY(-10px); border-color: var(--gold); background: #fff; box-shadow: 0 20px 40px rgba(184, 149, 81, 0.15); }
         .quote-icon-top { position: absolute; top: 30px; right: 35px; font-size: 2.5rem; color: #ebf0f5; transition: 0.3s; }
-        .feedback-card:hover .quote-icon-top { color: #f1f5f9; }
+        .quote-icon-top { color: #f1f5f9; }
         
         .stars-row { color: var(--gold); font-size: 0.8rem; margin-bottom: 20px; }
         .feedback-text { font-style: italic; color: #334155; font-size: 0.95rem; line-height: 1.8; margin-bottom: 30px; }
@@ -160,10 +142,8 @@
             box-shadow: none !important;
         }
 
-        .faq-section .accordion-button:not(.collapsed) { 
-            color: var(--gold); 
-            background: transparent; 
-        }
+        .faq-section .accordion-button:not(.collapsed) { color: var(--gold); background: transparent; }
+        .faq-section .accordion-button::after {filter: grayscale(1) brightness(0.5); }
 
         .faq-section .accordion-button::after {
             filter: brightness(0) invert(1);
@@ -178,16 +158,8 @@
 
         /* FOOTER CTA LINK */
         .feedback-footer-link { text-align: center; margin-top: 50px; }
-        .btn-feedback-cta {
-            color: var(--dark-blue);
-            text-decoration: none;
-            font-weight: 800;
-            font-size: 1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: 0.3s;
-        }
+        .btn-feedback-cta { color: var(--dark-blue); text-decoration: none; font-weight: 800; font-size: 1rem; display: inline-flex;
+            align-items: center; gap: 10px; transition: 0.3s; }
         .btn-feedback-cta:hover { color: var(--gold); transform: translateX(5px); }
 
         @media (max-width: 768px) {
@@ -480,12 +452,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Hamburger Menu
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.getElementById('navMenu');
         hamburger.onclick = () => { hamburger.classList.toggle('open'); navMenu.classList.toggle('active'); };
 
-        // Hero Slideshow
         let heroIdx = 0;
         const heroSlides = document.querySelectorAll('.slide');
         setInterval(() => {
@@ -494,7 +464,6 @@
             heroSlides[heroIdx].classList.add('active');
         }, 5000);
 
-        // Artikel Slider Logic
         const cards = document.querySelectorAll('.custom-card');
         const dotsContainer = document.getElementById('dotsContainer');
         let currentIndex = 2; 

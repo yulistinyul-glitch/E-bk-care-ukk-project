@@ -18,8 +18,6 @@ class BotResponded implements ShouldBroadcast
     {
         $this->chat = $chat;
     }
-
-    // Channel broadcast, tetap unik per konseling
     public function broadcastOn()
     {
         return new Channel('chat.' . $this->chat->konseling_id);

@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Data Siswa</title>
-    {{-- Font --}}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -21,7 +20,7 @@
 
         .form-box { 
             width: 100%;
-            max-width: 550px; /* Diperkecil sedikit */
+            max-width: 550px; 
             background: white; 
             padding: 30px; 
             border-radius: 20px; 
@@ -32,22 +31,22 @@
             font-weight: 600; 
             color: #2D3436; 
             margin-bottom: 20px; 
-            font-size: 1.25rem; /* Judul lebih kecil */
+            font-size: 1.25rem; 
         }
 
         .form-label { 
             font-weight: 500; 
             color: #2D3436; 
             margin-bottom: 6px; 
-            font-size: 0.85rem; /* Label lebih kecil */
+            font-size: 0.85rem; 
         }
 
         .form-control, .form-select {
             border: 1.5px solid #DFE6E9;
             border-radius: 10px;
-            padding: 8px 12px; /* Padding input diperkecil */
+            padding: 8px 12px; 
             color: #2D3436;
-            font-size: 0.85rem; /* Text input lebih kecil */
+            font-size: 0.85rem; 
         }
 
         .form-control[readonly] {
@@ -60,6 +59,10 @@
             box-shadow: 0 0 0 3px rgba(93, 95, 239, 0.1);
             border-color: #5D5FEF;
             outline: none;
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
         }
 
         .button-group { 
@@ -81,7 +84,7 @@
             justify-content: center; 
             gap: 8px;
             font-weight: 500; 
-            font-size: 0.85rem; /* Font tombol lebih kecil */
+            font-size: 0.85rem; 
             transition: 0.3s;
         }
 
@@ -97,7 +100,7 @@
             justify-content: center; 
             gap: 8px;
             font-weight: 500; 
-            font-size: 0.85rem; /* Font tombol lebih kecil */
+            font-size: 0.85rem; 
             transition: 0.3s;
         }
 
@@ -110,9 +113,10 @@
             color: white; 
         }
 
-        /* Styling tambahan untuk textarea */
-        textarea.form-control {
-            font-size: 0.85rem;
+        .alert {
+            font-size: 0.8rem;
+            padding: 10px;
+            border-radius: 10px;
         }
     </style>
 </head>
@@ -120,6 +124,17 @@
 
 <div class="form-box">
     <h4 class="text-center">Edit Data Siswa</h4>
+
+    {{-- Alert Error --}}
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
     <form action="{{ route('admin.siswa.update', $siswa->id_siswa) }}" method="POST">
         @csrf
@@ -138,28 +153,36 @@
 
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label">NIPD</label>
-                <input type="text" name="NIPD" id="NIPD" class="form-control" value="{{ $siswa->NIPD }}">
+                <label class="form-label">NIPD (9 Digit)</label>
+                <input type="text" name="NIPD" id="NIPD" 
+                    class="form-control @error('NIPD') is-invalid @enderror" 
+                    value="{{ old('NIPD', $siswa->NIPD) }}" maxlength="9" 
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '');">
             </div>
 
             <div class="col-md-6 mb-3">
-                <label class="form-label">NISN</label>
-                <input type="text" name="NISN" class="form-control" value="{{ $siswa->NISN }}">
+                <label class="form-label">NISN (10 Digit)</label>
+                <input type="text" name="NISN" 
+                    class="form-control @error('NISN') is-invalid @enderror" 
+                    value="{{ old('NISN', $siswa->NISN) }}" maxlength="10" 
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '');">
             </div>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Nama Lengkap</label>
-            <input type="text" name="nama_siswa" class="form-control" value="{{ $siswa->nama_siswa }}" required>
+            <input type="text" name="nama_siswa" 
+                class="form-control @error('nama_siswa') is-invalid @enderror" 
+                value="{{ old('nama_siswa', $siswa->nama_siswa) }}" required>
         </div>
 
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label">Kelas</label>
-                <select name="id_kelas" id="id_kelas" class="form-select" required>
+                <select name="id_kelas" id="id_kelas" class="form-select @error('id_kelas') is-invalid @enderror" required>
                     <option value="">Pilih Kelas</option>
                     @foreach($kelas as $k)
-                        <option value="{{ $k->id_kelas }}" {{ $siswa->id_kelas == $k->id_kelas ? 'selected' : '' }}>
+                        <option value="{{ $k->id_kelas }}" {{ old('id_kelas', $siswa->id_kelas) == $k->id_kelas ? 'selected' : '' }}>
                             {{ $k->nama_kelas == 10 ? 'X' : ($k->nama_kelas == 11 ? 'XI' : 'XII') }}
                             {{ $k->jurusan }}
                             {{ $k->nomor_ruang }}
@@ -170,9 +193,9 @@
 
             <div class="col-md-6 mb-3">
                 <label class="form-label">Jenis Kelamin</label>
-                <select name="jk" class="form-select" required>
-                    <option value="L" {{ $siswa->JK == 'L' ? 'selected' : '' }}>Laki-laki</option>
-                    <option value="P" {{ $siswa->JK == 'P' ? 'selected' : '' }}>Perempuan</option>
+                <select name="jk" class="form-select @error('jk') is-invalid @enderror" required>
+                    <option value="L" {{ old('jk', $siswa->JK) == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                    <option value="P" {{ old('jk', $siswa->JK) == 'P' ? 'selected' : '' }}>Perempuan</option>
                 </select>
             </div>
         </div>
@@ -180,23 +203,23 @@
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label">Tempat Lahir</label>
-                <input type="text" name="tempat_lahir" class="form-control" value="{{ $siswa->tempat_lahir }}">
+                <input type="text" name="tempat_lahir" class="form-control" value="{{ old('tempat_lahir', $siswa->tempat_lahir) }}">
             </div>
 
             <div class="col-md-6 mb-3">
                 <label class="form-label">Tanggal Lahir</label>
-                <input type="date" name="tanggal_lahir" class="form-control" value="{{ $siswa->tanggal_lahir }}">
+                <input type="date" name="tanggal_lahir" class="form-control" value="{{ old('tanggal_lahir', $siswa->tanggal_lahir) }}">
             </div>
         </div>
 
         <div class="mb-3">
             <label class="form-label">No. Telepon</label>
-            <input type="text" name="no_telp" class="form-control" value="{{ $siswa->no_telp }}">
+            <input type="text" name="no_telp" class="form-control" value="{{ old('no_telp', $siswa->no_telp) }}">
         </div>
 
         <div class="mb-3">
             <label class="form-label">Alamat Lengkap</label>
-            <textarea name="alamat" class="form-control" rows="2">{{ $siswa->alamat }}</textarea>
+            <textarea name="alamat" class="form-control" rows="2">{{ old('alamat', $siswa->alamat) }}</textarea>
         </div>
 
         <div class="button-group">

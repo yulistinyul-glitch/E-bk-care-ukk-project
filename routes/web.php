@@ -82,9 +82,21 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('siswa', SiswaController::class);
 
     Route::resource('kelas', KelasController::class);
+// 1. Route Khusus History harus diletakkan SEBELUM Resource
+Route::get('template_surats/history', [TemplateSuratController::class, 'history'])
+    ->name('template_surats.history');
 
-    Route::resource('template_surats', TemplateSuratController::class);
+// 2. Route Aksi Restore & Force Delete
+Route::post('template_surats/{id}/restore', [TemplateSuratController::class, 'restore'])
+    ->name('template_surats.restore');
+    
+Route::delete('template_surats/{id}/force-delete', [TemplateSuratController::class, 'forceDelete'])
+    ->name('template_surats.forceDelete');
 
+// 3. Route Resource (Letakkan paling bawah)
+Route::resource('template_surats', TemplateSuratController::class)->parameters([
+    'template_surats' => 'id'
+]);
     Route::resource('gurubk', GurubkController::class);
 
     Route::post('walikelas/import',
@@ -177,6 +189,7 @@ Route::middleware(['auth', 'role:GuruBK'])->prefix('gurubk')->name('gurubk.')->g
 |--------------------------------------------------------------------------
 */
 Route::prefix('siswa')->name('siswa.')->group(function () {
+<<<<<<< HEAD
     // --- AUTH SISWA ---
     Route::get('/login', [SiswaAuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [SiswaAuthController::class, 'login'])->name('login.submit');
@@ -219,3 +232,10 @@ Route::post('/logout', function () {
     return redirect('/');
 })->name('logout');
 
+=======
+    Route::get('/dashboard', function () {
+        return view('siswa.home');
+    })->name('home');
+});
+
+>>>>>>> be06502cc53335a928d4fdcb27d989ade4d688d7

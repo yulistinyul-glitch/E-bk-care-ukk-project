@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Service; // Menggunakan Model Service (Bahasa Inggris)
+use App\Models\Service;
 use Illuminate\Http\Request;
 
 class LayananController extends Controller
@@ -16,7 +16,6 @@ class LayananController extends Controller
     public function show($slug)
     {
         $layanan = Service::where('slug', $slug)->firstOrFail();
-
         return view('layanan_detail', compact('layanan'));
     }
 }

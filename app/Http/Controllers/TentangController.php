@@ -7,9 +7,6 @@ use Illuminate\Http\Request;
 
 class TentangController extends Controller
 {
-    /**
-     * Display the About Us page (Visi & Misi).
-     */
     public function index()
     {
         // Mengambil data visi misi pertama dari database

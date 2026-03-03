@@ -1,35 +1,36 @@
 <?php
 
-namespace App\Http\Controllers\GuruBK;
+namespace App\Http\Controllers\Gurubk;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\ESurat;
-use App\Models\Siswa;
-use App\Models\Gurubk;
-use App\Models\TemplateSurat;
+use App\Models\{Siswa, Gurubk, TemplateSurat, ESurat};
+use Illuminate\Support\Facades\{Storage, Mail, File};
+use PhpOffice\PhpWord\TemplateProcessor;
+use Carbon\Carbon;
 
 class E_SuratController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $query = ESurat::with(['siswa','gurubk','template']);
+        Carbon::setLocale('id');
 
-        // Search berdasarkan nama siswa
-        if ($request->search) {
-            $query->whereHas('siswa', function ($q) use ($request) {
-                $q->where('nama', 'like', '%'.$request->search.'%');
-            });
-        }
-
-        $surat = $query->latest()->paginate(5);
-
-        $siswa = Siswa::all();
-        $gurubk = Gurubk::all();
+        $siswa = Siswa::with(['kelas.walikelas'])->get();
+        $gurubk = Gurubk::all(); 
         $template = TemplateSurat::all();
+        
+        $surat = ESurat::with(['siswa.kelas.walikelas', 'gurubk'])
+                    ->latest()
+                    ->paginate(15);
 
-        return view('gurubk.e_surat.index',
-            compact('surat','siswa','gurubk','template'));
+        // Logika Nomor Surat Otomatis
+        $lastSurat = ESurat::whereYear('created_at', date('Y'))->latest()->first();
+        $nextNumber = $lastSurat ? ((int)explode('/', $lastSurat->nomor_surat_resmi)[0] + 1) : 1;
+        
+        $romawi = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+        $nomorOtomatis = str_pad($nextNumber, 3, '0', STR_PAD_LEFT) . "/BK/" . $romawi[date('n')] . "/" . date('Y');
+
+        return view('gurubk.e_surat.index', compact('siswa', 'gurubk', 'template', 'surat', 'nomorOtomatis'));
     }
 
     public function store(Request $request)
@@ -37,47 +38,112 @@ class E_SuratController extends Controller
         $request->validate([
             'id_siswa' => 'required',
             'id_template' => 'required',
-            'id_gurubk' => 'required',
+            'nomor_surat_resmi' => 'required',
             'tanggal_terbit' => 'required|date',
-            'keterangan_tambahan' => 'required'
+            'keterangan_tambahan' => 'required',
+            'nama_walikelas_input' => 'required', 
         ]);
 
+        Carbon::setLocale('id');
+
+        $dataSiswa = Siswa::with(['kelas.walikelas'])->where('id_siswa', $request->id_siswa)->firstOrFail();
+        
+        // Ambil Guru BK pertama jika tidak dipilih eksplisit (atau sesuaikan logic Anda)
+        $dataGuruBK = Gurubk::firstOrFail(); 
+        $dataTemplate = TemplateSurat::where('id_template', $request->id_template)->firstOrFail();
+
+        $templatePath = storage_path('app/public/template_surats/' . $dataTemplate->file);
+        
+        if (!File::exists($templatePath)) {
+            return redirect()->back()->with('error', 'File template dokumen tidak ditemukan di server.');
+        }
+
+        // 1. GENERATE WORD
+        $processor = new TemplateProcessor($templatePath);
+        $processor->setValue('nomor_surat_resmi', $request->nomor_surat_resmi);
+        $processor->setValue('nama_siswa', $dataSiswa->nama_siswa);
+        $processor->setValue('nipd', $dataSiswa->NIPD);
+        $processor->setValue('kelas', $dataSiswa->kelas->nama_lengkap ?? '-');
+        
+        $tanggalIndo = Carbon::parse($request->tanggal_terbit)->translatedFormat('d F Y');
+        $processor->setValue('tanggal', $tanggalIndo);
+        $processor->setValue('keterangan', $request->keterangan_tambahan);
+        $processor->setValue('nama_guru', $dataGuruBK->nama_gurubk);
+        $processor->setValue('walikelas', $request->nama_walikelas_input);
+
+        $fileName = 'SP_' . $dataSiswa->NIPD . '_' . time() . '.docx';
+        $directory = storage_path('app/public/generated_surats');
+        
+        if (!File::exists($directory)) {
+            File::makeDirectory($directory, 0755, true);
+        }
+
+        $processor->saveAs($directory . '/' . $fileName);
+
+        // 2. SIMPAN DATABASE
         ESurat::create([
+            'id_surat' => 'SR' . str_pad(ESurat::count() + 1, 4, '0', STR_PAD_LEFT),
+            'nomor_surat_resmi' => $request->nomor_surat_resmi,
             'id_siswa' => $request->id_siswa,
+            'id_gurubk' => $dataGuruBK->id_gurubk,
             'id_template' => $request->id_template,
-            'id_gurubk' => $request->id_gurubk,
             'tanggal_terbit' => $request->tanggal_terbit,
             'keterangan_tambahan' => $request->keterangan_tambahan,
-            'status' => 'draft'
+            'file_generate' => $fileName,
+            'status' => 'draft',
         ]);
 
-        return back()->with('success','E-SP berhasil dibuat');
+        return redirect()->back()->with('success', 'Surat Berhasil Dibuat (Status: Draft)');
     }
 
-    public function export($id)
+    public function print_pdf($id)
     {
-        $surat = ESurat::findOrFail($id);
-        $surat->status = 'pdf';
-        $surat->save();
+        $surat = ESurat::where('id_surat', $id)->firstOrFail();
+        $wordPath = storage_path('app/public/generated_surats/' . $surat->file_generate);
+        $outDir = storage_path('app/public/generated_surats');
+        $pdfName = str_replace('.docx', '.pdf', $surat->file_generate);
+        $pdfPath = $outDir . '/' . $pdfName;
 
-        return back()->with('success','PDF berhasil dibuat');
+        if (!File::exists($wordPath)) {
+            return redirect()->back()->with('error', 'File Word asal tidak ditemukan.');
+        }
+
+        if (!File::exists($pdfPath)) {
+            $libreOfficePath = '"C:\Program Files\LibreOffice\program\soffice.exe"';
+            $shellCommand = "$libreOfficePath --headless --convert-to pdf --outdir " . escapeshellarg($outDir) . " " . escapeshellarg($wordPath);
+            shell_exec($shellCommand);
+        }
+
+        if ($surat->status == 'draft') {
+            $surat->update(['status' => 'cetak_pdf']);
+        }
+
+        return view('gurubk.e_surat.preview', compact('surat', 'pdfName'));
     }
 
-    public function sendEmail($id)
+    public function send_email($id)
     {
-        $surat = ESurat::findOrFail($id);
-        $surat->status = 'emailed';
-        $surat->save();
+        $surat = ESurat::with(['siswa.kelas.walikelas'])->where('id_surat', $id)->firstOrFail();
+        $emailWali = $surat->siswa->kelas->walikelas->email ?? null;
 
-        return back()->with('success','Email berhasil dikirim');
-    }
+        if (!$emailWali) {
+            return redirect()->back()->with('error', 'Gagal kirim! Email Wali Kelas tidak ditemukan.');
+        }
 
-    public function selesai($id)
-    {
-        $surat = ESurat::findOrFail($id);
-        $surat->status = 'selesai';
-        $surat->save();
+        $pdfPath = storage_path('app/public/generated_surats/' . str_replace('.docx', '.pdf', $surat->file_generate));
 
-        return back()->with('success','Surat selesai');
+        try {
+            Mail::send('emails.surat_walikelas', ['surat' => $surat], function($m) use ($emailWali, $surat, $pdfPath) {
+                $m->to($emailWali)->subject('Pemberitahuan SP: ' . $surat->siswa->nama_siswa);
+                if (File::exists($pdfPath)) { $m->attach($pdfPath); }
+            });
+
+            // Update status ke 'sent' (Sesuai ENUM)
+            $surat->update(['status' => 'sent']);
+
+            return redirect()->route('gurubk.e_surat.index')->with('success', 'Surat berhasil dikirim ke: ' . $emailWali);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

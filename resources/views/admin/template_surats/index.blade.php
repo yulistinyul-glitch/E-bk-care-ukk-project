@@ -31,6 +31,7 @@
     .btn-action-icon { border:none;background:none;font-size:1.1rem;cursor:pointer; transition: .2s; display: inline-flex; }
     .icon-edit { color:#ffb74d; }
     .icon-delete { color:#ff7070; }
+    .icon-download { color:#5d5fef; }
     .btn-action-icon:hover { transform:scale(1.15); }
 
     .modal-content { border-radius: 20px; border: none; }
@@ -84,18 +85,20 @@
                                     {{ $t->jenis_template }}
                                 </span>
                             </td>
-                            <td class="text-muted small">
-                                <i class="bi bi-file-earmark-text"></i> {{ Str::limit($t->file, 15) }}
+                            <td>
+                                <a href="{{ route('admin.template_surats.download', $t->id_template) }}" class="text-decoration-none text-primary fw-semibold small">
+                                    <i class="bi bi-cloud-arrow-down-fill me-1"></i> Cek File
+                                </a>
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center gap-3">
                                     <button type="button" class="btn-action-icon icon-edit" 
-                                            data-bs-toggle="modal" data-bs-target="#modalEdit{{ $t->id_template }}">
+                                            data-bs-toggle="modal" data-bs-target="#modalEdit{{ $t->id_template }}" title="Edit">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
 
                                     <button type="button" class="btn-action-icon icon-delete" 
-                                            onclick="hapusData('{{ $t->id_template }}')">
+                                            onclick="hapusData('{{ $t->id_template }}')" title="Pindahkan ke History">
                                         <i class="bi bi-trash"></i>
                                     </button>
 
@@ -123,6 +126,7 @@
     </div>
 </div>
 
+{{-- MODAL CREATE --}}
 <div class="modal fade" id="modalCreate" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -135,28 +139,30 @@
                 <div class="modal-body px-4">
                     <div class="mb-3">
                         <label class="small fw-bold mb-1">Nama Template</label>
-                        <input type="text" name="nama_template" class="input-modal" required placeholder="Masukkan nama template">
+                        <input type="text" name="nama_template" class="input-modal" required placeholder="Contoh: Surat Peringatan 1">
                     </div>
                     <div class="mb-3">
                         <label class="small fw-bold mb-1">Jenis Template</label>
                         <select name="jenis_template" class="input-modal" required>
-                            <option value="SP">SP</option>
-                            <option value="UMUM">UMUM</option>
+                            <option value="SP">SP (Surat Peringatan)</option>
+                            <option value="UMUM">UMUM (Surat Keterangan dll)</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="small fw-bold mb-1">File Dokumen</label>
-                        <input type="file" name="file" class="form-control" style="border-radius:10px; font-size:12px;" required>
+                        <label class="small fw-bold mb-1">File Dokumen (.docx)</label>
+                        <input type="file" name="file" class="form-control" style="border-radius:10px; font-size:12px;" required accept=".doc,.docx">
+                        <small class="text-muted" style="font-size: 10px;">*Wajib format .docx untuk sistem generate otomatis</small>
                     </div>
                 </div>
                 <div class="modal-footer border-0 pb-4 px-4">
-                    <button type="submit" class="btn-catat w-100">Simpan Data</button>
+                    <button type="submit" class="btn-catat w-100">Simpan Template</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+{{-- MODAL EDIT --}}
 @foreach($templates as $t)
 <div class="modal fade" id="modalEdit{{ $t->id_template }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -180,8 +186,9 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="small fw-bold mb-1">Ganti File (Opsional)</label>
-                        <input type="file" name="file" class="form-control" style="border-radius:10px; font-size:12px;">
+                        <label class="small fw-bold mb-1">Ganti File Dokumen (Opsional)</label>
+                        <input type="file" name="file" class="form-control" style="border-radius:10px; font-size:12px;" accept=".doc,.docx">
+                        <small class="text-muted" style="font-size: 10px;">Kosongkan jika tidak ingin mengganti file.</small>
                     </div>
                 </div>
                 <div class="modal-footer border-0 pb-4 px-4">
@@ -212,10 +219,22 @@
         });
     @endif
 
+    @if(session('error'))
+        Swal.fire({
+            title: 'Gagal!',
+            text: "{{ session('error') }}",
+            icon: 'error',
+            showConfirmButton: true,
+            customClass: { 
+                popup: 'my-swal-popup'
+            }
+        });
+    @endif
+
     function hapusData(id) {
         Swal.fire({
             title: 'Pindahkan ke History?',
-            text: "Data akan dipindahkan ke history.",
+            text: "Data akan dipindahkan ke daftar history.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Ya, Pindahkan',

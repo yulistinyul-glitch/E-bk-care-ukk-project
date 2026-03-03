@@ -28,10 +28,11 @@ class Kelas extends Model
         return $this->hasMany(Siswa::class, 'id_kelas', 'id_kelas');
     }
 
-    public function walikelas()
-    {
-        return $this->hasOne(Walikelas::class, 'id_kelas', 'id_kelas');
-    }
+public function walikelas()
+{
+    // Menghubungkan id_walikelas di tabel kelas ke id_walikelas di tabel walikelas
+    return $this->belongsTo(Walikelas::class, 'id_walikelas', 'id_walikelas');
+}
 
     public function getNamaLengkapAttribute()
     {

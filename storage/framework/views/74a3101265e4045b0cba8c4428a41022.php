@@ -1,180 +1,165 @@
 <?php $__env->startSection('content'); ?>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<div class="container mt-4">
+<style>
+    body { background-color: #f4f7fe; font-family: 'Poppins', sans-serif; }
+    .main-wrapper { background: white; border-radius: 20px; border: none; box-shadow: 0 20px 40px rgba(0,0,0,.06) !important; padding: 35px !important; }
+    .header-title { font-size: 26px; font-weight: 800; color: #2d3748; letter-spacing: -0.5px; }
+    .icon-box { width: 48px; height: 48px; background: #ecfdf5; color: #10b981; display: inline-flex; align-items: center; justify-content: center; border-radius: 14px; margin-right: 15px; font-size: 24px; }
+    .form-label-custom { font-size: 13px; font-weight: 600; color: #718096; margin-bottom: 10px; display: block; }
+    .form-control-custom { border-radius: 12px; border: 1px solid #e2e8f0; font-size: 14px; padding: 12px 18px; transition: 0.3s; }
+    .btn-save-green { background: #10b981; color: white; border: none; padding: 12px 28px; border-radius: 12px; font-weight: 600; font-size: 13px; transition: .3s; }
+    .btn-save-green:hover { background: #059669; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2); }
+    
+    .status-badge { padding: 7px 15px; border-radius: 10px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+    .status-draft { background: #f7fafc; color: #718096; border: 1px solid #edf2f7; }
+    .status-sent { background: #f0fff4; color: #2f855a; border: 1px solid #c6f6d5; }
+    .status-print { background: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; }
 
-    <h3 class="fw-bold mb-4">Generate E-SP</h3>
+    .btn-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 38px; padding: 0 20px; border-radius: 50px; font-size: 11px; font-weight: 700; transition: 0.3s; }
+</style>
 
-    <?php if(session('success')): ?>
-        <div class="alert alert-success">
-            <?php echo e(session('success')); ?>
-
+<div class="container-fluid py-5 px-5">
+    
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div class="d-flex align-items-center">
+            <div class="icon-box shadow-sm"><i class="bi bi-shield-check"></i></div>
+            <h4 class="header-title mb-0">E-Surat Peringatan</h4>
         </div>
-    <?php endif; ?>
-
-    <div class="card border-0 rounded-4 mb-5"
-         style="box-shadow: 0 15px 40px rgba(0,0,0,0.15);">
-        <div class="card-body">
-
-            <form action="<?php echo e(route('gurubk.e_surat.store')); ?>" method="POST">
-                <?php echo csrf_field(); ?>
-
-                <div class="row">
-
-                    <div class="col-md-4 mb-3">
-                        <label class="fw-semibold">Siswa</label>
-                        <select name="id_siswa" class="form-control" required>
-                            <option value="">-- Pilih Siswa --</option>
-                            <?php $__currentLoopData = $siswa; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($s->id); ?>">
-                                    <?php echo e($s->nama); ?>
-
-                                </option>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </select>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label class="fw-semibold">Template</label>
-                        <select name="id_template" class="form-control" required>
-                            <option value="">-- Pilih Template --</option>
-                            <?php $__currentLoopData = $template; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $t): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($t->id); ?>">
-                                    <?php echo e($t->nama_template); ?>
-
-                                </option>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </select>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label class="fw-semibold">Tanggal Terbit</label>
-                        <input type="date"
-                               name="tanggal_terbit"
-                               class="form-control"
-                               required>
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-                        <label class="fw-semibold">Keterangan</label>
-                        <textarea name="keterangan_tambahan"
-                                  class="form-control"
-                                  rows="2"
-                                  required></textarea>
-                    </div>
-
-                </div>
-
-                <button type="submit" class="btn btn-success rounded-pill px-4">
-                    Simpan
-                </button>
-
-            </form>
+        <div class="badge bg-white text-dark border shadow-sm px-4 py-2" style="border-radius: 12px;">
+            <i class="bi bi-calendar3 me-2 text-primary"></i><?php echo e(date('d F Y')); ?>
 
         </div>
     </div>
 
-    <div class="d-flex justify-content-end mb-3">
-        <form method="GET" class="w-50">
-            <div class="input-group">
-                <input type="text"
-                       name="search"
-                       class="form-control rounded-start-pill"
-                       placeholder="Cari Nama Siswa"
-                       value="<?php echo e(request('search')); ?>">
-                <button class="btn btn-outline-secondary rounded-end-pill">
-                    🔍
+    
+    <div class="main-wrapper mb-5">
+        <div class="mb-5 border-start border-5 border-success ps-4">
+            <h5 class="fw-bold mb-1">Buat Dokumen SP Baru</h5>
+            <p class="text-muted small mb-0">Input data pelanggaran untuk generate surat resmi</p>
+        </div>
+
+        <form action="<?php echo e(route('gurubk.e_surat.store')); ?>" method="POST">
+            <?php echo csrf_field(); ?>
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <label class="form-label-custom">Pilih Siswa</label>
+                    <select name="id_siswa" id="siswa_select" class="form-select form-control-custom" onchange="isiOtomatis()" required>
+                        <option value="">-- Cari Nama --</option>
+                        <?php $__currentLoopData = $siswa; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($s->id_siswa); ?>" 
+                                    data-nipd="<?php echo e($s->NIPD); ?>" 
+                                    data-kelas="<?php echo e($s->kelas->nama_lengkap ?? '-'); ?>"
+                                    data-walikelas="<?php echo e($s->kelas->walikelas->nama_guru ?? 'Belum Set'); ?>">
+                                <?php echo e($s->nama_siswa); ?>
+
+                            </option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label-custom">NIPD</label>
+                    <input type="text" id="auto_nipd" class="form-control form-control-custom bg-light border-0" readonly>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label-custom">Kelas</label>
+                    <input type="text" id="auto_kelas" class="form-control form-control-custom bg-light border-0" readonly>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label-custom text-primary">Wali Kelas Pengampu</label>
+                    <input type="text" id="auto_walikelas" class="form-control form-control-custom bg-light border-0 fw-bold text-primary" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label-custom text-danger">Nomor Surat Resmi</label>
+                    <input type="text" name="nomor_surat_resmi" class="form-control form-control-custom border-danger fw-bold text-center" value="<?php echo e($nomorOtomatis); ?>" required>
+                </div>
+                <div class="col-md-9">
+                    <label class="form-label-custom">Alasan / Keterangan Pelanggaran</label>
+                    <input type="text" name="keterangan_tambahan" class="form-control form-control-custom" placeholder="Tuliskan alasan pengeluaran SP secara detail..." required>
+                </div>
+            </div>
+
+            <div class="mt-5 pt-4 border-top">
+                <button type="submit" class="btn-save-green">
+                    <i class="bi bi-file-earmark-plus me-2"></i>Simpan & Generate Surat
                 </button>
             </div>
+            
+            <input type="hidden" name="nama_walikelas_input" id="nama_walikelas_input">
+            <input type="hidden" name="id_template" value="<?php echo e($template->first()->id_template ?? ''); ?>">
+            <input type="hidden" name="id_gurubk" value="<?php echo e($gurubk->first()->id_gurubk ?? ''); ?>">
+            <input type="hidden" name="tanggal_terbit" value="<?php echo e(date('Y-m-d')); ?>">
         </form>
     </div>
 
-    <div class="card border-0 rounded-4"
-         style="box-shadow: 0 15px 40px rgba(0,0,0,0.15);">
-        <div class="card-body">
-
+    
+    <div class="main-wrapper">
+        <h5 class="fw-bold mb-4"><i class="bi bi-clock-history text-success me-2"></i>Daftar Riwayat SP</h5>
+        <div class="table-responsive">
             <table class="table align-middle">
-                <thead class="table-light">
+                <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Nama Siswa</th>
-                        <th>Jenis SP</th>
-                        <th>Tanggal Terbit</th>
-                        <th>Status</th>
-                        <th width="200">Aksi</th>
+                        <th class="ps-4">No. Surat</th>
+                        <th>Identitas Siswa</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Aksi Operasional</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $__empty_1 = true; $__currentLoopData = $surat; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <?php $__currentLoopData = $surat; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr>
+                        <td class="ps-4 fw-bold text-danger"><?php echo e($item->nomor_surat_resmi); ?></td>
                         <td>
-                            <?php echo e(($surat->currentPage()-1)*$surat->perPage()+$loop->iteration); ?>
-
+                            <div class="fw-bold"><?php echo e($item->siswa->nama_siswa ?? 'N/A'); ?></div>
+                            <small class="text-muted"><?php echo e($item->siswa->kelas->nama_lengkap ?? '-'); ?></small>
                         </td>
-
-                        <td><?php echo e(optional($item->siswa)->nama ?? '-'); ?></td>
-
-                        <td><?php echo e(optional($item->template)->nama_template ?? '-'); ?></td>
-
-                        <td><?php echo e(\Carbon\Carbon::parse($item->tanggal_terbit)->format('d-m-Y')); ?></td>
-
-                        <td>
-                            <?php if($item->status == 'draft'): ?>
-                                <span class="badge bg-secondary">Draft</span>
-                            <?php elseif($item->status == 'pdf'): ?>
-                                <span class="badge bg-primary">PDF</span>
-                            <?php elseif($item->status == 'emailed'): ?>
-                                <span class="badge bg-warning text-dark">Emailed</span>
-                            <?php elseif($item->status == 'selesai'): ?>
-                                <span class="badge bg-success">Selesai</span>
+                        <td class="text-center">
+                            <?php if($item->status == 'sent'): ?>
+                                <span class="status-badge status-sent"><i class="bi bi-send-check-fill"></i> TERKIRIM</span>
+                            <?php elseif($item->status == 'cetak_pdf'): ?>
+                                <span class="status-badge status-print"><i class="bi bi-printer-fill"></i> DICETAK (READY)</span>
+                            <?php else: ?>
+                                <span class="status-badge status-draft"><i class="bi bi-file-earmark-text"></i> DRAFT</span>
                             <?php endif; ?>
                         </td>
-
-                        <td>
-                            <?php if($item->status == 'draft'): ?>
-                                <a href="<?php echo e(route('gurubk.e_surat.export',$item->id)); ?>"
-                                   class="btn btn-success btn-sm">
-                                   Export PDF
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="<?php echo e(route('gurubk.e_surat.print_pdf', $item->id_surat)); ?>" class="btn btn-outline-danger btn-action" target="_blank">
+                                    <i class="bi bi-printer"></i> VIEW PDF
                                 </a>
 
-                            <?php elseif($item->status == 'pdf'): ?>
-                                <a href="<?php echo e(route('gurubk.e_surat.email',$item->id)); ?>"
-                                   class="btn btn-secondary btn-sm">
-                                   Kirim Email
-                                </a>
-
-                            <?php elseif($item->status == 'emailed'): ?>
-                                <a href="<?php echo e(route('gurubk.e_surat.selesai',$item->id)); ?>"
-                                   class="btn btn-warning btn-sm">
-                                   Selesai
-                                </a>
-
-                            <?php elseif($item->status == 'selesai'): ?>
-                                <span class="badge bg-success">
-                                    ✔ Selesai
-                                </span>
-                            <?php endif; ?>
+                                <?php if($item->status !== 'sent'): ?>
+                                    <?php $emailWali = $item->siswa->kelas->walikelas->email ?? null; ?>
+                                    <form action="<?php echo e(route('gurubk.e_surat.send_email', $item->id_surat)); ?>" method="POST" class="m-0">
+                                        <?php echo csrf_field(); ?>
+                                        <button type="submit" class="btn btn-success btn-action" <?php echo e(!$emailWali ? 'disabled' : ''); ?>>
+                                            <i class="bi bi-envelope"></i> KIRIM EMAIL
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
+                            </div>
                         </td>
-
                     </tr>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                        <tr>
-                            <td colspan="6" class="text-center">
-                                Belum ada data
-                            </td>
-                        </tr>
-                    <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
             </table>
-
-            <div class="mt-3">
-                <?php echo e($surat->withQueryString()->links()); ?>
-
-            </div>
-
+            <div class="mt-4"><?php echo e($surat->links()); ?></div>
         </div>
     </div>
-
 </div>
-<?php $__env->stopSection(); ?>
 
+<script>
+    function isiOtomatis() {
+        const select = document.getElementById('siswa_select');
+        const opt = select.options[select.selectedIndex];
+        if(!opt.value) return;
+        
+        document.getElementById('auto_nipd').value = opt.getAttribute('data-nipd');
+        document.getElementById('auto_kelas').value = opt.getAttribute('data-kelas');
+        document.getElementById('auto_walikelas').value = opt.getAttribute('data-walikelas');
+        document.getElementById('nama_walikelas_input').value = opt.getAttribute('data-walikelas');
+    }
+</script>
+<?php $__env->stopSection(); ?>
 <?php echo $__env->make('gurubk.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\lenovo\E-bk-care-ukk-project\resources\views/gurubk/e_surat/index.blade.php ENDPATH**/ ?>

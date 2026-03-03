@@ -6,11 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class ESurat extends Model
 {
+    // Nama tabel di database
     protected $table = 'e_surats';
+    
+    // Primary Key (jika bukan 'id')
     protected $primaryKey = 'id_surat';
-    public $incrementing = false;
+    public $incrementing = false; // Karena id_surat pake string SR0001
     protected $keyType = 'string';
 
+    // WAJIB ADA: Daftarkan semua kolom agar bisa disimpan
     protected $fillable = [
         'id_surat',
         'nomor_surat_resmi',
@@ -19,21 +23,19 @@ class ESurat extends Model
         'id_template',
         'tanggal_terbit',
         'keterangan_tambahan',
+        'file_generate',
         'status'
     ];
 
+    // Relasi ke Siswa
     public function siswa()
     {
-        return $this->belongsTo(Siswa::class, 'id_siswa');
+        return $this->belongsTo(Siswa::class, 'id_siswa', 'id_siswa');
     }
 
+    // Relasi ke Guru BK
     public function gurubk()
     {
-        return $this->belongsTo(Gurubk::class, 'id_gurubk');
-    }
-
-    public function templatesurat()
-    {
-        return $this->belongsTo(TemplateSurat::class, 'id_template');
+        return $this->belongsTo(Gurubk::class, 'id_gurubk', 'id_gurubk');
     }
 }

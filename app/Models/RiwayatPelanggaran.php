@@ -10,14 +10,18 @@ class RiwayatPelanggaran extends Model
     protected $primaryKey = 'id_riwayat';
     public $timestamps = false;
 
-    protected $fillable = [
-        'id_siswa', 
-        'id_pelanggaran',
-        'id_gurubk', 
-        'tanggal_kejadian', 
-        'keterangan', 
-        'bukti_foto'
-    ];
+protected $fillable = [
+    'id_riwayat',
+    'id_siswa',
+    'id_pelanggaran',
+    'id_gurubk',
+    'poin',
+    'status',
+    'tanggal_kejadian',
+    'keterangan',
+    'bukti',
+    'file'
+];
 
     public function siswa() {
         return $this->belongsTo(Siswa::class, 'id_siswa', 'id_siswa');

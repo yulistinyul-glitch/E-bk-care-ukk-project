@@ -47,25 +47,14 @@
         color: #b5b5b5;
     }
 
-    .icon-right {
-        position: absolute;
-        right: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #b5b5b5;
-    }
-
     .select-kelas {
         width: 100%;
-        max-width: 500px;
+        max-width: 300px; /* Ukuran disesuaikan */
         padding: 12px 20px;
         border-radius: 15px;
         border: 1px solid #e0e0e0;
         background-color: white;
         color: #666;
-        appearance: none;
-        background-repeat: no-repeat;
-        background-position: right 20px center;
     }
 
     .btn-history {
@@ -94,6 +83,15 @@
         color: #888;
         font-weight: 600;
         padding: 15px;
+        border-bottom: 1px solid #f8f9fa;
+    }
+
+    .badge-poin {
+        background: #fff5f5;
+        color: #ff4757;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 8px;
     }
 
     .empty-state {
@@ -110,25 +108,26 @@
     </a>
 </div>
 
+{{-- Menampilkan Pesan Sukses --}}
+@if(session('success'))
+    <div class="alert alert-success border-0 shadow-sm mb-4" style="border-radius: 15px;">
+        <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+    </div>
+@endif
+
 <div class="row align-items-end mb-3">
     <div class="col-md-8">
         <div class="search-container">
             <i class="bi bi-search icon-left"></i>
             <input type="text" class="search-input" placeholder="Cari pelanggaran">
-            <i class="bi bi-sliders icon-right"></i>
         </div>
 
         <select class="select-kelas">
             <option value="">Semua kelas</option>
-            @if(isset($kelas) && $kelas->count())
-                @foreach($kelas as $k)
-                    <option value="{{ $k->id_kelas }}">
-                        {{ $k->nama_kelas }}
-                    </option>
-                @endforeach
-            @endif
+            @foreach($kelas as $k)
+                <option value="{{ $k->id_kelas }}">{{ $k->nama_lengkap }}</option>
+            @endforeach
         </select>
-
     </div>
 
     <div class="col-md-4 text-end">
@@ -154,15 +153,32 @@
                 </tr>
             </thead>
             <tbody>
-
+                @forelse($riwayat as $index => $r)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ \Carbon\Carbon::parse($r->tanggal)->format('d/m/Y') }}</td>
+                    <td class="fw-bold text-dark text-start">{{ $r->siswa->nama_siswa }}</td>
+                    <td>{{ $r->siswa->kelas->nama_lengkap }}</td>
+                    <td class="text-start">{{ $r->pelanggaran->jenis_kegiatan }}</td>
+                    <td><span class="badge-poin">{{ $r->poin }}</span></td>
+                    <td>
+                        <span class="badge {{ $r->status == 'Ringan' ? 'bg-info' : ($r->status == 'Sedang' ? 'bg-warning' : 'bg-danger') }} rounded-pill">
+                            {{ $r->status }}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-light rounded-pill"><i class="bi bi-three-dots"></i></button>
+                    </td>
+                </tr>
+                @empty
                 <tr>
                     <td colspan="8" class="empty-state">
                         <i class="bi bi-folder2-open" style="font-size: 48px;"></i>
-                        <p class="mt-3 mb-0">Belum ada data tersedia.</p>
+                        <p class="mt-3 mb-0 text-dark fw-bold">Belum ada data tersedia.</p>
                         <small>Data akan muncul setelah anda menginput pelanggaran baru.</small>
                     </td>
                 </tr>
-
+                @endforelse
             </tbody>
         </table>
     </div>

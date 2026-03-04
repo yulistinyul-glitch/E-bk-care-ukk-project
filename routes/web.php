@@ -21,6 +21,9 @@ use App\Http\Controllers\Admin\KelasController;
 use App\Http\Controllers\Admin\WalikelasController;
 use App\Http\Controllers\Admin\PelanggaranController;
 use App\Http\Controllers\Admin\TemplateSuratController;
+use App\Http\Controllers\Admin\LogAktivitasController;
+
+// Guru BK Controllers
 use App\Http\Controllers\GuruBk\SiswaController as GuruBkSiswaController;
 use App\Http\Controllers\GuruBk\SelfReportController;
 use App\Http\Controllers\Gurubk\DashboardbkController;
@@ -31,6 +34,18 @@ use App\Http\Controllers\Gurubk\RiwayatPelanggaranController;
 use App\Http\Controllers\Siswa\KonselingSiswaController;
 use Illuminate\Support\Facades\App;
 
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/', [AuthController::class, 'showLogin'])->name('login'); // Satu-satunya route dengan nama 'login'
+Route::get('/home', function () { return view('home'); });
+Route::get('/tentang', [TentangController::class, 'index'])->name('tentang.index');
+Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
+Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('layanan.show');
+Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
+Route::get('/kotaksaran', [KotakSaranController::class, 'index'])->name('kotaksaran');
 
 // Mengarahkan ke view/tentang.blade.php melalui TentangController
 Route::get('/home', function () { return view('home'); })->name('home');
@@ -55,6 +70,11 @@ Route::get('/login', function () {
 */
 
 
+/*
+|--------------------------------------------------------------------------
+| ADMIN ROUTES
+|--------------------------------------------------------------------------
+*/
 Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
@@ -82,45 +102,27 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('siswa', SiswaController::class);
 
     Route::resource('kelas', KelasController::class);
-// 1. Route Khusus History harus diletakkan SEBELUM Resource
-Route::get('template_surats/history', [TemplateSuratController::class, 'history'])
-    ->name('template_surats.history');
-
-// 2. Route Aksi Restore & Force Delete
-Route::post('template_surats/{id}/restore', [TemplateSuratController::class, 'restore'])
-    ->name('template_surats.restore');
-    
-Route::delete('template_surats/{id}/force-delete', [TemplateSuratController::class, 'forceDelete'])
-    ->name('template_surats.forceDelete');
-
-// 3. Route Resource (Letakkan paling bawah)
-Route::resource('template_surats', TemplateSuratController::class)->parameters([
-    'template_surats' => 'id'
-]);
     Route::resource('gurubk', GurubkController::class);
 
-    Route::post('walikelas/import',
-        [WalikelasController::class, 'import']
-    )->name('walikelas.import');
+    // Template Surat
+    Route::get('template_surats/history', [TemplateSuratController::class, 'history'])->name('template_surats.history');
+    Route::post('template_surats/{id}/restore', [TemplateSuratController::class, 'restore'])->name('template_surats.restore');
+    Route::delete('template_surats/{id}/force-delete', [TemplateSuratController::class, 'forceDelete'])->name('template_surats.forceDelete');
+    Route::resource('template_surats', TemplateSuratController::class)->parameters(['template_surats' => 'id']);
+    Route::get('template_surats/{id}/download', [TemplateSuratController::class, 'download'])
+        ->name('template_surats.download');
 
-    Route::get('walikelas/cetak-semua',
-        [WalikelasController::class, 'cetakSemua']
-    )->name('walikelas.cetak.semua');
-
+    // Walikelas
+    Route::post('walikelas/import', [WalikelasController::class, 'import'])->name('walikelas.import');
+    Route::get('walikelas/cetak-semua', [WalikelasController::class, 'cetakSemua'])->name('walikelas.cetak.semua');
     Route::resource('walikelas', WalikelasController::class);
 
-    Route::get('pelanggaran/import',
-        [PelanggaranController::class, 'importForm']
-    )->name('pelanggaran.import.form');
-
-    Route::post('pelanggaran/import',
-        [PelanggaranController::class, 'import']
-    )->name('pelanggaran.import');
-
+    // Pelanggaran
     Route::get('pelanggaran/history', [PelanggaranController::class, 'history'])->name('pelanggaran.history');
+    Route::get('pelanggaran/import', [PelanggaranController::class, 'importForm'])->name('pelanggaran.import.form');
+    Route::post('pelanggaran/import', [PelanggaranController::class, 'import'])->name('pelanggaran.import');
     Route::post('pelanggaran/{id}/restore', [PelanggaranController::class, 'restore'])->name('pelanggaran.restore');
     Route::delete('pelanggaran/{id}/force-delete', [PelanggaranController::class, 'forceDelete'])->name('pelanggaran.forceDelete');
-
     Route::resource('pelanggaran', PelanggaranController::class);
     });
 

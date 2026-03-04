@@ -9,18 +9,16 @@ use Illuminate\Support\Facades\Storage;
 
 class TemplateSuratController extends Controller
 {
-    public function index()
-    {
+    public function index() {
         $templates = TemplateSurat::oldest()->paginate(10);
         return view('admin.template_surats.index', compact('templates'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $request->validate([
             'nama_template'  => 'required|string|max:100',
             'jenis_template' => 'required|in:SP,UMUM', 
-            'file'           => 'required|mimes:doc,docx,pdf|max:2048',
+            'file'           => 'required|mimes:docx|max:2048',
         ]);
 
         $last = TemplateSurat::withTrashed()->orderBy('id_template', 'desc')->first();
@@ -30,39 +28,50 @@ class TemplateSuratController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $filename = $id_template . '_' . time() . '.' . $file->getClientOriginalExtension();
-
-            $file->storeAs('public/template_surats', $filename);
+            
+            // Simpan ke: storage/app/public/template_surats
+            $file->storeAs('template_surats', $filename, 'public');
 
             TemplateSurat::create([
-                'id_template'   => $id_template,
-                'nama_template' => $request->nama_template,
-                'jenis_template'=> $request->jenis_template, 
-                'file'          => $filename,
+                'id_template'    => $id_template,
+                'nama_template'  => $request->nama_template,
+                'jenis_template' => $request->jenis_template, 
+                'file'           => $filename,
             ]);
         }
-
-        return redirect()->route('admin.template_surats.index')
-            ->with('success', 'Template berhasil disimpan.');
+        return redirect()->route('admin.template_surats.index')->with('success', 'Template Berhasil Disimpan.');
     }
 
-    public function update(Request $request, $id)
-    {
+public function download($id)
+{
+    $template = TemplateSurat::withTrashed()->where('id_template', $id)->firstOrFail();
+    
+    // Gunakan array untuk membangun path agar aman dari karakter escape
+    $pathParts = [storage_path('app'), 'public', 'template_surats', $template->file];
+    $fullPath = implode(DIRECTORY_SEPARATOR, $pathParts);
+
+    if (file_exists($fullPath)) {
+        return response()->download($fullPath);
+    }
+
+    return back()->with('error', 'File tidak ditemukan. Silakan upload ulang atau pastikan file ada di folder: ' . $fullPath);
+}
+
+    public function update(Request $request, $id) {
         $template = TemplateSurat::findOrFail($id);
-        
         $request->validate([
             'nama_template'  => 'required|string|max:100',
             'jenis_template' => 'required|in:SP,UMUM',
-            'file'           => 'nullable|mimes:doc,docx,pdf|max:2048',
+            'file'           => 'nullable|mimes:docx|max:2048',
         ]);
 
         if ($request->hasFile('file')) {
-            if ($template->file && Storage::exists('public/template_surats/' . $template->file)) {
-                Storage::delete('public/template_surats/' . $template->file);
+            if ($template->file) {
+                Storage::disk('public')->delete('template_surats/' . $template->file);
             }
-            
             $file = $request->file('file');
             $filename = $template->id_template . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/template_surats', $filename);
+            $file->storeAs('template_surats', $filename, 'public');
             $template->file = $filename;
         }
 
@@ -70,45 +79,30 @@ class TemplateSuratController extends Controller
         $template->jenis_template = $request->jenis_template;
         $template->save();
 
-        return redirect()->route('admin.template_surats.index')
-            ->with('success', 'Template berhasil diperbarui.');
+        return redirect()->route('admin.template_surats.index')->with('success', 'Template Diperbarui.');
     }
 
-    public function destroy($id)
-    {
-        $template = TemplateSurat::where('id_template', $id)->firstOrFail();
-        $template->delete();
-
-        return redirect()->route('admin.template_surats.history')
-            ->with('success', 'Data berhasil dipindahkan ke history');
+    public function destroy($id) {
+        TemplateSurat::where('id_template', $id)->firstOrFail()->delete();
+        return redirect()->route('admin.template_surats.history')->with('success', 'Data masuk history.');
     }
 
-    public function history()
-    {
+    public function history() {
         $templates = TemplateSurat::onlyTrashed()->oldest()->paginate(10);
         return view('admin.template_surats.history', compact('templates'));
     }
 
-    public function restore($id)
-    {
-        $template = TemplateSurat::onlyTrashed()->where('id_template', $id)->firstOrFail();
-        $template->restore();
-
-        return redirect()->route('admin.template_surats.index')
-            ->with('success', 'Template berhasil dikembalikan ke daftar aktif.');
+    public function restore($id) {
+        TemplateSurat::onlyTrashed()->where('id_template', $id)->firstOrFail()->restore();
+        return redirect()->route('admin.template_surats.index')->with('success', 'Berhasil dikembalikan.');
     }
 
-    public function forceDelete($id)
-    {
+    public function forceDelete($id) {
         $template = TemplateSurat::onlyTrashed()->where('id_template', $id)->firstOrFail();
- 
-        if ($template->file && Storage::exists('public/template_surats/' . $template->file)) {
-            Storage::delete('public/template_surats/' . $template->file);
+        if ($template->file) {
+            Storage::disk('public')->delete('template_surats/' . $template->file);
         }
-
         $template->forceDelete();
-
-        return redirect()->route('admin.template_surats.history')
-            ->with('success', 'Template telah dihapus permanen dari database.');
+        return redirect()->route('admin.template_surats.history')->with('success', 'Dihapus permanen.');
     }
 }

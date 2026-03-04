@@ -1,20 +1,18 @@
-@extends('admin.layouts.app')
+<?php $__env->startSection('title', 'Dashboard Admin | Sistem BK Digital'); ?>
 
-@section('title', 'Dashboard Admin | Sistem BK Digital')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.css">
 
 <div class="container-fluid p-0" style="font-family: 'Inter', sans-serif; color: #1a233a; position: relative; z-index: 1;">
     
-    {{-- Header Section --}}
+    
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
         <div class="text-start">
             <h2 class="fw-bold m-0" style="color: #1a233a; letter-spacing: -1px;">Dashboard Admin</h2>
-            <p class="text-muted small m-0">Selamat datang kembali, {{ auth()->user()->name ?? 'Administrator' }}</p>
+            <p class="text-muted small m-0">Selamat datang kembali, <?php echo e(auth()->user()->name ?? 'Administrator'); ?></p>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ url('/') }}" target="_blank" class="btn btn-white bg-white shadow-sm border px-3 py-2 rounded-3 text-dark fw-bold small transition-all">
+            <a href="<?php echo e(url('/')); ?>" target="_blank" class="btn btn-white bg-white shadow-sm border px-3 py-2 rounded-3 text-dark fw-bold small transition-all">
                 <i class="feather-external-link me-2 text-primary"></i>Lihat Website
             </a>
             <button class="btn text-white px-3 py-2 rounded-3 fw-bold small shadow-sm border-0" style="background: #1a233a;">
@@ -24,10 +22,10 @@
     </div>
 
     <div class="row g-4">
-        {{-- Kolom Kiri (Main Content) --}}
+        
         <div class="col-xl-9 col-lg-8">
             
-            {{-- Hero Banner --}}
+            
             <div class="card mb-4 border-0 shadow overflow-hidden" style="background: linear-gradient(135deg, #739aef 0%, #bdd0ff 100%); border-radius: 20px;">
                 <div class="card-body p-4 d-flex justify-content-between align-items-center">
                     <div class="text-white text-start" style="z-index: 2; max-width: 60%;">
@@ -48,34 +46,34 @@
                 </div>
             </div>
 
-            {{-- Stats Cards --}}
+            
             <div class="row g-3 mb-4 text-start">
-                @php
+                <?php
                     $main_stats = [
                         ['label' => 'Total Siswa', 'val' => number_format($totalSiswa ?? 0), 'icon' => 'users', 'color' => '#3b82f6', 'id' => 'ID_STUDENT'],
                         ['label' => 'Guru BK', 'val' => number_format($totalGuruBK ?? 0), 'icon' => 'shield', 'color' => '#10b981', 'id' => 'ID_COUNSELOR'],
                         ['label' => 'Wali Kelas', 'val' => number_format($totalWalas ?? 0), 'icon' => 'briefcase', 'color' => '#f59e0b', 'id' => 'ID_WALAS']
                     ];
-                @endphp
-                @foreach($main_stats as $ms)
+                ?>
+                <?php $__currentLoopData = $main_stats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ms): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="col-md-4">
                     <div class="card border-0 shadow transition-all hover-lift" style="border-radius: 20px; border: 1px solid #f1f5f9 !important;">
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="p-3 rounded-circle d-flex align-items-center justify-content-center" style="background: {{ $ms['color'] }}10; color: {{ $ms['color'] }}; width: 45px; height: 45px;">
-                                    <i class="feather-{{ $ms['icon'] }}" style="font-size: 20px;"></i>
+                                <div class="p-3 rounded-circle d-flex align-items-center justify-content-center" style="background: <?php echo e($ms['color']); ?>10; color: <?php echo e($ms['color']); ?>; width: 45px; height: 45px;">
+                                    <i class="feather-<?php echo e($ms['icon']); ?>" style="font-size: 20px;"></i>
                                 </div>
-                                <span class="badge rounded-pill fw-bold" style="font-size: 9px; background: #f8fafc; color: #94a3b8; border: 1px solid #e2e8f0;">{{ $ms['id'] }}</span>
+                                <span class="badge rounded-pill fw-bold" style="font-size: 9px; background: #f8fafc; color: #94a3b8; border: 1px solid #e2e8f0;"><?php echo e($ms['id']); ?></span>
                             </div>
-                            <h6 class="text-muted small fw-bold mb-1">{{ $ms['label'] }}</h6>
-                            <h2 class="fw-bold m-0" style="color: #1a233a;">{{ $ms['val'] }}</h2>
+                            <h6 class="text-muted small fw-bold mb-1"><?php echo e($ms['label']); ?></h6>
+                            <h2 class="fw-bold m-0" style="color: #1a233a;"><?php echo e($ms['val']); ?></h2>
                         </div>
                     </div>
                 </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
 
-            {{-- User Table --}}
+            
             <div class="card border-0 shadow mb-4 text-start" style="border-radius: 20px;">
                 <div class="card-header bg-white border-0 py-4 px-4">
                     <h6 class="fw-bold m-0" style="color: #1a233a;">Manajemen Sesi & Autentikasi Pengguna</h6>
@@ -92,42 +90,43 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php
+                            <?php
                                 $authUsers = [
                                     ['name' => 'Budi Sudarsono', 'id' => 'BK-001', 'role' => 'Guru BK', 'status' => 'Online', 'time' => 'Baru Saja'],
                                     ['name' => 'Heny Rahmawati', 'id' => 'WL-042', 'role' => 'Wali Kelas', 'status' => 'Offline', 'time' => '2 Jam Lalu'],
                                     ['name' => 'Andi Wijaya', 'id' => 'BK-003', 'role' => 'Guru BK', 'status' => 'Online', 'time' => '5 Menit Lalu'],
                                 ];
-                            @endphp
-                            @foreach($authUsers as $u)
+                            ?>
+                            <?php $__currentLoopData = $authUsers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $u): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
                                 <td class="ps-3 border-bottom-0 py-3">
                                     <div class="d-flex align-items-center gap-3">
                                         <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" style="width: 35px; height: 35px; background: #1a233a; font-size: 11px;">
-                                            {{ substr($u['name'], 0, 1) }}
+                                            <?php echo e(substr($u['name'], 0, 1)); ?>
+
                                         </div>
                                         <div>
-                                            <span class="fw-bold small d-block">{{ $u['name'] }}</span>
-                                            <small class="text-muted" style="font-size: 10px;">ID: {{ $u['id'] }}</small>
+                                            <span class="fw-bold small d-block"><?php echo e($u['name']); ?></span>
+                                            <small class="text-muted" style="font-size: 10px;">ID: <?php echo e($u['id']); ?></small>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="small border-bottom-0">{{ $u['role'] }}</td>
+                                <td class="small border-bottom-0"><?php echo e($u['role']); ?></td>
                                 <td class="text-center border-bottom-0">
-                                    <span class="badge rounded-pill px-2 {{ $u['status'] == 'Online' ? 'bg-success-subtle text-success' : 'bg-light text-muted' }}" style="font-size: 10px;">{{ $u['status'] }}</span>
+                                    <span class="badge rounded-pill px-2 <?php echo e($u['status'] == 'Online' ? 'bg-success-subtle text-success' : 'bg-light text-muted'); ?>" style="font-size: 10px;"><?php echo e($u['status']); ?></span>
                                 </td>
-                                <td class="text-center small text-muted border-bottom-0">{{ $u['time'] }}</td>
+                                <td class="text-center small text-muted border-bottom-0"><?php echo e($u['time']); ?></td>
                                 <td class="text-end pe-3 border-bottom-0">
                                     <button class="btn btn-sm btn-light text-danger rounded-2 border"><i class="feather-log-out" style="font-size: 12px;"></i></button>
                                 </td>
                             </tr>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            {{-- Chart --}}
+            
             <div class="card border-0 shadow-sm p-4 text-start mb-4" style="border-radius: 20px;">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h6 class="fw-bold m-0">Ringkasan Konseling & Pelanggaran Bulanan</h6>
@@ -140,24 +139,24 @@
 
         </div>
 
-        {{-- Kolom Kanan (Sidebar) --}}
+        
         <div class="col-xl-3 col-lg-4 text-start">
             
-            {{-- Profile Card --}}
+            
             <div class="card border-0 shadow p-4 mb-4 text-center" style="border-radius: 20px;">
                 <div class="position-relative d-inline-block mb-3">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'Admin') }}&background=1a233a&color=fff" class="rounded-circle shadow" width="80">
+                    <img src="https://ui-avatars.com/api/?name=<?php echo e(urlencode(auth()->user()->name ?? 'Admin')); ?>&background=1a233a&color=fff" class="rounded-circle shadow" width="80">
                     <span class="position-absolute bottom-0 end-0 bg-success border border-white border-3 rounded-circle" style="width: 18px; height: 18px;"></span>
                 </div>
-                <h6 class="fw-bold mb-0">{{ auth()->user()->name ?? 'Admin Utama' }}</h6>
+                <h6 class="fw-bold mb-0"><?php echo e(auth()->user()->name ?? 'Admin Utama'); ?></h6>
                 <p class="text-muted small mb-3">Super Administrator</p>
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
+                <form action="<?php echo e(route('logout')); ?>" method="POST">
+                    <?php echo csrf_field(); ?>
                     <button type="submit" class="btn btn-danger w-100 rounded-3 fw-bold py-2 border-0 shadow-sm">Logout Sesi</button>
                 </form>
             </div>
 
-{{-- Calendar & Agenda Rapat Guru BK --}}
+
 <div class="card border-0 shadow mb-4" style="border-radius: 20px; overflow: hidden;">
     <div class="card-header bg-white border-0 pt-4 px-4">
         <h6 class="fw-bold m-0" style="color: #1a233a;">
@@ -165,13 +164,13 @@
         </h6>
     </div>
     <div class="card-body p-3">
-        {{-- Mini Calendar --}}
+        
         <div class="calendar-mini text-center mb-4 p-2 bg-light rounded-4 text-start">
             <div class="row g-0 mb-2 fw-bold text-muted" style="font-size: 10px;">
                 <div class="col text-center">S</div><div class="col text-center">M</div><div class="col text-center">T</div><div class="col text-center">W</div><div class="col text-center">T</div><div class="col text-center">F</div><div class="col text-center">S</div>
             </div>
             <div class="row g-0 small">
-                @php
+                <?php
                     $date = now();
                     $daysInMonth = $date->daysInMonth;
                     $firstDayOfMonth = $date->copy()->startOfMonth()->dayOfWeek;
@@ -179,48 +178,49 @@
                     // Dummy Data Status Rapat
                     $rapatPending = [5, 12]; // Merah
                     $rapatSelesai = [2];     // Hijau
-                @endphp
+                ?>
 
-                @for ($i = 0; $i < $firstDayOfMonth; $i++)
+                <?php for($i = 0; $i < $firstDayOfMonth; $i++): ?>
                     <div class="col-1-7 p-1 text-center"></div>
-                @endfor
+                <?php endfor; ?>
 
-                @for ($i = 1; $i <= $daysInMonth; $i++)
-                    @php
+                <?php for($i = 1; $i <= $daysInMonth; $i++): ?>
+                    <?php
                         $isToday = ($i == now()->day);
                         $isPending = in_array($i, $rapatPending);
                         $isDone = in_array($i, $rapatSelesai);
-                    @endphp
+                    ?>
                     <div class="col-1-7 p-1 text-center">
                         <div class="py-1 rounded-2 day-cell position-relative transition-all" 
-                             onclick="triggerAgendaModal('{{ $i }} {{ now()->format('F Y') }}')"
+                             onclick="triggerAgendaModal('<?php echo e($i); ?> <?php echo e(now()->format('F Y')); ?>')"
                              style="cursor: pointer; font-size: 11px;
-                                @if($isToday) 
+                                <?php if($isToday): ?> 
                                     background: #1a233a !important; color: white; font-weight: bold;
-                                @elseif($isPending)
+                                <?php elseif($isPending): ?>
                                     background: #fee2e2 !important; color: #ef4444; font-weight: bold;
-                                @elseif($isDone)
+                                <?php elseif($isDone): ?>
                                     background: #dcfce7 !important; color: #10b981; font-weight: bold;
-                                @endif">
-                            {{ $i }}
+                                <?php endif; ?>">
+                            <?php echo e($i); ?>
+
                             
-                            {{-- Titik Status --}}
-                            @if(($isPending || $isDone) && !$isToday)
+                            
+                            <?php if(($isPending || $isDone) && !$isToday): ?>
                                 <span class="position-absolute start-50 translate-middle-x" 
                                       style="bottom: 2px; width: 4px; height: 4px; border-radius: 50%; 
-                                      background: {{ $isPending ? '#ef4444' : '#10b981' }};">
+                                      background: <?php echo e($isPending ? '#ef4444' : '#10b981'); ?>;">
                                 </span>
-                            @endif
+                            <?php endif; ?>
                         </div>
                     </div>
-                    @if (($i + $firstDayOfMonth) % 7 == 0)
+                    <?php if(($i + $firstDayOfMonth) % 7 == 0): ?>
                         </div><div class="row g-0 small">
-                    @endif
-                @endfor
+                    <?php endif; ?>
+                <?php endfor; ?>
             </div>
         </div>
 
-        {{-- Legend Sederhana --}}
+        
         <div class="d-flex justify-content-center gap-3 mb-4" style="font-size: 8px; text-transform: uppercase; font-weight: bold;">
             <div class="d-flex align-items-center gap-1"><span class="rounded-circle" style="width: 6px; height: 6px; background: #ef4444;"></span> Mendatang</div>
             <div class="d-flex align-items-center gap-1"><span class="rounded-circle" style="width: 6px; height: 6px; background: #10b981;"></span> Selesai</div>
@@ -229,7 +229,7 @@
         <h6 class="fw-bold mb-3 small px-2 text-start">Daftar Rapat</h6>
         <div class="agenda-list px-1 text-start" style="max-height: 250px; overflow-y: auto;">
             
-            {{-- Rapat Mendatang (Merah) --}}
+            
             <div class="d-flex gap-3 mb-3 pb-3 border-bottom border-light">
                 <div class="text-center rounded-3 p-2" style="background: #fee2e2; min-width: 48px; height: 48px;">
                     <span class="d-block fw-bold text-danger" style="font-size: 14px; line-height: 1;">05</span>
@@ -244,7 +244,7 @@
                 </div>
             </div>
 
-            {{-- Rapat Selesai (Hijau) --}}
+            
             <div class="d-flex gap-3 mb-3 pb-3 border-bottom border-light opacity-75">
                 <div class="text-center rounded-3 p-2" style="background: #dcfce7; min-width: 48px; height: 48px;">
                     <span class="d-block fw-bold text-success" style="font-size: 14px; line-height: 1;">02</span>
@@ -260,45 +260,45 @@
 
         </div>
 
-        <button class="btn btn-light w-100 rounded-3 fw-bold mt-2 py-2" onclick="triggerAgendaModal('{{ now()->format('d F Y') }}')" style="font-size: 10px; border: 1px dashed #cbd5e1; color: #1a233a;">
+        <button class="btn btn-light w-100 rounded-3 fw-bold mt-2 py-2" onclick="triggerAgendaModal('<?php echo e(now()->format('d F Y')); ?>')" style="font-size: 10px; border: 1px dashed #cbd5e1; color: #1a233a;">
             <i class="feather-plus-circle me-1 text-primary"></i>Buat Jadwal Rapat
         </button>
     </div>
 </div>
-            {{-- Activity Log --}}
+            
             <div class="card border-0 shadow overflow-hidden" style="border-radius: 20px; background: #ffffff;">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h6 class="fw-bold m-0" style="color: #1a233a;">Log Aktivitas</h6>
-                        <span class="badge bg-danger rounded-pill" style="font-size: 9px; padding: 5px 10px;">{{ $logs->count() ?? 0 }} Terbaru</span>
+                        <span class="badge bg-danger rounded-pill" style="font-size: 9px; padding: 5px 10px;"><?php echo e($logs->count() ?? 0); ?> Terbaru</span>
                     </div>
                     <div class="activity-timeline">
-                        @forelse($logs ?? [] as $log)
-                            @php
+                        <?php $__empty_1 = true; $__currentLoopData = $logs ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $log): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                            <?php
                                 $act = strtolower($log->aktivitas);
                                 $isGuru = str_contains($log->id_pengguna, 'BK');
                                 if(str_contains($act, 'login')) { $icon = 'log-in'; $color = '#3b82f6'; }
                                 elseif(str_contains($act, 'input') || str_contains($act, 'tambah')) { $icon = 'plus-square'; $color = '#10b981'; }
                                 elseif(str_contains($act, 'hapus')) { $icon = 'trash-2'; $color = '#ef4444'; }
                                 else { $icon = 'activity'; $color = '#6366f1'; }
-                            @endphp
+                            ?>
                             <div class="d-flex gap-3 mb-4 position-relative p-2 rounded-3 transition-all activity-item">
-                                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px; background: {{ $color }}15; color: {{ $color }};">
-                                    <i class="feather-{{ $icon }}" style="font-size: 13px;"></i>
+                                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px; background: <?php echo e($color); ?>15; color: <?php echo e($color); ?>;">
+                                    <i class="feather-<?php echo e($icon); ?>" style="font-size: 13px;"></i>
                                 </div>
                                 <div class="w-100 overflow-hidden">
                                     <div class="d-flex justify-content-between align-items-start">
-                                        <p class="mb-0 small fw-bold text-dark text-truncate">{{ $log->aktivitas }}</p>
-                                        <small class="text-muted" style="font-size: 9px;">{{ \Carbon\Carbon::parse($log->waktu_akses)->diffForHumans() }}</small>
+                                        <p class="mb-0 small fw-bold text-dark text-truncate"><?php echo e($log->aktivitas); ?></p>
+                                        <small class="text-muted" style="font-size: 9px;"><?php echo e(\Carbon\Carbon::parse($log->waktu_akses)->diffForHumans()); ?></small>
                                     </div>
-                                    <small class="text-muted d-block" style="font-size: 10px;">{{ $log->guru->nama_guru ?? $log->id_pengguna }} • {{ $isGuru ? 'Guru BK' : 'Admin' }}</small>
+                                    <small class="text-muted d-block" style="font-size: 10px;"><?php echo e($log->guru->nama_guru ?? $log->id_pengguna); ?> • <?php echo e($isGuru ? 'Guru BK' : 'Admin'); ?></small>
                                 </div>
                             </div>
-                        @empty
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <div class="text-center py-4"><p class="text-muted small">Belum ada aktivitas.</p></div>
-                        @endforelse
+                        <?php endif; ?>
                     </div>
-                    <a href="{{ route('admin.log') }}" class="btn btn-light w-100 rounded-3 fw-bold py-2 border-0 shadow-sm transition-all mt-2" style="font-size: 11px; color: #1a233a; background: #f1f5f9;">
+                    <a href="<?php echo e(route('admin.log')); ?>" class="btn btn-light w-100 rounded-3 fw-bold py-2 border-0 shadow-sm transition-all mt-2" style="font-size: 11px; color: #1a233a; background: #f1f5f9;">
                         Lihat Semua <i class="feather-arrow-right ms-1"></i>
                     </a>
                 </div>
@@ -306,6 +306,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="modal fade" id="modalAgenda" tabindex="-1" aria-labelledby="modalAgendaLabel" aria-hidden="true" style="z-index: 9999;">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
@@ -316,7 +317,7 @@
             </div>
             <div class="modal-body p-4">
                 <form action="#" method="POST" id="formAgenda">
-                    @csrf
+                    <?php echo csrf_field(); ?>
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-muted">Tanggal</label>
                         <input type="text" id="display_date" class="form-control bg-light border-0 rounded-3 text-dark fw-bold" name="tanggal" readonly>
@@ -356,9 +357,10 @@
     .modal { z-index: 1050 !important; }
 </style>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
+    // Fungsi panggil modal
     function triggerAgendaModal(selectedDate) {
         document.getElementById('display_date').value = selectedDate;
         const modalEl = document.getElementById('modalAgenda');
@@ -367,9 +369,11 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
+        // Pindahkan modal ke body untuk menghindari masalah backdrop
         const modal = document.getElementById('modalAgenda');
         document.body.appendChild(modal);
 
+        // Render Chart
         const options = {
             series: [
                 { name: 'Kasus Pelanggaran', data: [31, 40, 28, 51, 42, 109, 100] }, 
@@ -389,5 +393,6 @@
         }
     });
 </script>
-@endpush
-@endsection
+<?php $__env->stopPush(); ?>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\lenovo\E-bk-care-ukk-project\resources\views/admin/dashboard.blade.php ENDPATH**/ ?>

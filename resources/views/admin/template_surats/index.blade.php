@@ -5,12 +5,12 @@
 @section('content')
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
-    body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; }
-    .header-title { font-size: 24px; font-weight: 700; color: #333; }
-    .header-subtitle { font-size: 13px; color: #888; margin-top: -5px; }
+    body { background-color: #f5f7fb; font-family: 'Inter', sans-serif; }
+    .header-title { font-size: 24px; font-weight: 900; color: #333; }
+    .header-subtitle { font-size: 13px; color: #888; margin-top: 5px; }
     
     .btn-catat { background:#5d5fef;color:white;padding:8px 18px;border-radius:10px;font-weight:600;font-size:13px;text-decoration:none;transition:.3s; border:none; cursor:pointer; }
     .btn-catat:hover { transform:translateY(-2px); color:white; opacity:0.9; }
@@ -42,6 +42,10 @@
     .swal2-html-container { font-size: 13px !important; }
     .swal2-icon { transform: scale(0.7); margin: 10px auto 5px !important; }
     .swal-button-custom { border-radius: 8px !important; padding: 6px 20px !important; font-size: 12px !important; }
+
+    /* Custom Footer for small button */
+    .modal-footer-custom { padding: 0 1.5rem 1.5rem 1.5rem; border: none; display: flex; justify-content: flex-end; }
+    .btn-save-small { padding: 6px 15px; font-size: 12px; border-radius: 8px; font-weight: 600; }
 </style>
 
 <div class="container-fluid py-4">
@@ -130,9 +134,9 @@
 <div class="modal fade" id="modalCreate" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header border-0 pt-4 px-4">
-                <h5 class="fw-bold" style="font-size:16px;">Tambah Template</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-header border-0 pt-4 px-4 position-relative d-flex justify-content-center">
+                <h5 class="fw-bold mb-0" style="font-size:16px;">Tambah Template</h5>
+                <button type="button" class="btn-close position-absolute end-0 me-4" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('admin.template_surats.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -154,8 +158,8 @@
                         <small class="text-muted" style="font-size: 10px;">*Wajib format .docx untuk sistem generate otomatis</small>
                     </div>
                 </div>
-                <div class="modal-footer border-0 pb-4 px-4">
-                    <button type="submit" class="btn-catat w-100">Simpan Template</button>
+                <div class="modal-footer-custom">
+                    <button type="submit" class="btn-catat btn-save-small">Simpan Template</button>
                 </div>
             </form>
         </div>
@@ -167,9 +171,9 @@
 <div class="modal fade" id="modalEdit{{ $t->id_template }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header border-0 pt-4 px-4">
-                <h5 class="fw-bold" style="font-size:16px;">Edit Template</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-header border-0 pt-4 px-4 position-relative d-flex justify-content-center">
+                <h5 class="fw-bold mb-0" style="font-size:16px;">Edit Template</h5>
+                <button type="button" class="btn-close position-absolute end-0 me-4" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('admin.template_surats.update', $t->id_template) }}" method="POST" enctype="multipart/form-data">
                 @csrf @method('PUT')
@@ -191,8 +195,8 @@
                         <small class="text-muted" style="font-size: 10px;">Kosongkan jika tidak ingin mengganti file.</small>
                     </div>
                 </div>
-                <div class="modal-footer border-0 pb-4 px-4">
-                    <button type="submit" class="btn-catat w-100">Update Data</button>
+                <div class="modal-footer-custom">
+                    <button type="submit" class="btn-catat btn-save-small">Update Data</button>
                 </div>
             </form>
         </div>
@@ -246,7 +250,7 @@
                 cancelButton: 'swal-button-custom'
             }
         }).then(function(result) {
-            if (result.value) {
+            if (result.isConfirmed) {
                 document.getElementById('delete-' + id).submit();
             }
         });

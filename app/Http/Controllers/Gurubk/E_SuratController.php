@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Gurubk;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\{Siswa, Gurubk, TemplateSurat, ESurat};
-use Illuminate\Support\Facades\{Storage, Mail, File};
+use App\Mail\LaporanBKMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\File;
+
 use PhpOffice\PhpWord\TemplateProcessor;
 use Carbon\Carbon;
 
@@ -121,29 +124,46 @@ class E_SuratController extends Controller
         return view('gurubk.e_surat.preview', compact('surat', 'pdfName'));
     }
 
-    public function send_email($id)
-    {
-        $surat = ESurat::with(['siswa.kelas.walikelas'])->where('id_surat', $id)->firstOrFail();
-        $emailWali = $surat->siswa->kelas->walikelas->email ?? null;
+public function send_email($id)
+{
+    // 1. Ambil data surat beserta relasi wali kelas
+    $surat = ESurat::with(['siswa.kelas.walikelas'])->where('id_surat', $id)->firstOrFail();
+    $emailWali = $surat->siswa->kelas->walikelas->email ?? null;
 
-        if (!$emailWali) {
-            return redirect()->back()->with('error', 'Gagal kirim! Email Wali Kelas tidak ditemukan.');
-        }
-
-        $pdfPath = storage_path('app/public/generated_surats/' . str_replace('.docx', '.pdf', $surat->file_generate));
-
-        try {
-            Mail::send('emails.surat_walikelas', ['surat' => $surat], function($m) use ($emailWali, $surat, $pdfPath) {
-                $m->to($emailWali)->subject('Pemberitahuan SP: ' . $surat->siswa->nama_siswa);
-                if (File::exists($pdfPath)) { $m->attach($pdfPath); }
-            });
-
-            // Update status ke 'sent' (Sesuai ENUM)
-            $surat->update(['status' => 'sent']);
-
-            return redirect()->route('gurubk.e_surat.index')->with('success', 'Surat berhasil dikirim ke: ' . $emailWali);
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
-        }
+    if (!$emailWali) {
+        return redirect()->back()->with('error', 'Gagal! Email Wali Kelas tidak ditemukan di database.');
     }
+
+    // 2. Tentukan path PDF (Mengonversi nama file .docx ke .pdf)
+    $fileNamePdf = str_replace('.docx', '.pdf', $surat->file_generate);
+    $pdfPath = storage_path('app/public/generated_surats/' . $fileNamePdf);
+
+    // 3. Cek fisik file PDF sebelum lanjut
+    if (!File::exists($pdfPath)) {
+        return redirect()->back()->with('error', 'File PDF tidak ditemukan di folder penyimpanan.');
+    }
+
+    // 4. Bungkus data untuk Mailable
+    $rincian = [
+        'subjek'   => 'Pemberitahuan SP: ' . $surat->siswa->nama_siswa,
+        'surat'    => $surat,
+        'pdf_path' => $pdfPath,
+        'nama_file'=> 'Surat_Peringatan_' . $surat->siswa->nama_siswa . '.pdf'
+    ];
+
+    try {
+        // 5. Kirim Email
+        Mail::to($emailWali)->send(new LaporanBKMail($rincian));
+
+        // 6. Update status ke 'sent'
+        $surat->update(['status' => 'sent']);
+
+        return redirect()->route('gurubk.e_surat.index')
+                         ->with('success', 'Surat Berhasil Dikirim ke Wali Kelas (' . $emailWali . ')');
+
+    } catch (\Exception $e) {
+        // Jika ada kesalahan SMTP atau jaringan
+        return redirect()->back()->with('error', 'Gagal mengirim email: ' . $e->getMessage());
+    }
+}
 }

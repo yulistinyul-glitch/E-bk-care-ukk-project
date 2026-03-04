@@ -20,9 +20,28 @@
     .status-print { background: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; }
 
     .btn-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 38px; padding: 0 20px; border-radius: 50px; font-size: 11px; font-weight: 700; transition: 0.3s; }
+    
+    /* Tambahan efek alert */
+    .alert { border: none; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
 </style>
 
 <div class="container-fluid py-5 px-5">
+    
+    {{-- Notifikasi Feedback --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     {{-- Header --}}
     <div class="d-flex justify-content-between align-items-center mb-5">
         <div class="d-flex align-items-center">
@@ -133,10 +152,16 @@
                                     @php $emailWali = $item->siswa->kelas->walikelas->email ?? null; @endphp
                                     <form action="{{ route('gurubk.e_surat.send_email', $item->id_surat) }}" method="POST" class="m-0">
                                         @csrf
-                                        <button type="submit" class="btn btn-success btn-action" {{ !$emailWali ? 'disabled' : '' }}>
+                                        <button type="submit" class="btn btn-success btn-action" 
+                                            {{ !$emailWali ? 'disabled' : '' }}
+                                            title="{{ !$emailWali ? 'Email Wali Kelas Belum Diatur' : 'Kirim Laporan ke Wali Kelas' }}">
                                             <i class="bi bi-envelope"></i> KIRIM EMAIL
                                         </button>
                                     </form>
+                                @else
+                                    <button class="btn btn-secondary btn-action" disabled>
+                                        <i class="bi bi-check2-all"></i> SELESAI
+                                    </button>
                                 @endif
                             </div>
                         </td>

@@ -47,8 +47,8 @@
 <nav class="nxl-navigation">
     <div class="navbar-wrapper">
         <div class="m-header text-center">
-            <a href="{{ route('gurubk.dashboard') }}" class="b-brand">
-                <img src="{{ asset('assets/images/bbc.png') }}" 
+            <a href="<?php echo e(route('gurubk.dashboard')); ?>" class="b-brand">
+                <img src="<?php echo e(asset('assets/images/bbc.png')); ?>" 
                      alt="Logo" 
                      class="logo logo-sm" />
             </a>
@@ -57,11 +57,12 @@
         <div class="navbar-content">
             <div class="profile-wrapper">
                 <div class="profile-frame">
-                    <img src="{{ asset('assets/images/profile.jpeg') }}" alt="Profile">
+                    <img src="<?php echo e(asset('assets/images/profile.jpeg')); ?>" alt="Profile">
                 </div>
 
                 <h6 class="profile-name">
-                    {{ auth()->user()->name ?? 'Admin' }}
+                    <?php echo e(auth()->user()->name ?? 'Admin'); ?>
+
                 </h6>
                 <small class="profile-role">NIP.</small>
             </div>
@@ -70,13 +71,13 @@
 
             <ul class="nxl-navbar">
                 <li class="nxl-item">
-                    <a href="{{ route('admin.dashboard') }}" class="nxl-link">
+                    <a href="<?php echo e(route('admin.dashboard')); ?>" class="nxl-link">
                         <span class="nxl-micon"><i class="feather-airplay"></i></span>
                         <span class="nxl-mtext">Dashboard</span>
                     </a>
                 </li>
                 <li class="nxl-item">
-                    <a href="{{ route('admin.siswa.index') }}" class="nxl-link">
+                    <a href="<?php echo e(route('admin.siswa.index')); ?>" class="nxl-link">
                         <span class="nxl-micon"><i class="feather-users"></i></span>
                         <span class="nxl-mtext">Data Siswa</span>
                     </a>
@@ -90,13 +91,13 @@
 
                     <ul class="nxl-submenu">
                         <li class="nxl-item">
-                            <a href="{{ route('admin.gurubk.index') }}" class="nxl-link">
+                            <a href="<?php echo e(route('admin.gurubk.index')); ?>" class="nxl-link">
                                 <span class="nxl-mtext">Data Guru BK</span>
                             </a>
                         </li>
 
                         <li class="nxl-item">
-                            <a href="{{ route('admin.walikelas.index') }}" class="nxl-link">
+                            <a href="<?php echo e(route('admin.walikelas.index')); ?>" class="nxl-link">
                                 <span class="nxl-mtext">Data Walikelas</span>
                             </a>
                         </li>
@@ -104,35 +105,35 @@
                 </li>
 
                 <li class="nxl-item">
-                    <a href="{{ route('admin.kelas.index') }}" class="nxl-link">
+                    <a href="<?php echo e(route('admin.kelas.index')); ?>" class="nxl-link">
                         <span class="nxl-micon"><i class="feather-layers"></i></span>
                         <span class="nxl-mtext">Data Kelas</span>
                     </a>
                 </li>
 
                 <li class="nxl-item">
-                    <a href="{{ route('admin.pelanggaran.index') }}" class="nxl-link">
+                    <a href="<?php echo e(route('admin.pelanggaran.index')); ?>" class="nxl-link">
                         <span class="nxl-micon"><i class="feather-file-text"></i></span>
                         <span class="nxl-mtext">Data Pelanggaran</span>
                     </a>
                 </li>
 
                 <li class="nxl-item">
-                    <a href="{{ route('admin.template_surats.index') }}" class="nxl-link">
+                    <a href="<?php echo e(route('admin.template_surats.index')); ?>" class="nxl-link">
                         <span class="nxl-micon"><i class="feather-bar-chart-2"></i></span>
                         <span class="nxl-mtext">Laporan E-SP</span>
                     </a>
                 </li>
 
-<li class="nxl-item nxl-hasmenu {{ Route::is('admin.log') ? 'active nxl-trigger' : '' }}">
+<li class="nxl-item nxl-hasmenu <?php echo e(Route::is('admin.log') ? 'active nxl-trigger' : ''); ?>">
     <a href="javascript:void(0);" class="nxl-link">
         <span class="nxl-micon"><i class="feather-activity"></i></span>
         <span class="nxl-mtext">Monitoring</span>
         <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
     </a>
     <ul class="nxl-submenu">
-        <li class="nxl-item {{ Route::is('admin.log') ? 'active' : '' }}">
-            <a href="{{ route('admin.log') }}" class="nxl-link">
+        <li class="nxl-item <?php echo e(Route::is('admin.log') ? 'active' : ''); ?>">
+            <a href="<?php echo e(route('admin.log')); ?>" class="nxl-link">
                 <span class="nxl-mtext">Log Aktivitas</span>
             </a>
         </li>
@@ -143,7 +144,7 @@
             <div class="divider-white"></div>
             <div class="logout-btn">
                 <form method="POST" action="">
-                    @csrf
+                    <?php echo csrf_field(); ?>
                     <button type="submit" class="btn btn-light px-4">
                         <i class="feather-log-out me-1"></i> Logout
                     </button>
@@ -152,3 +153,4 @@
         </div>
     </div>
 </nav>
+<?php /**PATH C:\Users\lenovo\E-bk-care-ukk-project\resources\views/admin/layouts/sidebar.blade.php ENDPATH**/ ?>

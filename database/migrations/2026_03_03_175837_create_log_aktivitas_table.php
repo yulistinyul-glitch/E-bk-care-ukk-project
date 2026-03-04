@@ -10,11 +10,10 @@ return new class extends Migration
     {
         Schema::create('log_aktivitas', function (Blueprint $table) {
             $table->string('id_log', 8)->primary();
-
             $table->string('id_pengguna', 6);
-            $table->enum('aktivitas', ['login', 'input data', 'hapus data', 'edit data']);
-
-            $table->timestamps();
+            $table->enum('aktivitas', ['login', 'input data', 'hapus data', 'edit data', 'download']);
+            $table->string('keterangan')->nullable(); 
+            $table->timestamp('waktu_akses')->useCurrent();
 
             $table->foreign('id_pengguna')
                   ->references('id_pengguna')

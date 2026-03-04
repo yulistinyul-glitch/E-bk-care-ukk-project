@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\KelasController;
 use App\Http\Controllers\Admin\WalikelasController;
 use App\Http\Controllers\Admin\PelanggaranController;
 use App\Http\Controllers\Admin\TemplateSuratController;
+use App\Http\Controllers\Admin\LogAktivitasController;
 
 // Guru BK Controllers
 use App\Http\Controllers\GuruBk\SiswaController as GuruBkSiswaController;
@@ -89,6 +90,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('pelanggaran/{id}/restore', [PelanggaranController::class, 'restore'])->name('pelanggaran.restore');
     Route::delete('pelanggaran/{id}/force-delete', [PelanggaranController::class, 'forceDelete'])->name('pelanggaran.forceDelete');
     Route::resource('pelanggaran', PelanggaranController::class);
+Route::get('/monitoring/log', [LogAktivitasController::class, 'indexLog'])->name('log');
 });
 
 /*
@@ -124,6 +126,7 @@ Route::get('e_surat/{id}/print-pdf', [E_SuratController::class, 'print_pdf'])->n
 
     // Route Resource (Otomatis: index, store, dll)
     Route::resource('e_surat', E_SuratController::class)->except(['destroy']);
+
 });
 
 /*

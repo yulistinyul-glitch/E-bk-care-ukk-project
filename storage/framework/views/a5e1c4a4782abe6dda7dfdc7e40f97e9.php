@@ -1,8 +1,6 @@
-@extends('gurubk.layouts.app')
+<?php $__env->startSection('title', 'Pelanggaran siswa'); ?>
 
-@section('title', 'Pelanggaran siswa')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
@@ -103,17 +101,18 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="header-title">Pelanggaran siswa</h4>
 
-    <a href="{{ route('gurubk.riwayatpelanggaran.create') }}" class="btn-catat">
+    <a href="<?php echo e(route('gurubk.riwayatpelanggaran.create')); ?>" class="btn-catat">
         + Catat pelanggaran
     </a>
 </div>
 
-{{-- Menampilkan Pesan Sukses --}}
-@if(session('success'))
+
+<?php if(session('success')): ?>
     <div class="alert alert-success border-0 shadow-sm mb-4" style="border-radius: 15px;">
-        <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+        <i class="bi bi-check-circle-fill me-2"></i> <?php echo e(session('success')); ?>
+
     </div>
-@endif
+<?php endif; ?>
 
 <div class="row align-items-end mb-3">
     <div class="col-md-8">
@@ -124,9 +123,9 @@
 
         <select class="select-kelas">
             <option value="">Semua kelas</option>
-            @foreach($kelas as $k)
-                <option value="{{ $k->id_kelas }}">{{ $k->nama_lengkap }}</option>
-            @endforeach
+            <?php $__currentLoopData = $kelas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <option value="<?php echo e($k->id_kelas); ?>"><?php echo e($k->nama_lengkap); ?></option>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </select>
     </div>
 
@@ -153,24 +152,25 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($riwayat as $index => $r)
+                <?php $__empty_1 = true; $__currentLoopData = $riwayat; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $r): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                 <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ \Carbon\Carbon::parse($r->tanggal)->format('d/m/Y') }}</td>
-                    <td class="fw-bold text-dark text-start">{{ $r->siswa->nama_siswa }}</td>
-                    <td>{{ $r->siswa->kelas->nama_lengkap }}</td>
-                    <td class="text-start">{{ $r->pelanggaran->jenis_kegiatan }}</td>
-                    <td><span class="badge-poin">{{ $r->poin }}</span></td>
+                    <td><?php echo e($index + 1); ?></td>
+                    <td><?php echo e(\Carbon\Carbon::parse($r->tanggal)->format('d/m/Y')); ?></td>
+                    <td class="fw-bold text-dark text-start"><?php echo e($r->siswa->nama_siswa); ?></td>
+                    <td><?php echo e($r->siswa->kelas->nama_lengkap); ?></td>
+                    <td class="text-start"><?php echo e($r->pelanggaran->jenis_kegiatan); ?></td>
+                    <td><span class="badge-poin"><?php echo e($r->poin); ?></span></td>
                     <td>
-                        <span class="badge {{ $r->status == 'Ringan' ? 'bg-info' : ($r->status == 'Sedang' ? 'bg-warning' : 'bg-danger') }} rounded-pill">
-                            {{ $r->status }}
+                        <span class="badge <?php echo e($r->status == 'Ringan' ? 'bg-info' : ($r->status == 'Sedang' ? 'bg-warning' : 'bg-danger')); ?> rounded-pill">
+                            <?php echo e($r->status); ?>
+
                         </span>
                     </td>
                     <td>
                         <button class="btn btn-sm btn-light rounded-pill"><i class="bi bi-three-dots"></i></button>
                     </td>
                 </tr>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <tr>
                     <td colspan="8" class="empty-state">
                         <i class="bi bi-folder2-open" style="font-size: 48px;"></i>
@@ -178,10 +178,11 @@
                         <small>Data akan muncul setelah anda menginput pelanggaran baru.</small>
                     </td>
                 </tr>
-                @endforelse
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('gurubk.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\lenovo\E-bk-care-ukk-project\resources\views/gurubk/riwayatpelanggaran/index.blade.php ENDPATH**/ ?>

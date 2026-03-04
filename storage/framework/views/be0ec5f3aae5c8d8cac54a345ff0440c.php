@@ -140,29 +140,31 @@
     <div class="form-box">
         <h4 class="text-center">Catat Pelanggaran Siswa</h4>
 
-        {{-- Form Filter (Hanya untuk ambil data dropdown) --}}
-        <form action="{{ route('gurubk.riwayatpelanggaran.create') }}" method="GET">
+        
+        <form action="<?php echo e(route('gurubk.riwayatpelanggaran.create')); ?>" method="GET">
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Pilih Kelas</label>
                     <select name="id_kelas" class="form-select" onchange="this.form.submit()">
                         <option value="">Pilih Kelas</option>
-                        @foreach($kelas as $k)
-                            <option value="{{ $k->id_kelas }}" {{ request('id_kelas') == $k->id_kelas ? 'selected' : '' }}>
-                                {{ $k->nama_lengkap }}
+                        <?php $__currentLoopData = $kelas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($k->id_kelas); ?>" <?php echo e(request('id_kelas') == $k->id_kelas ? 'selected' : ''); ?>>
+                                <?php echo e($k->nama_lengkap); ?>
+
                             </option>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Nama Siswa</label>
                     <select name="id_siswa" class="form-select" onchange="this.form.submit()">
                         <option value="">Pilih Siswa</option>
-                        @foreach($siswa as $s)
-                            <option value="{{ $s->id_siswa }}" {{ request('id_siswa') == $s->id_siswa ? 'selected' : '' }}>
-                                {{ $s->nama_siswa }}
+                        <?php $__currentLoopData = $siswa; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($s->id_siswa); ?>" <?php echo e(request('id_siswa') == $s->id_siswa ? 'selected' : ''); ?>>
+                                <?php echo e($s->nama_siswa); ?>
+
                             </option>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
                 </div>
             </div>
@@ -171,11 +173,12 @@
                 <label class="form-label">Kategori Pelanggaran</label>
                 <select name="kategori_pilih" class="form-select" onchange="this.form.submit()">
                     <option value="">Pilih Kategori</option>
-                    @foreach($kategori as $kat)
-                        <option value="{{ $kat->kategori_pelanggaran }}" {{ request('kategori_pilih') == $kat->kategori_pelanggaran ? 'selected' : '' }}>
-                            {{ $kat->kategori_pelanggaran }}
+                    <?php $__currentLoopData = $kategori; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($kat->kategori_pelanggaran); ?>" <?php echo e(request('kategori_pilih') == $kat->kategori_pelanggaran ? 'selected' : ''); ?>>
+                            <?php echo e($kat->kategori_pelanggaran); ?>
+
                         </option>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             </div>
 
@@ -183,39 +186,40 @@
                 <label class="form-label">Jenis Kegiatan</label>
                 <select name="id_pelanggaran" class="form-select" onchange="this.form.submit()">
                     <option value="">Pilih Jenis Pelanggaran</option>
-                    @foreach($jenis_pelanggaran as $j)
-                        <option value="{{ $j->id_pelanggaran }}" {{ request('id_pelanggaran') == $j->id_pelanggaran ? 'selected' : '' }}>
-                            {{ $j->jenis_kegiatan }}
+                    <?php $__currentLoopData = $jenis_pelanggaran; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $j): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($j->id_pelanggaran); ?>" <?php echo e(request('id_pelanggaran') == $j->id_pelanggaran ? 'selected' : ''); ?>>
+                            <?php echo e($j->jenis_kegiatan); ?>
+
                         </option>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
             </div>
         </form>
 
         <hr>
 
-        {{-- Form Simpan (Utama) --}}
-        <form action="{{ route('gurubk.riwayatpelanggaran.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            {{-- Input Hidden untuk melempar data filter ke Store --}}
-            <input type="hidden" name="id_siswa" value="{{ request('id_siswa') }}">
-            <input type="hidden" name="id_pelanggaran" value="{{ request('id_pelanggaran') }}">
+        
+        <form action="<?php echo e(route('gurubk.riwayatpelanggaran.store')); ?>" method="POST" enctype="multipart/form-data">
+            <?php echo csrf_field(); ?>
+            
+            <input type="hidden" name="id_siswa" value="<?php echo e(request('id_siswa')); ?>">
+            <input type="hidden" name="id_pelanggaran" value="<?php echo e(request('id_pelanggaran')); ?>">
 
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Tingkatan</label>
-                    <input type="text" class="form-control" readonly value="{{ $detail ? strtoupper($detail->tingkatan) : '-' }}">
+                    <input type="text" class="form-control" readonly value="<?php echo e($detail ? strtoupper($detail->tingkatan) : '-'); ?>">
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Poin</label>
-                    <input type="text" class="form-control text-danger-custom" readonly value="{{ $detail ? $detail->poin_pelanggaran : '0' }}">
+                    <input type="text" class="form-control text-danger-custom" readonly value="<?php echo e($detail ? $detail->poin_pelanggaran : '0'); ?>">
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Tanggal Kejadian</label>
-                    <input type="date" name="tanggal" class="form-control" value="{{ date('Y-m-d') }}" required>
+                    <input type="date" name="tanggal" class="form-control" value="<?php echo e(date('Y-m-d')); ?>" required>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Jenis Bukti</label>
@@ -238,8 +242,8 @@
             </div>
 
             <div class="button-group">
-                <a href="{{ route('gurubk.riwayatpelanggaran.index') }}" class="btn-kembali">Batal</a>
-                <button type="submit" class="btn-simpan" {{ !request('id_siswa') || !request('id_pelanggaran') ? 'disabled' : '' }}>
+                <a href="<?php echo e(route('gurubk.riwayatpelanggaran.index')); ?>" class="btn-kembali">Batal</a>
+                <button type="submit" class="btn-simpan" <?php echo e(!request('id_siswa') || !request('id_pelanggaran') ? 'disabled' : ''); ?>>
                     Simpan Pelanggaran
                 </button>
             </div>
@@ -249,4 +253,4 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
+</html><?php /**PATH C:\Users\lenovo\E-bk-care-ukk-project\resources\views/gurubk/riwayatpelanggaran/create.blade.php ENDPATH**/ ?>

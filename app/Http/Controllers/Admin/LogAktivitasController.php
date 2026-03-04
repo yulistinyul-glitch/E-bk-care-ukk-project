@@ -8,29 +8,20 @@ use Illuminate\Support\Facades\Auth;
 
 class LogAktivitasController extends Controller
 {
-    public function indexLog()
-    {
-        $user = Auth::user();
-        
-        // Gunakan query builder yang bersih
-        $query = DB::table('log_aktivitas')->orderBy('waktu_akses', 'desc');
+public function indexLog()
+{
+    $user = Auth::user();
+    
+    // Ambil data mentah tanpa JOIN dulu agar data PASTI muncul
+    $logs = DB::table('log_aktivitas')
+              ->orderBy('waktu_akses', 'desc')
+              ->paginate(15);
 
-        if ($user && ($user->role == 'guru' || $user->role == 'admin')) {
-            // GURU: Pakai leftJoin agar data log tetap muncul meskipun usernya (amit-amit) terhapus
-            $logs = $query->leftJoin('users', 'log_aktivitas.id_pengguna', '=', 'users.id')
-                          ->select('log_aktivitas.*', 'users.name as nama_user')
-                          ->paginate(15);
-            $role = 'guru';
-            $title = 'Monitoring Log Aktivitas';
-        } else {
-            // SISWA: Hanya ambil miliknya sendiri
-            $userId = $user ? $user->id : 0;
-            $logs = $query->where('id_pengguna', $userId)
-                          ->paginate(15);
-            $role = 'siswa';
-            $title = 'Riwayat Aktivitas';
-        }
+    // Deteksi role secara sederhana untuk title
+    $role = ($user && ($user->role == 'guru' || $user->role == 'admin')) ? 'guru' : 'siswa';
+    $title = ($role == 'guru') ? 'Monitoring Log Aktivitas' : 'Riwayat Aktivitas';
 
-        return view('admin.log_aktivitas.index', compact('logs', 'role', 'title'));
-    }
+    // Pastikan path view sesuai folder yang kamu sebutkan (admin/monitoring/log_aktivitas)
+    return view('admin.log_aktivitas.index', compact('logs', 'role', 'title'));
+}
 }

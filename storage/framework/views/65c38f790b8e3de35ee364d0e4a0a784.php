@@ -152,5 +152,4 @@
             </div>
         </div>
     </div>
-</nav>
-<?php /**PATH C:\Users\lenovo\E-bk-care-ukk-project\resources\views/admin/layouts/sidebar.blade.php ENDPATH**/ ?>
+</nav><?php /**PATH C:\Users\lenovo\E-bk-care-ukk-project\resources\views/admin/layouts/sidebar.blade.php ENDPATH**/ ?>

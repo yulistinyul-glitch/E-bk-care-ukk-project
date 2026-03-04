@@ -17,7 +17,6 @@
         padding: 10px;
     }
 
-    /* Tabel Styling agar mirip gambar */
     .table-custom thead th { 
         background: #f8fafc; 
         font-size: 11px; 
@@ -35,7 +34,6 @@
         color: #1e293b;
     }
 
-    /* Icon Activity Styling */
     .icon-box {
         width: 32px;
         height: 32px;
@@ -47,7 +45,6 @@
         margin-right: 12px;
     }
 
-    /* Warna & Ikon Berdasarkan Aktivitas */
     .bg-soft-blue { background: #e0f2fe; color: #0369a1; } /* Login */
     .bg-soft-orange { background: #ffedd5; color: #c2410c; } /* Input */
     .bg-soft-purple { background: #f3e8ff; color: #7e22ce; } /* Edit */
@@ -83,8 +80,7 @@
                         $isGuru = str_contains($log->id_pengguna, 'BK');
                         $act = strtolower($log->aktivitas);
                         $ket = $log->keterangan ?? $log->aktivitas;
-                        
-                        // Logika Penentuan Ikon dan Warna
+
                         if($act == 'login') {
                             $icon = 'bi-door-open'; $colorClass = 'bg-soft-blue'; $label = 'LOGIN SISTEM';
                         } elseif(!$isGuru && $act == 'input data') {
@@ -101,7 +97,7 @@
                     ?>
                     <tr>
                         <td class="text-center text-muted"><?php echo e($logs->firstItem() + $index); ?></td>
-                        <td><a href="#" class="id-log-text">#<?php echo e($log->id_log); ?></a></td>
+                        <td><a href="#" class="id-log-text">#<?php echo e($log->   id_log); ?></a></td>
                         <td>
                             <div class="role-text">
                                 <i class="bi <?php echo e($isGuru ? 'bi-person-badge-fill' : 'bi-person-fill'); ?> text-secondary"></i>

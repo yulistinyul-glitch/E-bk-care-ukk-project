@@ -97,7 +97,7 @@
                     @endphp
                     <tr>
                         <td class="text-center text-muted">{{ $logs->firstItem() + $index }}</td>
-                        <td><a href="#" class="id-log-text">#{{ $log->id_log }}</a></td>
+                        <td><a href="#" class="id-log-text">#{{ $log->   id_log }}</a></td>
                         <td>
                             <div class="role-text">
                                 <i class="bi {{ $isGuru ? 'bi-person-badge-fill' : 'bi-person-fill' }} text-secondary"></i>

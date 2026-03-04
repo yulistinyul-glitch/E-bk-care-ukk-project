@@ -56,21 +56,12 @@ class SiswaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-<<<<<<< HEAD
             'nama_siswa' => 'required',
             'NIPD' => 'required|unique:siswas,NIPD|max:9',
             'NISN' => 'required|max:10',
             'id_kelas' => 'required|exists:kelas,id_kelas',
             'jk' => 'required',
             'tempat_lahir' => 'required',
-=======
-            'nama_siswa'    => 'required|string|max:255',
-            'NIPD'          => 'required|digits:9|unique:siswas,NIPD',
-            'NISN'          => 'required|digits:10',
-            'id_kelas'      => 'required|exists:kelas,id_kelas',
-            'jk'            => 'required',
-            'tempat_lahir'  => 'required',
->>>>>>> be06502cc53335a928d4fdcb27d989ade4d688d7
             'tanggal_lahir' => 'required|date',
             'no_telp'       => 'required',
             'alamat'        => 'required',

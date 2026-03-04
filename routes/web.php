@@ -39,36 +39,20 @@ use Illuminate\Support\Facades\App;
 | Public Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/', [AuthController::class, 'showLogin'])->name('login'); // Satu-satunya route dengan nama 'login'
-Route::get('/home', function () { return view('home'); });
-Route::get('/tentang', [TentangController::class, 'index'])->name('tentang.index');
-Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
-Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('layanan.show');
-Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
-Route::get('/kotaksaran', [KotakSaranController::class, 'index'])->name('kotaksaran');
-
-// Mengarahkan ke view/tentang.blade.php melalui TentangController
-Route::get('/home', function () { return view('home'); })->name('home');
-Route::get('/tentang', [TentangController::class, 'index'])->name('tentang.index');
-
-Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
-Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('layanan.show');
-
-Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
-
-Route::get('/kotaksaran', [KotakSaranController::class, 'index'])->name('kotaksaran');
-
-Route::get('/', function () {return view('welcome'); });
+Route::get('/', function () { 
+    return view('home'); 
+})->name('home');
 
 Route::get('/login', function () {
     return view('auth.login'); 
 })->name('login');
-/*
-|--------------------------------------------------------------------------
-| ADMIN AUTH & FUNCTION
-|--------------------------------------------------------------------------
-*/
 
+Route::get('/home', function () { return view('home'); })->name('home');
+Route::get('/tentang', [TentangController::class, 'index'])->name('tentang.index');
+Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
+Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('layanan.show');
+Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
+Route::get('/kotaksaran', [KotakSaranController::class, 'index'])->name('kotaksaran');
 
 /*
 |--------------------------------------------------------------------------
@@ -124,6 +108,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('pelanggaran/{id}/restore', [PelanggaranController::class, 'restore'])->name('pelanggaran.restore');
     Route::delete('pelanggaran/{id}/force-delete', [PelanggaranController::class, 'forceDelete'])->name('pelanggaran.forceDelete');
     Route::resource('pelanggaran', PelanggaranController::class);
+    });
+
+    Route::prefix('monitoring')->group(function () {
+
+        Route::get('/log', [LogAktivitasController::class, 'indexLog'])->name('log');
+        
     });
 
     Route::post('/logout-admin', function (Request $request) { Auth::logout();

@@ -307,7 +307,6 @@
     </div>
 </div>
 
-
 <div class="modal fade" id="modalAgenda" tabindex="-1" aria-labelledby="modalAgendaLabel" aria-hidden="true" style="z-index: 9999;">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
@@ -360,7 +359,6 @@
 <?php $__env->startPush('scripts'); ?>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
-    // Fungsi panggil modal
     function triggerAgendaModal(selectedDate) {
         document.getElementById('display_date').value = selectedDate;
         const modalEl = document.getElementById('modalAgenda');
@@ -369,11 +367,9 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-        // Pindahkan modal ke body untuk menghindari masalah backdrop
         const modal = document.getElementById('modalAgenda');
         document.body.appendChild(modal);
 
-        // Render Chart
         const options = {
             series: [
                 { name: 'Kasus Pelanggaran', data: [31, 40, 28, 51, 42, 109, 100] }, 

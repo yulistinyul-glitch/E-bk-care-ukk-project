@@ -20,25 +20,31 @@ class SiswaAuthController extends Controller
     }
 
     public function login(Request $request) {
-    $credentials = $request->validate([
-        'username' => 'required',
-        'password' => 'required',
+    $request->validate([
+        'username' => 'required', 
+        'password' => 'required', 
     ]);
 
-    if (Auth::attempt(['username' => $request->username, 'password' => $request->password, 'role' => 'Siswa'])) {
-        $user = Auth::user();
+    $siswa = \App\Models\Siswa::where('nama_siswa', $request->username)
+                ->where('NIPD', $request->password)
+                ->first();
 
-        if ($user->is_first_login == 1) {
+    if ($siswa) {
+        $user = $siswa->user; 
+
+        if ($user && $user->is_first_login == 1) {
+            Auth::login($user);
             return redirect()->route('siswa.setup-password');
         }
+    }
 
+    if (Auth::attempt(['username' => $request->username, 'password' => $request->password, 'role' => 'Siswa'])) {
         return redirect()->intended(route('siswa.home'));
     }
 
-    return back()->withErrors(['username' => 'Kredensial tidak cocok.']);
+    return back()->withErrors(['username' => 'Nama/NIPD atau Password salah.']);
     }
 
-    // Menampilkan halaman input NIPD untuk Forgot Password
     public function showForgotForm() {
         return view('auth.forgetpw'); 
     }
@@ -131,22 +137,22 @@ class SiswaAuthController extends Controller
         'password' => 'required|min:8|confirmed',
     ]);
 
+    // Ambil user yang sedang login (dari proses Alur A tadi)
     $user = User::with('siswa')->find(Auth::id());
     
     if (!$user || !$user->siswa) {
-        return redirect()->route('siswa.login')->withErrors(['error' => 'Data profil siswa tidak ditemukan.']);
+        return redirect()->route('siswa.login')->withErrors(['error' => 'Data tidak ditemukan.']);
     }
 
-    $newUsername = $user->siswa->NIPD;
-
+    // Update data di tabel users
     $user->update([
-        'username' => $newUsername, 
-        'email' => $request->email,    
+        'username' => $user->siswa->NIPD,
+        'email' => $request->email,
         'password' => Hash::make($request->password),
-        'is_first_login' => 0
+        'is_first_login' => 0 
     ]);
 
-    Auth::logout();
+    Auth::logout(); 
     
     return redirect()->route('siswa.login')->with('success', 'Akun aktif! Silakan login menggunakan NIPD kamu.');
     }

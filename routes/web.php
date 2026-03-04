@@ -189,7 +189,6 @@ Route::middleware(['auth', 'role:GuruBK'])->prefix('gurubk')->name('gurubk.')->g
 |--------------------------------------------------------------------------
 */
 Route::prefix('siswa')->name('siswa.')->group(function () {
-<<<<<<< HEAD
     // --- AUTH SISWA ---
     Route::get('/login', [SiswaAuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [SiswaAuthController::class, 'login'])->name('login.submit');
@@ -232,10 +231,3 @@ Route::post('/logout', function () {
     return redirect('/');
 })->name('logout');
 
-=======
-    Route::get('/dashboard', function () {
-        return view('siswa.home');
-    })->name('home');
-});
-
->>>>>>> be06502cc53335a928d4fdcb27d989ade4d688d7

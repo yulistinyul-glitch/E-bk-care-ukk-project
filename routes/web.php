@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\App;
 | Public Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/', [AuthController::class, 'showLogin'])->name('login'); // Satu-satunya route dengan nama 'login'
+// Route::get('/', [AuthController::class, 'showLogin'])->name('login'); // Satu-satunya route dengan nama 'login'
 Route::get('/home', function () { return view('home'); });
 Route::get('/tentang', [TentangController::class, 'index'])->name('tentang.index');
 Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
@@ -180,6 +180,9 @@ Route::middleware(['auth', 'role:GuruBK'])->prefix('gurubk')->name('gurubk.')->g
     Route::get('e_surat/{id}/email', [E_SuratController::class, 'sendEmail'])->name('e_surat.email');
     Route::get('e_surat/{id}/selesai', [E_SuratController::class, 'selesai'])->name('e_surat.selesai');
     Route::resource('e_surat', E_SuratController::class)->except(['destroy']);
+
+    // 
+    Route::get('e_surat/{id}/print', [E_SuratController::class, 'printPdf'])->name('e_surat.print_pdf');
     
     // Logout
     Route::post('/logout', [GuruAuthController::class, 'logout'])->name('logout');

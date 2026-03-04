@@ -60,7 +60,7 @@ class KonselingSiswaController extends Controller
 
     public function home()
     {
-        $id_siswa = Auth::user()->id_siswa;
+        $id_siswa = Auth::user()->siswa->id_siswa;
 
         $lastChat = Chat::whereHas('konseling', function($query) use ($id_siswa) {
                         $query->where('id_siswa', $id_siswa);

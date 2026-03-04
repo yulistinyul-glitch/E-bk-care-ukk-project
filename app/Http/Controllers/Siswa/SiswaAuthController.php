@@ -19,30 +19,34 @@ class SiswaAuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request) {
+   public function login(Request $request) {
     $request->validate([
         'username' => 'required', 
-        'password' => 'required', 
+        'password' => 'required', // Input NIPD
     ]);
 
+    // 1. CARI DI DATA YANG SUDAH ADA (Tabel Siswas)
     $siswa = \App\Models\Siswa::where('nama_siswa', $request->username)
                 ->where('NIPD', $request->password)
                 ->first();
 
     if ($siswa) {
-        $user = $siswa->user; 
+        $user = $siswa->user; // Ambil akun di tabel users yang terhubung
 
+        // Cek apakah dia memang belum aktivasi (is_first_login == 1)
         if ($user && $user->is_first_login == 1) {
-            Auth::login($user);
+            // LOGIN OTOMATIS (Bypass/Tanpa cek password di tabel users)
+            Auth::login($user); 
             return redirect()->route('siswa.setup-password');
         }
     }
 
+    // 2. JALUR LOGIN BIASA (Untuk yang sudah aktivasi/ganti password)
     if (Auth::attempt(['username' => $request->username, 'password' => $request->password, 'role' => 'Siswa'])) {
         return redirect()->intended(route('siswa.home'));
     }
 
-    return back()->withErrors(['username' => 'Nama/NIPD atau Password salah.']);
+    return back()->withErrors(['username' => 'Nama atau NIPD tidak ditemukan atau salah.']);
     }
 
     public function showForgotForm() {

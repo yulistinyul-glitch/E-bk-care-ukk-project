@@ -112,7 +112,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar" id="mainNav">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="home.html">
-                <img src="{{asset('img/logo-ebkCare.png')}}" alt="Logo" width="40" class="me-2">
+                <img src="<?php echo e(asset('img/logo-ebkCare.png')); ?>" alt="Logo" width="40" class="me-2">
                 <div class="brand-text">
                     <span class="d-block fw-bold" style="letter-spacing: 2px;">E-BK CARE</span>
                     <small class="d-block text-uppercase" style="font-size: 0.6rem; letter-spacing: 3px; color: #B89551;">Layanan konseling bagi siswa</small>
@@ -198,4 +198,4 @@
             }
         });
     });
-</script>
+</script><?php /**PATH D:\e-bk-care-venusvault\resources\views/layouts/navbar.blade.php ENDPATH**/ ?>

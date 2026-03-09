@@ -25,6 +25,7 @@
         /* --- HEADER & NAV --- */
         .header-top { padding: 40px 0 20px 0; text-align: center; position: relative; z-index: 1000; }
         .logo-placeholder { width: 100px; height: 100px; background: white; border: 3px solid #8ba8bc; border-radius: 50%; display: inline-block; margin-bottom: 40px; }
+        .logo-img { width: 5rem; height: 5rem; justify-content: center; align-items: center; overflow: hidden; transform: translateY(4px);}
         .nav-menu { display: flex; justify-content: center; gap: 70px; transition: 0.4s ease; }
         .nav-menu a { text-decoration: none; color: var(--dark-blue); font-weight: 600; font-size: 0.85rem; letter-spacing: 1.5px; position: relative; }
         .login-btn { position: absolute; top: 0; right: 1.5rem; background: var(--dark-blue); color: white !important; padding: 7px 25px; border-radius: 20px; font-weight: bold; text-decoration: none; font-size: 0.8rem; z-index: 1001; }
@@ -185,8 +186,10 @@
         <div class="header-top">
             <div class="container px-4 position-relative">
                 <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-                <div class="logo-placeholder"></div>
-                <a href="#" class="login-btn">LOGIN</a>
+                <div class="logo-placeholder">
+                      <img src="{{asset('img/logo-ebkCare.png')}}" alt="Logo" width="40" class="logo-img">
+                </div>
+                <a href="{{route('login')}}" class="login-btn">LOGIN</a>
                 <div class="nav-menu" id="navMenu">
                     <a href="home">BERANDA</a><a href="tentang">TENTANG</a><a href="artikel">ARTIKEL</a><a href="layanan">LAYANAN</a><a href="kotaksaran">KOTAK SARAN</a> 
                 </div>

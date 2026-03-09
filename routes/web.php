@@ -231,3 +231,4 @@ Route::post('/logout', function () {
     return redirect('/');
 })->name('logout');
 
+Route::get('/selfreport', function () { return view('siswa.selfreport.index'); })->name('selfreport');

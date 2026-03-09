@@ -508,4 +508,4 @@
         startAutoPlay();
     </script>
 </body>
-</html><?php /**PATH C:\Users\lenovo\E-bk-care-ukk-project\resources\views/home.blade.php ENDPATH**/ ?>
+</html><?php /**PATH D:\e-bk-care-venusvault\resources\views/home.blade.php ENDPATH**/ ?>

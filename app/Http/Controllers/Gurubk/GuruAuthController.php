@@ -14,7 +14,7 @@ class GuruAuthController extends Controller
     }
 
     public function login(Request $request)
-{
+    {
     $request->validate([
         'username' => 'required', // NIP
         'password' => 'required', // Password dari Admin
@@ -34,7 +34,7 @@ class GuruAuthController extends Controller
     return back()->withErrors([
         'username' => 'NIP atau Password yang diberikan Admin salah.',
     ])->withInput($request->only('username'));
-}
+    }
 
    
     public function logout(Request $request)

@@ -7,14 +7,14 @@ use App\Models\Chat;
 use Illuminate\Http\Request;
 use App\Models\CounselingRequest;
 use App\Models\CounselingSession;
-use App\Models\KotakSurats; // Pastikan nama model ini sudah benar (tadi kita bahas Mailbox/KotakSurat)
+use App\Models\KotakSurats; 
 use Illuminate\Support\Facades\DB;
 
 class KonselingController extends Controller
 {
     public function index()
     {
-        $requests = CounselingRequest::where('status', 'menunggu')->with('siswa')->latest()->get();
+        $requests = CounselingRequest::where('status', 'pending')->with('siswa')->latest()->get();
         return view('gurubk.konseling.index', compact('requests'));
     }
 
@@ -32,7 +32,7 @@ class KonselingController extends Controller
     }
 
     DB::transaction(function () use ($request, $id) {
-        $counselingRequest = CounselingRequest::findOrFail($id);
+        $counselingRequest = CounselingRequest::with('siswa')->findOrFail($id);
         $counselingRequest->update(['status' => 'accepted']);
         
         $session = CounselingSession::create([
@@ -44,12 +44,15 @@ class KonselingController extends Controller
         ]);
 
         KotakSurats::create([
-            'id_siswa' => $counselingRequest->id_siswa,
+            'id_siswa' => $counselingRequest->siswa->id_siswa,
             'session_id' => $session->id,
             'subject' => 'Undangan Konseling: ' . $counselingRequest->kategori, 
-            'message' => "Halo, permintaan konselingmu telah disetujui. Silahkan datang/join pada tanggal " .
-                         $request->scheduled_date . " jam " . $request->scheduled_time . 
-                         " di: " . $request->location_link,
+            'message' => "Halo👋🏻" . $counselingRequest->siswa->nama_siswa . ",\n\n" .
+                         "Permintaan konselingmu telah disetujui! \n" . 
+                         "Silahkan datang atau join pada: \n" .
+                         "Tanggal:" . $request->scheduled_date . "\n" . 
+                         "Jam" . $request->scheduled_time . "WIB\n" . 
+                         "Tempat/Link:" . $request->location_link,
             'is_read' => false,
             'type' => 'success',
         ]);
@@ -65,5 +68,36 @@ class KonselingController extends Controller
     });
 
     return redirect()->back()->with('success', 'Jadwal berhasil dibuat dan surat terkirim!');
+    }
+
+    public function listKonseling()
+    {
+        $sessions = CounselingSession::with(['request.siswa'])
+                                    ->where('status', 'dijadwalkan')
+                                    ->orderBy('scheduled_date', 'asc')
+                                    ->orderBy('scheduled_time', 'asc')
+                                    ->get()
+                                    ->groupBy(function($item) {
+                                        return \Carbon\Carbon::parse($item->scheduled_date)->translatedFormat('l, d F Y');
+                                    });
+        return view('gurubk.konseling.konseling', compact('sessions'));
+    }
+
+public function updateStatus(Request $request, $id)
+{
+    $session = CounselingSession::with('request')->findOrFail($id);
+    $statusBaru = $request->status; 
+    $session->update([
+        'status' => $statusBaru
+    ]);
+
+    if ($session->request) {
+        $statusUntukRequest = ($statusBaru == 'selesai') ? 'accepted' : 'rejected';
+        $session->request->update([
+            'status' => $statusUntukRequest
+        ]);
+     }
+
+     return redirect()->route('gurubk.konseling.konseling')->with('success', 'Status Berhasil Diperbaharui!');
     }
 }

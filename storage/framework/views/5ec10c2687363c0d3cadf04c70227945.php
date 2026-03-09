@@ -200,4 +200,4 @@
     © Copyright 2025. All rights reserved.
   </div>
 </footer>
-<?php /**PATH C:\Users\lenovo\E-bk-care-ukk-project\resources\views/layouts/footer.blade.php ENDPATH**/ ?>
+<?php /**PATH D:\e-bk-care-venusvault\resources\views/layouts/footer.blade.php ENDPATH**/ ?>

@@ -4,54 +4,55 @@ namespace App\Http\Controllers\Gurubk;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Konseling;
+use App\Models\CounselingRequest;
 use App\Models\Chat;
 use App\Events\ChatSent;
 use App\Events\BotResponded;
 
 class ChatController extends Controller
 {
-    public function index(Request $request){
-        $konseling = Konseling::with('siswa','chats')->get();
+    
+    public function index(Request $request)
+    {
+        $konseling = CounselingRequest::with(['siswa', 'chats'])
+                        ->whereIn('status', ['accepted', 'ongoing'])
+                        ->latest()
+                        ->get()
+                        ->unique('id_siswa');
 
-        return view('gurubk.chat.index', compact('konseling'));
+        $selectedChat = null;
+        $allMessages = collect(); 
+
+        if ($request->has('id')) {
+            $selectedChat = CounselingRequest::with('siswa')
+                            ->where('id', $request->id)
+                            ->first();
+
+            if ($selectedChat) {
+                $allMessages = Chat::whereHas('konseling', function($q) use ($selectedChat) {
+                    $q->where('id_siswa', $selectedChat->id_siswa);
+                })->orderBy('created_at', 'asc')->get();
+
+                Chat::where('konseling_id', $selectedChat->id)
+                    ->where('sender_type', 'siswa')
+                    ->update(['is_read' => true]);
+            }
+        }
+
+        return view('gurubk.chat.index', compact('konseling', 'selectedChat', 'allMessages'));
     }
 
-    public function reply(Request $request, $id){
-        $konseling = Konseling::findOrFail($id);
-
+    public function reply(Request $request, $id)
+    {
+        $request->validate(['message' => 'required']);
         $chat = Chat::create([
-            'konseling_id' => $konseling->id_konseling,
+            'konseling_id' => $id,
             'sender_type' => 'gurubk',
-            'message' => $request->message
+            'message' => $request->message,
+            'is_read' => false
         ]);
 
-        event(new ChatSent($chat));
-
+        broadcast(new ChatSent($chat))->toOthers();
         return redirect()->back();
-    }
-
-    public function markRead($id){
-        Chat::where('konseling_id',$id)
-            ->where('sender_type','siswa')
-            ->update(['is_read'=>true]);
-
-        return response()->json(['status'=>'ok']);
-    }
-
-    public function botRespond(Chat $siswaChat){
-        $existBot = Chat::where('konseling_id',$siswaChat->konseling_id)
-                        ->where('sender_type','bot')
-                        ->exists();
-
-        if(!$existBot){
-            $botMessage = Chat::create([
-                'konseling_id' => $siswaChat->konseling_id,
-                'sender_type' => 'bot',
-                'message' => 'Terima kasih! Pesan Anda sudah diterima. Guru BK akan segera membalas.'
-            ]);
-
-            event(new BotResponded($botMessage));
-        }
     }
 }

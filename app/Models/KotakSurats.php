@@ -2,9 +2,23 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class KotakSurats extends Model
 {
-    //
+    use HasFactory;
+
+    protected $fillable = [
+        'id_siswa', 
+        'session_id', 
+        'subject', 
+        'message', 
+        'is_read', 
+        'type'
+    ];
+
+    protected $casts = [
+        'is_read' => 'boolean',
+    ];
 }

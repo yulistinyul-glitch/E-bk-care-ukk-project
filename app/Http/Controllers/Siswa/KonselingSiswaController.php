@@ -9,13 +9,20 @@ use App\Models\CounselingSession;
 use App\Models\KotakSurats;
 use App\Models\Chat;
 use App\Events\BotResponded;
+use App\Models\Siswa;
 use Illuminate\Support\Facades\Auth;
-
 
 class KonselingSiswaController extends Controller
 {
+
+    private function getIdSiswa() {
+        $siswa = Siswa::where('id_pengguna', Auth::user()->id_pengguna)->first();
+        return $siswa ? $siswa->id_siswa : null;
+    }
+
     public function index()
     {
+        $id_siswa = $this-> getIdSiswa();
         $surat = KotakSurats::where('id_siswa', Auth::user()->id_siswa)
                             ->orderBy('created_at', 'desc')
                             ->get();
@@ -35,7 +42,8 @@ class KonselingSiswaController extends Controller
             'pilihan_metode' => 'required',
             'deskripsi' => 'required|min:10',
         ]);
-        $id_siswa = Auth::user()->id_siswa ?? Auth::user()->siswa->id_siswa;
+
+        $id_siswa = $this->getIdSiswa();
 
         CounselingRequest::create([
             'id_siswa' => $id_siswa, 
@@ -50,35 +58,41 @@ class KonselingSiswaController extends Controller
 
     public function markAsRead($id)
     {
+        $id_siswa = $this->getIdSiswa(); 
         $surat = KotakSurats::where('id', $id)
-                            ->where('id_siswa', Auth::user()->id_siswa)
+                            ->where('id_siswa', $id_siswa)
                             ->firstOrFail();
         
-        $surat->update(['read_at' => now()]);
+        $surat->update(['is_read' => true]);
         return response()->json(['success' => true]);
     }
 
     public function home()
     {
-        $id_siswa = Auth::user()->siswa->id_siswa;
+        $user = Auth::user();
+        $siswa = Siswa::where('id_pengguna', $user->id_pengguna)->first();
+    
+         if (!$siswa) { abort(404, 'Data Siswa Tidak Ditemukan'); }
+
+        $id_siswa = $siswa->id_siswa; // Gunakan ini secara konsisten
+
+        $unreadMessages = \App\Models\KotakSurats::where('id_siswa', $id_siswa)
+                        ->where('is_read', false)
+                        ->count();
 
         $lastChat = Chat::whereHas('konseling', function($query) use ($id_siswa) {
-                        $query->where('id_siswa', $id_siswa);
-                    })
-                    ->latest()
-                    ->first();
+                    $query->where('id_siswa', $id_siswa);
+                })->latest()->first();
 
         $jadwalTerdekat = CounselingSession::whereHas('request', function($query) use ($id_siswa) {
             $query->where('id_siswa', $id_siswa);
         })
+        ->where('status', 'dijadwalkan') 
         ->where('scheduled_date', '>=', now())
         ->orderBy('scheduled_date', 'asc')
+        ->orderBy('scheduled_time', 'asc')
         ->first();
-
-        $unreadMessages = KotakSurats::where('id_siswa', $id_siswa)
-                                    ->whereNull('read_at')
-                                    ->count();
-
+        
         return view('siswa.home', compact('lastChat', 'jadwalTerdekat', 'unreadMessages'));
     }
 
@@ -89,10 +103,17 @@ class KonselingSiswaController extends Controller
             'file' => 'nullable|image|max:2048'
         ]);
 
-        $id_siswa = Auth::user()->id_siswa;
-        $konseling = CounselingRequest::where('id_siswa', $id_siswa)->latest()->first();
-        $chat = Chat::create([
-            'konseling_id' => $konseling ? $konseling->id : null,
+        $id_siswa = $this->getIdSiswa();
+        $konseling = CounselingRequest::where('id_siswa', $id_siswa)
+                    ->whereIn('status', ['accepted', 'ongoing'])
+                    ->latest()
+                    ->first();
+        if (!$konseling) {
+            return response()->json(['status' => 'error', 'message' => 'Sesi Chat tidak aktif']);
+        }
+
+       $chat = Chat::create([
+            'konseling_id' => $konseling->id,
             'sender_type' => 'siswa',
             'message' => $request->message ?? '',
             'is_read' => 0
@@ -112,4 +133,24 @@ class KonselingSiswaController extends Controller
             'time' => $chat->created_at->format('H:i A')
         ]);
     }
+
+   public function chatRoom($id)
+    {
+        $siswa = Siswa::where('id_pengguna', Auth::user()->id_pengguna)->first();
+
+        if (!$siswa) {
+        abort(404, 'Siswa tidak ditemukan');
+        }
+
+       $chats = Chat::where('konseling_id', $id)
+                ->orderBy('created_at', 'asc')
+                ->get();
+
+        Chat::where('konseling_id', $id)
+            ->where('sender_type', '!=', 'siswa')
+            ->update(['is_read' => 1]);
+
+        return view('siswa.room-chat', compact('chats', 'id'));
+    }
+
 }

@@ -143,8 +143,8 @@ body {
         </div>
         <div class="chat-list" id="chatList">
             @foreach($konseling as $k)
-            <a href="?id={{ $k->id_konseling }}" style="text-decoration:none;color:inherit;">
-                <div class="chat-user {{ request('id')==$k->id_konseling?'active':'' }}">
+            <a href="?id={{ $k->id }}" style="text-decoration:none;color:inherit;">
+                <div class="chat-user {{ request('id')==$k->id?'active':'' }}">
                     <img src="{{ $k->siswa->avatar ?? asset('images/default-avatar.png') }}" class="avatar">
                     <div>
                         <h6>{{ $k->siswa->nama_siswa }}
@@ -160,28 +160,27 @@ body {
     </div>
 
     <div class="chat-room">
-        @php $selected = $konseling->where('id_konseling',request('id'))->first(); @endphp
 
-        @if($selected)
+        @if($selectedChat)
         <div class="chat-navbar">
-            <img src="{{ $selected->siswa->avatar ?? asset('images/default-avatar.png') }}" class="avatar">
+            <img src="{{ $selectedChat->siswa->avatar ?? asset('images/default-avatar.png') }}" class="avatar">
             <div>
-                {{ $selected->siswa->nama_siswa }}
-                <div class="status-box">Status: {{ ucfirst($selected->status_konseling) }}</div>
+                {{ $selectedChat->siswa->nama_siswa }}
+                <div class="status-box">Status: {{ ucfirst($selectedChat->status_konseling) }}</div>
             </div>
         </div>
 
         <div class="chat-body" id="chatBody">
-            @foreach($selected->chats as $chat)
-            <div class="chat-bubble {{ $chat->sender_type }}">
+            @foreach($allMessages as $chat)
+            <div class="chat-bubble {{ $chat->sender_type == 'siswa' ? 'siswa' : 'gurubk' }}">
                 {{ $chat->message }}
                 <div class="timestamp">{{ $chat->created_at->format('H:i') }}</div>
             </div>
             @endforeach
         </div>
 
-        @if($selected->status_metode=='online'||$selected->status_metode==null)
-        <form action="{{ route('gurubk.chat.reply',$selected->id_konseling) }}" method="POST" id="chatForm">
+        @if($selectedChat->status_metode=='online'||$selectedChat->status_metode==null)
+        <form action="{{ route('gurubk.chat.reply',$selectedChat->id) }}" method="POST" id="chatForm">
             @csrf
             <div class="chat-footer">
                 <input type="text" name="message" placeholder="Ketik balasan..." required>
@@ -221,8 +220,8 @@ window.Echo=new Echo({
     forceTLS:true
 });
 
-@if($selected)
-window.Echo.channel('chat.{{ $selected->id_konseling }}')
+@if($selectedChat)
+window.Echo.channel('chat.{{ $selectedChat->id_konseling }}')
     .listen('ChatSent',(e)=>{
         const div=document.createElement('div');
         div.classList.add('chat-bubble',e.chat.sender_type);

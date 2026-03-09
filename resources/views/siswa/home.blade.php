@@ -6,9 +6,9 @@
 <div class="lg:ml-28 px-6 lg:px-10 max-w-7xl mx-auto">
 
 
-<div class="w-full font-['Poppins'] ">
+<div class="max-w-7xl mx-auto px-6 lg:px-10 mt-6 font-['Poppins'] ">
   <div class="mx-auto  bg-[#1A374C] text-white p-5 rounded-b-[40px] shadow-lg">
-     <div class="flex items-center gap-6 md:gap-4">
+     <div class="flex items-center gap-4 md:gap-4">
       <div class="w-24 h-24 md:w-20 md:h-20 bg-white text-black rounded-full flex items-center justify-center shrink-0 border-2 border-blue-400 overflow-hidden text-xs font-bold uppercase">
         Profile
       </div>
@@ -102,9 +102,10 @@
     
     <div class="flex flex-col gap-4">
       <div>
-        <p class="text-slate-500 text-xs md:text-sm font-medium ml-1 mb-2">Pesan</p>
-        <a href="{{ route('siswa.kotaksurat') }}" class="relative inline-block p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:bg-gray-50 transition-all">
-          <i class="fas fa-envelope text-2xl text-[#1A374C]"></i>
+        <p class="text-slate-500 text-xs md:text-sm font-medium ml-1 mb-2">Surat/Jadwal konseling</p>
+        <a href="{{ route('siswa.kotaksurat.index') }}" class="relative inline-block p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:bg-gray-50 transition-all">
+         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 56 56" class="text-blue-950">
+          <path fill="currentColor" d="M28.047 30.707c.984 0 1.875-.445 2.883-1.477L51.32 9.05c-.867-.843-2.484-1.241-4.804-1.241H8.78c-1.969 0-3.351.375-4.125 1.148l20.508 20.274c1.008 1.007 1.922 1.476 2.883 1.476M2.71 44.418l16.57-16.383L2.664 11.652c-.352.657-.54 1.782-.54 3.399v25.875c0 1.664.212 2.836.587 3.492m50.625-.023c.351-.68.54-1.829.54-3.47V15.052c0-1.57-.165-2.696-.517-3.328L36.812 28.035ZM9.484 48.19h37.734c1.97 0 3.329-.375 4.102-1.125L34.445 30.332l-1.57 1.57c-1.594 1.547-3.117 2.25-4.828 2.25s-3.235-.703-4.828-2.25l-1.57-1.57L4.796 47.043c.89.773 2.46 1.148 4.687 1.148"/></svg>
           @if ($unreadMessages > 0)
             <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-bounce">
               {{ $unreadMessages }}
@@ -177,7 +178,7 @@
         </div>
       </div>
 
-      <form action="{{ route('siswa.chat')}}" method="GET">
+      <form action="#" method="GET">
         <button class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-5 flex items-center justify-center gap-3 rounded-[1.5rem] shadow-lg shadow-emerald-100 transition-all hover:-translate-y-1 active:scale-95">
           <span class="font-bold tracking-widest text-sm">MULAI KONSELING</span>
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -193,11 +194,15 @@
 <div class="mx-5 mt-8 font-['Poppins']">
     <div class="flex justify-between items-center mb-3">
         <h4 class="text-slate-500 text-xs md:text-sm font-medium ml-1">Percakapan Terbaru</h4>
-        <a href="{{ route('siswa.chat') }}" class="text-blue-600 text-[10px] font-bold hover:underline tracking-widest">BUKA CHAT</a>
+        @if($lastChat)
+      <a href="{{ route('siswa.chat', $lastChat->konseling_id) }}" class="text-blue-600 text-[10px] font-bold hover:underline tracking-widest">BUKA CHAT</a>
+      @else
+      <span class="text-slate-400 text-[10px] tracking-widest">TIDAK ADA CHAT</span>
+     @endif
     </div>
 
     @if($lastChat)
-    <a href="{{ route('siswa.chat') }}" class="flex items-center gap-4 bg-white p-4 rounded-3xl shadow-sm border border-gray-100 hover:bg-gray-50 transition-all active:scale-[0.98]">
+    <a href="{{ route('siswa.chat', $lastChat->konseling_id) }}" class="flex items-center gap-4 bg-white p-4 rounded-3xl shadow-sm border border-gray-100 hover:bg-gray-50 transition-all active:scale-[0.98]">
         <div class="relative">
             <img src="{{ asset('img/guruProfile.jpg') }}" alt="Guru BK" class="w-12 h-12 rounded-full object-cover shadow-sm border border-gray-100">
             @if($lastChat->sender_type == 'guru' && !$lastChat->is_read)
@@ -207,8 +212,8 @@
 
         <div class="flex-1 min-w-0">
             <div class="flex justify-between items-center">
-                <p class="text-sm font-bold text-[#1A374C] truncate">Mr. James Chao, S.Pd</p>
-                <p class="text-[10px] text-gray-400">{{ $lastChat->created_at->diffForHumans() }}</p>
+                <p class="text-[10px] md:text-md font-bold text-[#1A374C]  truncate">Mr. James Chao, S.Pd</p>
+                <p class="text-[8px] text-gray-400">{{ $lastChat->created_at->diffForHumans() }}</p>
             </div>
             <div class="flex items-center gap-1 mt-0.5">
                 @if($lastChat->sender_type == 'siswa')
@@ -234,14 +239,14 @@
   <div class="flex p-4 items-center mx-auto gap-6 rounded-2xl shadow-md transition-all duration-300 hover:brightness-110 active:scale-[0.98] cursor-pointer" 
        style="background: linear-gradient(135deg, #1A374C, #2C5C7F, #3D81B2);">
     <div>
-      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 32 32">
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 32 32">
         <path fill="#fff" d="M15 20h2v4h-2zm5-2h2v6h-2zm-10-4h2v10h-2z" />
         <path fill="#fff" d="M25 5h-3V4a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v1H7a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2M12 4h8v4h-8Zm13 24H7V7h3v3h12V7h3Z" />
       </svg>
     </div>
     <div class="flex-1 min-w-0">
-      <h3 class="leading-tight text-white text-lg font-bold">QUICK ACTION</h3>
-      <p class="leading-tight text-white text-xs font-medium">Ada kejadian apa hari ini? <br> Laporkan disini!!</p>
+      <h3 class="leading-tight text-white text-[20px] md:text-lg font-bold">QUICK ACTION</h3>
+      <p class="leading-tight text-white text-s[10px] md:text-xs font-medium">Ada kejadian apa hari ini? <br> Laporkan disini!!</p>
     </div>
     <div class="shrink-0">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 15 15">

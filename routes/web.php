@@ -32,6 +32,7 @@ use App\Http\Controllers\Gurubk\E_SuratController;
 use App\Http\Controllers\Gurubk\KonselingController;
 use App\Http\Controllers\Gurubk\RiwayatPelanggaranController;
 use App\Http\Controllers\Siswa\KonselingSiswaController;
+use App\Http\Controllers\Siswa\KotakSuratController;
 use Illuminate\Support\Facades\App;
 
 /*
@@ -39,8 +40,15 @@ use Illuminate\Support\Facades\App;
 | Public Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/', [AuthController::class, 'showLogin'])->name('login'); // Satu-satunya route dengan nama 'login'
-Route::get('/home', function () { return view('home'); });
+Route::get('/', function () { 
+    return view('home'); 
+})->name('home');
+
+Route::get('/login', function () {
+    return view('auth.login'); 
+})->name('login');
+
+Route::get('/home', function () { return view('home'); })->name('home');
 Route::get('/tentang', [TentangController::class, 'index'])->name('tentang.index');
 Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
 Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('layanan.show');
@@ -139,7 +147,8 @@ Route::middleware(['auth', 'role:GuruBK'])->prefix('gurubk')->name('gurubk.')->g
     // Konseling
     Route::get('/conseling-request', [KonselingController::class, 'index'])->name('konseling.index');
     Route::post('/counseling-requests/{id}/approve', [KonselingController::class, 'approve'])->name('counseling.approve');
-
+    Route::get('/jadwal-konseling', [KonselingController::class, 'listKonseling'])->name('konseling.konseling');
+    Route::patch('/konseling/{id}/status', [KonselingController::class, 'updateStatus'])->name('konseling.updateStatus');
     // Riwayat Pelanggaran
     Route::get('/get-siswa/{id_kelas}', [RiwayatPelanggaranController::class, 'getSiswa'])->name('riwayatpelanggaran.getSiswa'); 
     Route::get('/get-pelanggaran/{id}', [RiwayatPelanggaranController::class, 'getPelanggaran'])->name('riwayatpelanggaran.getPelanggaran'); 
@@ -194,7 +203,9 @@ Route::prefix('siswa')->name('siswa.')->group(function () {
         Route::get('/setup-password', [SiswaAuthController::class, 'showSetupForm'])->name('setup-password');
         Route::post('/update-setup-password', [SiswaAuthController::class, 'updatePassword'])->name('update-password');
 
-        Route::get('/mailbox', [KonselingSiswaController::class, 'index'])->name('kotaksurat');
+        Route::get('/mailbox', [KotakSuratController::class, 'index'])->name('kotaksurat.index');
+        Route::get('/mailbox/{id}', [KotakSuratController::class, 'show'])->name('kotaksurat.show');
+        Route::post('/mailbox/{id}/read', [KotakSuratController::class, 'markAsRead']);
 
         Route::get('/ajukan-konseling', [KonselingSiswaController::class, 'create'])->name('konseling.create');
         Route::post('/ajukan-konseling', [KonselingSiswaController::class, 'store'])->name('konseling.store');
@@ -205,7 +216,8 @@ Route::prefix('siswa')->name('siswa.')->group(function () {
         Route::get('/profile', function() { return view('siswa.profile'); })->name('profile');
 
         // chat
-        Route::get('/chat', [DashboardSiswaController::class, 'chat'])->name('chat');
+        // Route::get('/chat', [DashboardSiswaController::class, 'chat'])->name('chat');
+        Route::get('/chat/{id}', [KonselingSiswaController::class, 'chatRoom'])->name('chat');
         Route::post('/chat/send', [KonselingSiswaController::class, 'storeChat'])->name('chat.send');
         
     });

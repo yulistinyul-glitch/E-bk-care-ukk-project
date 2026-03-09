@@ -11,6 +11,11 @@ class CounselingRequest extends Model
     
     protected $guarded = []; 
 
+    public function chats()
+    {
+        return $this->hasMany(Chat::class, 'konseling_id', 'id');
+    }
+
     public function siswa()
     {
         return $this->belongsTo(Siswa::class, 'id_siswa', 'id_siswa');

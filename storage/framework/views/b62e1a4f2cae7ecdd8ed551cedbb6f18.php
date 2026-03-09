@@ -57,14 +57,15 @@
 
       <?php $__currentLoopData = $chats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $chat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
         <?php if($chat->sender_type == 'bot'): ?>
-          <div class="flex justify-center my-2 animate-pop">
-            <div class="bg-amber-50 border border-amber-100 text-amber-800 text-[10px] px-4 py-2 rounded-2xl shadow-sm text-center italic max-w-[85%]">
-              <i class="fas fa-info-circle mr-1"></i> <?php echo e($chat->message); ?>
+          <div class="flex items-end gap-2 animate-pop">
+            <div class="max-w-[80%] bg-amber-50 text-amber-900 px-3 py-2.5 rounded-2xl rounded-bl-none shadow-sm border border-amber-200">
+                <p class="text-[13px] leading-relaxed">
+                    <i class="fas fa-robot mr-1 text-amber-500"></i> <?php echo e($chat->message); ?>
 
-              <span class="block text-[8px] text-amber-400 mt-1 uppercase font-bold"><?php echo e($chat->created_at->format('H:i')); ?></span>
+                </p>
+                <span class="text-[9px] text-amber-400 block text-right mt-1"><?php echo e($chat->created_at->format('H:i')); ?></span>
             </div>
-          </div>
-        
+        </div>
         <?php elseif($chat->sender_type == 'siswa'): ?>
           <div class="flex item-md justify-end gap-2 animate-pop">
             <div class="max-w-[80%] bg-blue-950 text-white px-3 py-2.5 rounded-2xl rounded-br-none shadow-md">

@@ -115,6 +115,13 @@
                 </li>
 
                 <li class="nxl-item">
+                    <a class="nxl-link <?php echo e(Route::is('gurubk.konseling.konseling') ? 'active' : ''); ?>" href="<?php echo e(route('gurubk.konseling.konseling')); ?>">
+                        <span class="nxl-micon"><i class="feather-message-circle"></i></span>
+                        <span class="nxl-mtext">List Konseling</span>
+                    </a>
+                </li>
+
+                <li class="nxl-item">
                     <a href="<?php echo e(route('gurubk.selfreport.index')); ?>" class="nxl-link">
                         <span class="nxl-micon"><i class="feather-edit"></i></span>
                         <span class="nxl-mtext">Self Report</span>

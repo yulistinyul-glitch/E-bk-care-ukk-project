@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('slug')->unique(); // URL SEO Friendly
             $table->text('excerpt');        // Ringkasan singkat
             $table->longText('content');    // Isi lengkap artikel
-            $table->string('image')->nullable(); // Nama file gambar
-            $table->boolean('is_featured')->default(false); // Penanda artikel utama (atas)
+            $table->string('image')->nullable(); 
+            $table->boolean('is_featured')->default(false); 
             $table->timestamps();
         });
     }

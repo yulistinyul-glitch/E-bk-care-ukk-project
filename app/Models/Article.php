@@ -8,22 +8,14 @@ use Illuminate\Support\Str;
 class Article extends Model
 {
     protected $fillable = [
-        'title', 
-        'slug', 
-        'excerpt', 
-        'content', 
-        'image', 
-        'is_featured'
+        'title', 'slug', 'content', 'image', 'category', 'author', 'is_featured'
     ];
 
-    // Otomatis membuat slug dari title saat create
     protected static function boot()
     {
         parent::boot();
         static::creating(function ($article) {
-            if (empty($article->slug)) {
-                $article->slug = Str::slug($article->title);
-            }
+            $article->slug = Str::slug($article->title);
         });
     }
 }

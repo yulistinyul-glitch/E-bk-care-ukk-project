@@ -7,6 +7,8 @@ use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\KotakSaranController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\TentangController;
+use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\BlogController;
 // SISWA, GURU, ADMIN
 
 
@@ -22,6 +24,11 @@ use App\Http\Controllers\Admin\WalikelasController;
 use App\Http\Controllers\Admin\PelanggaranController;
 use App\Http\Controllers\Admin\TemplateSuratController;
 use App\Http\Controllers\Admin\LogAktivitasController;
+use App\Http\Controllers\Admin\TentangController as AdminTentangController;
+use App\Http\Controllers\Admin\GaleriController as AdminGaleriController;
+use App\Http\Controllers\Admin\LayananController as AdminLayananController;
+use App\Http\Controllers\Admin\SaranController as AdminSaranController;
+use App\Http\Controllers\Admin\AdminArticleController;
 
 // Guru BK Controllers
 use App\Http\Controllers\GuruBk\SiswaController as GuruBkSiswaController;
@@ -39,13 +46,24 @@ use Illuminate\Support\Facades\App;
 | Public Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/', [AuthController::class, 'showLogin'])->name('login'); // Satu-satunya route dengan nama 'login'
-Route::get('/home', function () { return view('home'); });
+Route::get('/', function () { 
+    return view('home'); 
+})->name('home');
+
+Route::get('/login', function () {
+    return view('auth.login'); 
+})->name('login');
+
+Route::get('/home', function () { return view('home'); })->name('home');
 Route::get('/tentang', [TentangController::class, 'index'])->name('tentang.index');
 Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
 Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('layanan.show');
 Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
 Route::get('/kotaksaran', [KotakSaranController::class, 'index'])->name('kotaksaran');
+
+Route::get('/galeri', [GalleryController::class, 'index'])->name('galeri');
+Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 /*
 |--------------------------------------------------------------------------
@@ -60,19 +78,48 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/dashboard', [DashboardAdminController::class, 'dashboard'])->name('dashboard');
 
+    Route::get('/data/tentang', [AdminTentangController::class, 'edit'])->name('tentang.edit');
+        Route::put('/data/tentang/update', [AdminTentangController::class, 'update'])->name('tentang.update'); 
 
-    Route::get('siswa/history', [SiswaController::class, 'history'])
-        ->name('siswa.history');
+        // Route::resource('articles', AdminArticleController::class);
 
-    Route::get('siswa/cetak-semua', [SiswaController::class, 'cetakSemua'])
-        ->name('siswa.cetak.semua');
+    Route::get('/data/kotaksaran', [AdminSaranController::class, 'index'])->name('data.kotaksaran');
+    Route::post('/data/kotaksaran', [AdminSaranController::class, 'store'])->name('data.kotaksaran.store');
+    Route::put('/data/kotaksaran/{id}', [AdminSaranController::class, 'update'])->name('data.kotaksaran.update');
+    Route::delete('/data/kotaksaran/{id}', [AdminSaranController::class, 'destroy'])->name('data.kotaksaran.destroy');
 
-    Route::post('siswa/import', [SiswaController::class, 'import'])
-        ->name('siswa.import');
+    Route::get('/data/layanan', [AdminLayananController::class, 'index'])->name('layanan.index');
+    Route::post('/data/layanan', [AdminLayananController::class, 'store'])->name('layanan.store');
+    Route::put('/data/layanan/{id}', [AdminLayananController::class, 'update'])->name('layanan.update');
+    Route::delete('/data/layanan/{id}', [AdminLayananController::class, 'destroy'])->name('layanan.destroy');
 
-  
-    Route::post('siswa/{id}/restore', [SiswaController::class, 'restore'])
-        ->name('siswa.restore');
+Route::resource('data/galeri', AdminGaleriController::class)->names([
+    'index'   => 'data.galeri.index',
+    'create'  => 'data.galeri.create',
+    'store'   => 'data.galeri.store',
+    'show'    => 'data.galeri.show',
+    'edit'    => 'data.galeri.edit',
+    'update'  => 'data.galeri.update',
+    'destroy' => 'data.galeri.destroy',
+]);
+// Route History
+Route::get('siswa/history', [SiswaController::class, 'history'])
+    ->name('siswa.history');
+
+// Route Fitur Tambahan
+Route::get('siswa/cetak-semua', [SiswaController::class, 'cetakSemua'])
+    ->name('siswa.cetak.semua');
+
+Route::post('siswa/import', [SiswaController::class, 'import'])
+    ->name('siswa.import');
+
+// Route Restore (Kembalikan data)
+Route::post('siswa/{id}/restore', [SiswaController::class, 'restore'])
+    ->name('siswa.restore');
+
+// Route Force Delete (Hapus Permanen) - TAMBAHKAN INI
+Route::delete('siswa/{id}/force-delete', [SiswaController::class, 'forceDelete'])
+    ->name('siswa.forceDelete');
 
     // 3. Resource Route
     // Tetap gunakan 'siswa' sebagai nama resource
@@ -98,6 +145,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('pelanggaran/history', [PelanggaranController::class, 'history'])->name('pelanggaran.history');
     Route::get('pelanggaran/import', [PelanggaranController::class, 'importForm'])->name('pelanggaran.import.form');
     Route::post('pelanggaran/import', [PelanggaranController::class, 'import'])->name('pelanggaran.import');
+    Route::get('pelanggaran/cetak-semua', [PelanggaranController::class, 'cetakSemua'])->name('pelanggaran.cetak-semua');
     Route::post('pelanggaran/{id}/restore', [PelanggaranController::class, 'restore'])->name('pelanggaran.restore');
     Route::delete('pelanggaran/{id}/force-delete', [PelanggaranController::class, 'forceDelete'])->name('pelanggaran.forceDelete');
     Route::resource('pelanggaran', PelanggaranController::class);
@@ -163,9 +211,6 @@ Route::middleware(['auth', 'role:GuruBK'])->prefix('gurubk')->name('gurubk.')->g
     Route::get('e_surat/{id}/email', [E_SuratController::class, 'sendEmail'])->name('e_surat.email');
     Route::get('e_surat/{id}/selesai', [E_SuratController::class, 'selesai'])->name('e_surat.selesai');
     Route::resource('e_surat', E_SuratController::class)->except(['destroy']);
-
-    // 
-    Route::get('e_surat/{id}/print', [E_SuratController::class, 'printPdf'])->name('e_surat.print_pdf');
     
     // Logout
     Route::post('/logout', [GuruAuthController::class, 'logout'])->name('logout');

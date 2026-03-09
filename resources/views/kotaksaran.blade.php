@@ -230,17 +230,17 @@
             <div id="testi-slider-content" style="position:relative; width:100%; height:100%; display:flex; justify-content:center; align-items:center;">
                 <div class="testi-card active" id="t-0">
                     <p class="fst-italic text-muted">"Layanan BK sangat membantu saya dalam menentukan jurusan kuliah."</p>
-                    <div class="fw-bold small text-uppercase mt-3">Siswa Kelas XII - IPA</div>
+                    <div class="fw-bold small text-uppercase mt-3">Siswa - Kelas XII</div>
                     <div class="quote-icon">”</div>
                 </div>
                 <div class="testi-card next" id="t-1">
                     <p class="fst-italic text-muted">"Fasilitas sekolah semakin lengkap berkat kotak saran yang aktif didengar."</p>
-                    <div class="fw-bold small text-uppercase mt-3">Alumni 2024</div>
+                    <div class="fw-bold small text-uppercase mt-3">Alumni/21-24</div>
                     <div class="quote-icon">”</div>
                 </div>
                 <div class="testi-card" id="t-2">
                     <p class="fst-italic text-muted">"Proses konseling jadi jauh lebih nyaman dan terjaga kerahasiaannya."</p>
-                    <div class="fw-bold small text-uppercase mt-3">Siswa Kelas XI</div>
+                    <div class="fw-bold small text-uppercase mt-3">Siswa - Kelas XI</div>
                     <div class="quote-icon">”</div>
                 </div>
             </div>

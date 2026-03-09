@@ -5,31 +5,25 @@
 @section('content')
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-    body { background-color: #f5f7fb; font-family: 'Inter', sans-serif; }
-    .header-title { font-size: 24px; font-weight: 900; color: #333; }
+    body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; }
+    .header-title { font-size: 24px; font-weight: 800; color: #333; }
     .sub-title { font-size: 13px; color: #888; margin-top: 5px; display: block; }
-    
-    /* Tombol Style */
     .btn-catat { background:#5d5fef;color:white;padding:8px 18px;border-radius:10px;font-weight:600;font-size:13px;text-decoration:none;transition:.3s; display: inline-flex; align-items: center; gap: 8px; }
     .btn-catat:hover { transform:translateY(-2px); color: white; box-shadow: 0 4px 12px rgba(93, 95, 239, 0.2); }
-    
-    /* Container Style */
+
     .main-wrapper { background:white;border-radius:10px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.03); margin-top: 20px; }
-    
-    /* Table Style */
+
     .table-container { padding:20px; }
     .table thead th { background:#f8fafc;border:none;font-size:12px;color:#888;font-weight:600;padding:12px; text-transform: uppercase; }
     .table tbody td { font-size:12.5px;padding:12px;border-bottom:1px solid #f1f1f1; }
-    
-    /* Badge JK */
+
     .badge-jk { padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600; }
     .badge-l { background:#e3f2fd;color:#1976d2; }
     .badge-p { background:#fce4ec;color:#d81b60; }
-    
-    /* Action Buttons */
+
     .btn-action-icon { border:none;background:none;font-size:1.1rem;cursor:pointer; transition: 0.2s; padding: 0; }
     .icon-edit { color:#ffb74d; }
     .icon-delete { color:#ff7070; }
@@ -37,9 +31,8 @@
 
     .pagination-wrapper { display: flex !important; justify-content: center !important; padding: 20px 0; }
 
-    /* SweetAlert Customization */
     .my-swal-popup { border-radius: 18px !important; padding: 1.5em !important; width: 320px !important; }
-    .swal2-title { font-size: 18px !important; font-weight: 700 !important; }
+    .swal2-title { font-size: 18px !important; font-weight: 800 !important; }
     .swal2-html-container { font-size: 13px !important; }
     .swal2-icon { transform: scale(0.7); margin: 10px auto 5px !important; }
     .swal-button-custom { border-radius: 8px !important; padding: 6px 20px !important; font-size: 12px !important; }

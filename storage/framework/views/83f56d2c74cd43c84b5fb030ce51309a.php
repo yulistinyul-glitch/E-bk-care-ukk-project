@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title><?php echo $__env->yieldContent('title', 'Dashboard Admin'); ?></title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <link rel="shortcut icon" type="image/x-icon" href="<?php echo e(asset('assets/images/favicon.ico')); ?>" />
     <link rel="stylesheet" type="text/css" href="<?php echo e(asset('assets/css/bootstrap.min.css')); ?>" />
@@ -39,8 +39,7 @@
     <script src="<?php echo e(asset('assets/vendors/js/vendors.min.js')); ?>"></script>
     <script src="<?php echo e(asset('assets/js/common-init.min.js')); ?>"></script>
     <script src="<?php echo e(asset('assets/js/theme-customizer-init.min.js')); ?>"></script>
-
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html><?php /**PATH C:\Users\lenovo\E-bk-care-ukk-project\resources\views/admin/layouts/app.blade.php ENDPATH**/ ?>

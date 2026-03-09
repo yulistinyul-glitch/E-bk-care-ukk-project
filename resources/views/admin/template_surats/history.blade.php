@@ -5,12 +5,12 @@
 @section('content')
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
-    body { background-color: #f5f7fb; font-family: 'Inter', sans-serif; }
-    .header-title { font-size: 24px; font-weight: 900; color: #333; }
-    .header-subtitle { font-size: 12px; color: #888; margin-top: -5px; margin-bottom: 25px; }
+    body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; }
+    .header-title { font-size: 24px; font-weight: 800; color: #333; }
+    .header-subtitle { font-size: 12px; color: #888; margin-top: 5px; margin-bottom: 25px; }
     .btn-back { background-color: #5d5fef; color: white; padding: 8px 18px; border-radius: 10px; font-weight: 600; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: .3s; }
     .btn-back:hover { color: white; opacity: 0.9; transform: translateX(-5px); }
     .main-wrapper { background: white; border-radius: 10px; padding: 0; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }

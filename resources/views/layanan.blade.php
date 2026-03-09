@@ -131,18 +131,17 @@
                 <p class="text-muted mt-4" style="line-height: 1.8; font-size: 0.95rem;">
                     Kesejahteraan mental siswa adalah prioritas utama kami. Kami berkomitmen memberikan bimbingan profesional untuk membantu setiap siswa mencapai potensi terbaik mereka.
                 </p>
-                <a href="#" class="btn btn-link p-0 mt-3 text-teal fw-bold text-decoration-none border-bottom border-teal">Pelajari Filosofi Kami →</a>
+                <a href="{{ route('galeri') }}" class="btn btn-link p-0 mt-3 text-teal fw-bold text-decoration-none border-bottom border-teal">Pelajari Filosofi Kami →</a>
             </div>
         </div>
     </div>
 </section>
-
 <section class="focus-areas section-padding">
     <div class="container px-4">
         <div class="mb-5">
             <p class="area-sub mb-2">System Features</p>
             <div style="border-left: 3px solid var(--gold-accent); padding-left: 15px;">
-                <h2 class="fw-bold h1 text-white">Fitur Utama E-BK</h2>
+                <h2 class="fw-bold h1 text-white">Fitur Utama Layanan</h2>
             </div>
         </div>
 
@@ -155,7 +154,10 @@
                         </div>
                         <h3 class="service-title">{{ $item->title }}</h3>
                         <p class="service-desc">{{ Str::limit($item->description, 120) }}</p>
-                        <a href="{{ route('layanan.show', $item->slug) }}" class="learn-more-link text-uppercase">Buka Fitur <i class="bi bi-arrow-right small"></i></a>
+                        
+                        <a href="{{ route('login') }}?layanan={{ $item->slug }}" class="learn-more-link text-uppercase">
+                            Buka Fitur <i class="bi bi-arrow-right small"></i>
+                        </a>
                     </div>
                 </div>
             @empty

@@ -76,7 +76,7 @@
 
     .hero-caption-centered h1 {
         font-family: 'Playfair Display', serif;
-        font-size: 3.8rem;
+        font-size: 3.2rem;
         letter-spacing: -1px;
         color: white;
         animation: fadeInUp 1.2s ease-out;
@@ -164,38 +164,46 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Inisialisasi Carousel
+
         var myCarousel = document.querySelector('#heroCarousel');
-        var carousel = new bootstrap.Carousel(myCarousel, {
-            interval: 5000,
-            ride: 'carousel',
-            pause: false
-        });
 
-        // Logika Ganti Teks Berdasarkan URL
+        if (myCarousel) {
+            var carousel = new bootstrap.Carousel(myCarousel, {
+                interval: 5000,
+                ride: 'carousel',
+                pause: false
+            });
+        }
+
         var titleElement = document.getElementById('hero-title');
-        var path = window.location.pathname.toLowerCase();
+        if (titleElement) {
+            var path = window.location.pathname.toLowerCase();
 
-        if (path.includes('layanan')) {
-            titleElement.innerText = 'LAYANAN';
-        } else if (path.includes('tentang')) {
-            titleElement.innerText = 'TENTANG KAMI';
-        } else if (path.includes('artikel')) {
-            titleElement.innerText = 'ARTIKEL';
-        } else if (path.includes('kotaksaran')) {
-            titleElement.innerText = 'KOTAK SARAN';
-        } else {
-            titleElement.innerText = 'LEGAL EDGE'; 
+            if (path.includes('layanan')) {
+                titleElement.innerText = 'LAYANAN';
+            } else if (path.includes('tentang')) {
+                titleElement.innerText = 'TENTANG KAMI';
+            } else if (path.includes('artikel')) {
+                titleElement.innerText = 'ARTIKEL';
+            } else if (path.includes('kotaksaran')) {
+                titleElement.innerText = 'KOTAK SARAN';
+            } else if (path.includes('galeri')) { 
+                titleElement.innerText = 'GALERI LAYANAN';
+            } else {
+                titleElement.innerText = 'LEGAL EDGE'; 
+            }
         }
         
         // Navbar scroll effect
         var nav = document.getElementById('mainNav');
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
-        });
+        if (nav) {
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    nav.classList.add('scrolled');
+                } else {
+                    nav.classList.remove('scrolled');
+                }
+            });
+        }
     });
 </script>

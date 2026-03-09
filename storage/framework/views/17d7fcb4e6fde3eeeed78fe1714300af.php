@@ -18,9 +18,9 @@
         body { font-family: 'Montserrat', sans-serif; margin: 0; overflow-x: hidden; background-color: #fff; }
         .hero-section { position: relative; min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         .hero-slideshow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
-        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.5s ease-in-out; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 1; transition: opacity 1.5s ease-in-out; }
         .slide.active { opacity: 1; }
-        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.568); z-index: -1; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.42); z-index: -2; }
 
         /* --- HEADER & NAV --- */
         .header-top { padding: 40px 0 20px 0; text-align: center; position: relative; z-index: 1000; }
@@ -46,8 +46,8 @@
         }
 
         .content-area { padding-top: 40px; max-width: 850px; }
-        .title-large { font-family: 'Great Vibes', cursive; font-size: 3.4rem; color: var(--dark-blue); line-height: 1.2; margin-bottom: 0; }
-        .title-small { font-family: 'Great Vibes', cursive; font-size: 3.2rem; color: var(--dark-blue); line-height: 1.1; margin-top: 30px; margin-bottom: 15px; }
+        .title-large { font-family: 'Great Vibes', cursive; font-size: 3.4rem; color: var(--dark-blue); line-height: 1.2; margin-bottom: 70px; }
+        .title-small { font-family: 'Great Vibes', cursive; font-size: 3.2rem; color: var(--dark-blue); line-height: 1.1; margin-top: -30px; margin-bottom: 15px; }
         .description { color: #ffffff; font-size: 0.9rem; max-width: 480px; line-height: 1.6; text-shadow: 1px 1px 3px rgba(0,0,0,0.4); margin-bottom: 35px; }
         .btn-see-more { display: inline-flex; align-items: center; justify-content: space-between; margin-bottom: 50px; width: 210px; border: 2px solid rgba(255, 255, 255, 0.8); color: white; text-decoration: none; padding: 10px 25px; border-radius: 50px; font-weight: bold; font-size: 0.85rem; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(2px); }
 
@@ -177,8 +177,7 @@
 
     <div class="hero-section">
         <div class="hero-slideshow">
-            <div class="slide active" style="background-image: url('https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');"></div>
-            <div class="slide" style="background-image: url('https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1260');"></div>
+            <div class="slide active" style="background-image: url('/img/hero.jpeg')"></div>
         </div>
         <div class="hero-overlay"></div>
 
@@ -186,7 +185,7 @@
             <div class="container px-4 position-relative">
                 <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
                 <div class="logo-placeholder"></div>
-                <a href="#" class="login-btn">LOGIN</a>
+                <a href="<?php echo e(route('login')); ?>" class="login-btn">LOGIN</a>
                 <div class="nav-menu" id="navMenu">
                     <a href="home">BERANDA</a><a href="tentang">TENTANG</a><a href="artikel">ARTIKEL</a><a href="layanan">LAYANAN</a><a href="kotaksaran">KOTAK SARAN</a> 
                 </div>
@@ -195,7 +194,7 @@
 
         <div class="container px-4">
             <div class="content-area">
-                <div class="title-large">Your Safety is Our Priority</div>
+                <div class="title-large ">Your Safety is Our Priority</div>
                 <div class="title-small">Voice is Your Power</div>
                 <p class="description">Identity remains strictly confidential. You are never alone.</p>
                 <a href="#" class="btn-see-more">SEE MORE <span>&rarr;</span></a>
@@ -359,94 +358,108 @@
         </div>
     </section>
 
-    <section class="faq-section">
-        <div class="container px-4">
-            <h2 class="faq-title">Have any questions?</h2>
-            <div class="row g-5">
-                <div class="col-lg-6">
-                    <div class="accordion accordion-flush" id="faqAccordionLeft">
-                        <div class="accordion-item shadow">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#leftOne">
-                                    Bagaimana cara melakukan konseling anonim?
-                                </button>
-                            </h2>
-                            <div id="leftOne" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
-                                <div class="accordion-body">
-                                    Anda cukup masuk ke menu 'Layanan', pilih Konseling, dan aktifkan opsi 'Mode Anonim'. Identitas Anda tidak akan terlihat oleh siapapun kecuali konselor yang bertugas.
-                                </div>
+<section class="faq-section" style="padding: 80px 0; background-color: #fff;">
+    <div class="container px-4">
+        <div class="text-center">
+            <h2 style="font-weight: 800; color: #0f2744; font-size: 2rem; margin-bottom: 60px; ">Frequently Asked Questions</h2>
+        </div>
+        
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-5">
+                <div class="accordion accordion-flush" id="faqAccordionLeft">
+                    <div class="accordion-item mb-4 shadow" style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed py-3 px-4 fw-semibold d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#l1" style="background: #fff; color: #0f2744; box-shadow: none; font-size: 0.95rem;">
+                                Bagaimana cara melakukan konseling anonim?
+                                <i class="fas fa-chevron-down" style="font-size: 0.7rem; transition: 0.3s; opacity: 0.6;"></i>
+                            </button>
+                        </h2>
+                        <div id="l1" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
+                            <div class="accordion-body px-4 pb-4 pt-0 text-muted" style="line-height: 1.7; font-size: 0.9rem;">
+                                Anda cukup masuk ke menu 'Layanan', pilih Konseling, dan aktifkan 'Mode Anonim'. Identitas Anda dijamin aman.
                             </div>
                         </div>
-                        <div class="accordion-item shadow">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#leftTwo">
-                                    Berapa lama respon kotak saran diproses?
-                                </button>
-                            </h2>
-                            <div id="leftTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
-                                <div class="accordion-body">
-                                    Tim kami berkomitmen untuk meninjau setiap laporan dalam 1x24 jam kerja. Tindak lanjut biasanya akan selesai dalam waktu kurang dari seminggu.
-                                </div>
+                    </div>
+                    <div class="accordion-item mb-4 shadow" style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed py-3 px-4 fw-semibold d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#l2" style="background: #fff; color: #0f2744; box-shadow: none; font-size: 0.95rem;">
+                                Berapa lama respon kotak saran?
+                                <i class="fas fa-chevron-down" style="font-size: 0.7rem; transition: 0.3s; opacity: 0.6;"></i>
+                            </button>
+                        </h2>
+                        <div id="l2" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
+                            <div class="accordion-body px-4 pb-4 pt-0 text-muted" style="line-height: 1.7; font-size: 0.9rem;">
+                                Tim kami meninjau setiap laporan dalam 1x24 jam kerja. Tindak lanjut biasanya selesai kurang dari seminggu.
                             </div>
                         </div>
-                        <div class="accordion-item shadow">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#leftThree">
-                                    Apakah layanan ini berbayar?
-                                </button>
-                            </h2>
-                            <div id="leftThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
-                                <div class="accordion-body">
-                                    Seluruh layanan e-BK Care disediakan secara gratis sebagai bentuk dukungan fasilitas kesehatan mental bagi siswa dan pengguna terdaftar.
-                                </div>
+                    </div>
+                    <div class="accordion-item mb-4 shadow" style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed py-3 px-4 fw-semibold d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#l3" style="background: #fff; color: #0f2744; box-shadow: none; font-size: 0.95rem;">
+                                Apakah layanan ini berbayar?
+                                <i class="fas fa-chevron-down" style="font-size: 0.7rem; transition: 0.3s; opacity: 0.6;"></i>
+                            </button>
+                        </h2>
+                        <div id="l3" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
+                            <div class="accordion-body px-4 pb-4 pt-0 text-muted" style="line-height: 1.7; font-size: 0.9rem;">
+                                Seluruh layanan e-BK Care disediakan secara gratis bagi seluruh siswa dan pengguna terdaftar.
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-lg-6">
-                    <div class="accordion accordion-flush" id="faqAccordionRight">
-                        <div class="accordion-item shadow">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rightOne">
-                                    Bagaimana cara mengganti kata sandi?
-                                </button>
-                            </h2>
-                            <div id="rightOne" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
-                                <div class="accordion-body">
-                                    Masuk ke Dashboard Profil, pilih pengaturan keamanan, dan klik 'Ubah Kata Sandi'. Kami menyarankan kombinasi huruf dan angka untuk keamanan ekstra.
-                                </div>
+            <div class="col-lg-5">
+                <div class="accordion accordion-flush" id="faqAccordionRight">
+                    <div class="accordion-item mb-4 shadow" style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed py-3 px-4 fw-semibold d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#r1" style="background: #fff; color: #0f2744; box-shadow: none; font-size: 0.95rem;">
+                                Bagaimana mengganti kata sandi?
+                                <i class="fas fa-chevron-down" style="font-size: 0.7rem; transition: 0.3s; opacity: 0.6;"></i>
+                            </button>
+                        </h2>
+                        <div id="r1" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
+                            <div class="accordion-body px-4 pb-4 pt-0 text-muted" style="line-height: 1.7; font-size: 0.9rem;">
+                                Buka Dashboard Profil, masuk ke menu keamanan, dan pilih 'Ubah Kata Sandi'.
                             </div>
                         </div>
-                        <div class="accordion-item shadow">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rightTwo">
-                                    Siapa yang akan membaca laporan saya?
-                                </button>
-                            </h2>
-                            <div id="rightTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
-                                <div class="accordion-body">
-                                    Laporan Anda hanya dapat diakses oleh konselor profesional dan tim administrator BK yang telah menandatangani pakta integritas kerahasiaan data.
-                                </div>
+                    </div>
+                    <div class="accordion-item mb-4 shadow" style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed py-3 px-4 fw-semibold d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#r2" style="background: #fff; color: #0f2744; box-shadow: none; font-size: 0.95rem;">
+                                Siapa yang membaca laporan saya?
+                                <i class="fas fa-chevron-down" style="font-size: 0.7rem; transition: 0.3s; opacity: 0.6;"></i>
+                            </button>
+                        </h2>
+                        <div id="r2" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
+                            <div class="accordion-body px-4 pb-4 pt-0 text-muted" style="line-height: 1.7; font-size: 0.9rem;">
+                                Hanya konselor profesional dan tim admin yang terikat pakta kerahasiaan data yang dapat mengaksesnya.
                             </div>
                         </div>
-                        <div class="accordion-item shadow">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rightThree">
-                                    Lupa akun atau kendala teknis?
-                                </button>
-                            </h2>
-                            <div id="rightThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
-                                <div class="accordion-body">
-                                    Gunakan fitur 'Lupa Password' atau hubungi bantuan teknis melalui link WhatsApp yang tersedia di bagian bawah situs ini.
-                                </div>
+                    </div>
+                    <div class="accordion-item mb-4 shadow" style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed py-3 px-4 fw-semibold d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#r3" style="background: #fff; color: #0f2744; box-shadow: none; font-size: 0.95rem;">
+                                Lupa akun atau kendala teknis?
+                                <i class="fas fa-chevron-down" style="font-size: 0.7rem; transition: 0.3s; opacity: 0.6;"></i>
+                            </button>
+                        </h2>
+                        <div id="r3" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
+                            <div class="accordion-body px-4 pb-4 pt-0 text-muted" style="line-height: 1.7; font-size: 0.9rem;">
+                                Gunakan fitur 'Lupa Password' atau hubungi bantuan teknis melalui link WhatsApp di bagian bawah situs.
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
+<style>
+    .accordion-button:not(.collapsed) i { transform: rotate(180deg); }
+    .accordion-button::after { display: none !important; }
+</style>
     <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -455,14 +468,6 @@
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.getElementById('navMenu');
         hamburger.onclick = () => { hamburger.classList.toggle('open'); navMenu.classList.toggle('active'); };
-
-        let heroIdx = 0;
-        const heroSlides = document.querySelectorAll('.slide');
-        setInterval(() => {
-            heroSlides[heroIdx].classList.remove('active');
-            heroIdx = (heroIdx + 1) % heroSlides.length;
-            heroSlides[heroIdx].classList.add('active');
-        }, 5000);
 
         const cards = document.querySelectorAll('.custom-card');
         const dotsContainer = document.getElementById('dotsContainer');

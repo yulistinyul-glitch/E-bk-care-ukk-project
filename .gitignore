@@ -22,3 +22,15 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Tambahan untuk Laravel Framework
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*.php
+/storage/framework/testing/*
+
+# Tambahan untuk menjaga agar folder tetap ada tapi isinya kosong
+!storage/framework/cache/.gitignore
+!storage/framework/sessions/.gitignore
+!storage/framework/views/.gitignore
+!storage/framework/testing/.gitignore

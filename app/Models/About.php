@@ -7,15 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class About extends Model
 {
     protected $fillable = [
-        'vision', 
-        'mission', 
-        'hero_image', 
-        'vision_image', 
-        'mission_image'
-    ];
-
-    // Jika misi ingin disimpan sebagai array (untuk list poin-poin)
-    protected $casts = [
-        'mission' => 'array',
+        'title', 'tagline', 'desc_1', 'desc_2', 
+        'visi_judul', 'visi_tagline', 'visi_desc', 'foto_visi',
+        'misi_judul', 'misi_tagline', 'misi_desc', 'foto_misi'
     ];
 }

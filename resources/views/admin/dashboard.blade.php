@@ -5,7 +5,7 @@
 @section('content')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.css">
 
-<div class="container-fluid p-0" style="font-family: 'Inter', sans-serif; color: #1a233a; position: relative; z-index: 1;">
+<div class="container-fluid p-0" style="font-family: 'Poppins', sans-serif; color: #1a233a; position: relative; z-index: 1;">
     
     {{-- Header Section --}}
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">

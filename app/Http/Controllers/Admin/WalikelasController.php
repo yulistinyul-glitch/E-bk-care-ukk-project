@@ -11,32 +11,37 @@ use Illuminate\Support\Facades\Storage;
 
 class WalikelasController extends Controller
 {
-    public function index()
-    {
-        $walikelas = Walikelas::with('kelas')
-            ->orderBy('id_walikelas', 'asc')
-            ->paginate(10);
+public function index(Request $request)
+{
+    // Mengambil kata kunci dari input 'search' di view
+    $search = $request->get('search');
 
-        $kelas = Kelas::all();
+    $walikelas = Walikelas::with('kelas')
+        ->when($search, function ($query) use ($search) {
+            // Mencari di kolom nama_guru ATAU NIP
+            $query->where('nama_guru', 'LIKE', "%{$search}%")
+                  ->orWhere('NIP', 'LIKE', "%{$search}%");
+        })
+        ->orderBy('id_walikelas', 'asc')
+        ->paginate(10)
+        ->withQueryString(); // Penting: agar saat pindah halaman, hasil pencarian tidak hilang
 
-        return view('admin.walikelas.index', compact('walikelas', 'kelas'));
-    }
+    $kelas = Kelas::all();
+
+    return view('admin.walikelas.index', compact('walikelas', 'kelas'));
+}
 
     public function create()
     {
         $kelas = Kelas::all();
-
-        // LOGIK UNTUK GENERATE ID OTOMATIS (Melanjutkan GR001, GR002, dst)
         $lastWali = Walikelas::orderBy('id_walikelas', 'desc')->first();
         if ($lastWali) {
-            // Mengambil angka saja dari ID terakhir (misal GR040 diambil 40)
             $lastNum = (int) substr($lastWali->id_walikelas, 2);
             $nextNum = $lastNum + 1;
         } else {
             $nextNum = 1;
         }
         
-        // Format menjadi GR + 3 digit angka (Contoh: GR041)
         $nextWaliID = "GR" . str_pad($nextNum, 3, "0", STR_PAD_LEFT);
 
         return view('admin.walikelas.create', compact('kelas', 'nextWaliID'));
@@ -140,11 +145,14 @@ class WalikelasController extends Controller
                 continue;
             }
 
+            if (empty($row[0])) continue;
+
             Walikelas::updateOrCreate(
-                ['NIP' => $row[1]], 
+                ['id_walikelas' => $row[0]],
                 [
-                    'id_walikelas' => $row[0],
-                    'id_kelas'     => $row[2], // Tadi $row[1] (double), diperbaiki ke index 2
+
+                    'id_kelas'     => $row[1], 
+                    'NIP'          => $row[2], 
                     'nama_guru'    => $row[3],
                     'JK'           => $row[4],
                     'no_telp'      => $row[5],

@@ -6,7 +6,6 @@ use Illuminate\Support\Str;
 
 class Service extends Model
 {
-    // Nama tabel secara otomatis menjadi 'services'
     protected $fillable = ['title', 'icon', 'description', 'slug'];
 
     protected static function boot()

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Pelanggaran;
 use Illuminate\Http\Request;
+use voku\helper\ASCII;
 
 class PelanggaranController extends Controller
 {
@@ -149,4 +151,22 @@ class PelanggaranController extends Controller
         return redirect()->back()->with('success', 'Data pelanggaran berhasil diimport');
     }
 
+public function cetakSemua()
+    {
+        $kategoriOrder = [
+            'Keterlambatan', 'Kehadiran', 'Kelengkapan Seragam', 'Kepribadian',
+            'Ketertiban', 'Merokok', 'Media Konten Negatif', 'Senjata',
+            'MIRAS & NARKOBA', 'Perkelahian', 'Etika & Moral', 'Perjudian'
+        ];
+
+        $pelanggaran = Pelanggaran::orderByRaw("
+            FIELD(kategori_pelanggaran, '" . implode("','", $kategoriOrder) . "') ASC,
+            CAST(SUBSTRING(id_pelanggaran, 3) AS UNSIGNED) ASC
+        ")->get();
+
+        $pdf = Pdf::loadView('admin.pelanggaran.pdf-semua', compact('pelanggaran'))
+                  ->setPaper('A4', 'portrait');
+
+        return $pdf->stream('daftar_pelanggaran_lengkap.pdf');
+    }
 }

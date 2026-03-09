@@ -28,11 +28,10 @@ class Kelas extends Model
         return $this->hasMany(Siswa::class, 'id_kelas', 'id_kelas');
     }
 
-public function walikelas()
-{
-    // Menghubungkan id_walikelas di tabel kelas ke id_walikelas di tabel walikelas
-    return $this->belongsTo(Walikelas::class, 'id_walikelas', 'id_walikelas');
-}
+    public function walikelas()
+    {
+        return $this->belongsTo(Walikelas::class, 'id_walikelas', 'id_walikelas');
+    }
 
     public function getNamaLengkapAttribute()
     {
@@ -41,5 +40,4 @@ public function walikelas()
         $jurusan = explode(' ', trim($this->jurusan))[0];
         return "{$tingkat} {$jurusan} {$this->nomor_ruang}";
     }
-
 }

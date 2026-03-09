@@ -5,20 +5,27 @@
 @section('content')
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
     body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; }
-    .header-title { font-size: 24px; font-weight: 700; color: #333; }
+    .header-title { font-size: 24px; font-weight: 800; color: #333; }
+    .header-subtitle { font-size: 13px; color: #888; margin-top: -2px; display: block; }
+
     .btn-catat { background:#5d5fef;color:white;padding:8px 18px;border-radius:10px;font-weight:600;font-size:13px;text-decoration:none;transition:.3s; }
     .btn-catat:hover { transform:translateY(-2px); color: white; }
     .btn-history { background:#b5b5b5;color:white;padding:8px 20px;border-radius:10px;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:8px; }
     .btn-history:hover { background:#999;color:white; }
     .main-wrapper { background:white;border-radius:10px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.03); }
     .filter-area { padding:20px; }
-    .input-group-custom { border:1px solid #e2e8f0;border-radius:10px;height:34px;font-size:12px;padding:0 12px;width:100%; }
-    .btn-search-outline { height:34px;border:2px solid #3b82f6;color:#3b82f6;border-radius:10px;font-size:12px;padding:0 20px;background:white; }
-    .btn-search-outline:hover { background:#3b82f6;color:white; }
+
+    .search-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
+    .search-wrapper i { position: absolute; left: 12px; color: #a0aec0; font-size: 14px; }
+    .search-wrapper .input-group-custom { padding-left: 35px !important; }
+
+    .input-group-custom { border:1px solid #e2e8f0;border-radius:10px;height:34px;font-size:12px;padding:0 12px;width:100%; outline: none; transition: 0.2s; }
+    .input-group-custom:focus { border-color: #5d5fef; box-shadow: 0 0 0 3px rgba(93, 95, 239, 0.1); }
+
     .btn-export-solid { height:34px;background:#5bcb65;color:white;border:none;border-radius:10px;font-size:12px;padding:0 15px;display:inline-flex;align-items:center;gap:6px;text-decoration:none; }
     .table-container { padding:0 20px 20px 20px; }
     .table thead th { background:#f8fafc;border:none;font-size:12px;color:#888;font-weight:600;padding:12px; }
@@ -35,7 +42,6 @@
     .page-link { padding: 3px 10px; font-size: 11px; border-radius: 5px !important; }
     .import-box { background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;padding:12px;margin-top:12px; }
 
-    /* KUSTOMISASI MODAL POPUP */
     .my-swal-popup { border-radius: 18px !important; padding: 1.5em !important; width: 320px !important; }
     .swal2-title { font-size: 18px !important; font-weight: 700 !important; }
     .swal2-html-container { font-size: 13px !important; }
@@ -46,7 +52,10 @@
 <div class="container-fluid py-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4 px-2">
-        <h4 class="header-title mb-0">Manajemen Data Walikelas</h4>
+        <div>
+            <h4 class="header-title mb-0">Manajemen Data Walikelas</h4>
+            <span class="header-subtitle">Kelola informasi guru yang bertugas sebagai wali kelas.</span>
+        </div>
         <div class="d-flex gap-2">
             <a href="" class="btn-history">
                 <i class="bi bi-clock-history"></i> History
@@ -62,13 +71,13 @@
             <form action="{{ route('admin.walikelas.index') }}" method="GET">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-5">
-                        <input type="text" name="search" class="input-group-custom"
-                               placeholder="Cari Nama atau NIP..."
-                               value="{{ request('search') }}">
-                    </div>
-
-                    <div class="col-auto">
-                        <button type="submit" class="btn-search-outline">Search</button>
+                        <div class="search-wrapper">
+                            <i class="bi bi-search"></i>
+                            <input type="text" name="search" class="input-group-custom"
+                                   placeholder="Cari Nama atau NIP..."
+                                   value="{{ request('search') }}"
+                                   onkeyup="if(event.keyCode == 13) this.form.submit()">
+                        </div>
                     </div>
 
                     <div class="col text-end">

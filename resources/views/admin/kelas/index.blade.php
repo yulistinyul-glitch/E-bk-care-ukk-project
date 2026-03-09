@@ -5,11 +5,11 @@
 @section('content')
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
     body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; } 
-    .header-title { font-size: 24px; font-weight: 700; color: #333; } 
+    .header-title { font-size: 24px; font-weight: 800; color: #333; } 
 
     .btn-catat {
         background-color: #5d5fef;
@@ -81,8 +81,11 @@
 </style>
 
 <div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4 px-2">
-        <h4 class="header-title mb-0">Manajemen Data Kelas</h4>
+    <div class="d-flex justify-content-between align-items-start mb-4 px-2">
+        <div>
+            <h4 class="header-title mb-0">Manajemen Data Kelas</h4>
+            <p style="font-size: 13px; color: #888; margin-top: 4px; margin-bottom: 0;">Kelola data tingkat kelas, jurusan, dan pembagian ruang kelas secara efisien.</p>
+        </div>
         <button class="btn-catat" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTambah">
             <i class="bi bi-plus-lg"></i> Tambah Kelas
         </button>

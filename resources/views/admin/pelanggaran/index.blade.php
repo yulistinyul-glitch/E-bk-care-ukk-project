@@ -5,13 +5,12 @@
 @section('content')
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
-    body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; } 
-    .header-title { font-size: 24px; font-weight: 700; color: #333; } 
+    body { background-color: #f5f7fb; font-family: 'Inter', sans-serif; } 
+    .header-title { font-size: 24px; font-weight: 900; color: #333; } 
 
-    /* BUTTONS */
     .btn-catat { background-color: #5d5fef; color: white; padding: 8px 18px; border-radius: 10px; font-weight: 600; font-size: 13px; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(93, 95, 239, 0.2); }
     .btn-catat:hover { color: white; opacity: 0.9; transform: translateY(-2px); }
 
@@ -60,8 +59,11 @@
 </style>
 
 <div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4 px-2">
-        <h4 class="header-title mb-0">Manajemen Data Pelanggaran</h4>
+    <div class="d-flex justify-content-between align-items-start mb-4 px-2">
+        <div>
+            <h4 class="header-title mb-0">Manajemen Data Pelanggaran</h4>
+            <p style="font-size: 13px; color: #888; margin-top: 4px; margin-bottom: 0;">Kelola daftar kategori, jenis kegiatan, dan poin pelanggaran tata tertib secara sistematis.</p>
+        </div>
         <div class="d-flex gap-2">
             <a href="{{ route('admin.pelanggaran.history') }}" class="btn-history">
                 <i class="bi bi-clock-history"></i> History
@@ -86,7 +88,7 @@
                         </div>
                     </div>
                     <div class="col text-end">
-                        <a href="" class="btn-export-solid">
+                        <a href="{{ route('admin.pelanggaran.cetak-semua') }}" class="btn-export-solid">
                             <i class="bi bi-file-earmark-pdf"></i> Export PDF
                         </a>
                     </div>

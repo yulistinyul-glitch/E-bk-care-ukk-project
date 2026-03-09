@@ -138,6 +138,42 @@
         </li>
     </ul>
 </li>
+<li class="nxl-item nxl-hasmenu {{ Request::is('admin/articles*') || Request::is('admin/data/tentang*') ? 'active nxl-trigger' : '' }}">
+    <a href="javascript:void(0);" class="nxl-link">
+        <span class="nxl-micon"><i class="feather-grid"></i></span>
+        <span class="nxl-mtext">Konten Web</span>
+        <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+    </a>
+    <ul class="nxl-submenu">
+        <li class="nxl-item {{ Request::is('admin/data/tentang*') ? 'active' : '' }}">
+            <a href="{{ route('admin.tentang.edit') }}" class="nxl-link">
+                <span class="nxl-mtext">Tentang</span>
+            </a>
+        </li>
+{{-- <li class="nxl-item {{ Request::is('admin/articles*') ? 'active' : '' }}">
+    <a href="{{ route('admin.articles.index') }}" class="nxl-link">
+        <span class="nxl-mtext">Artikel</span>
+    </a>
+</li> --}}
+<li class="nxl-item {{ Request::is('admin/data/layanan*') ? 'active' : '' }}">
+    <a href="{{ route('admin.layanan.index') }}" class="nxl-link">
+        <span class="nxl-mtext">Layanan</span>
+    </a>
+</li>
+
+<li class="nxl-item {{ Request::is('admin/data/galeri*') ? 'active' : '' }}">
+    <a href="{{ route('admin.data.galeri.index') }}" class="nxl-link">
+        <span class="nxl-mtext">Galeri</span>
+    </a>
+</li>
+
+<li class="nxl-item {{ Request::is('admin/data/kotaksaran*') ? 'active' : '' }}">
+    <a href="{{ route('admin.data.kotaksaran') }}" class="nxl-link">
+        <span class="nxl-mtext">Kotak Saran</span>
+    </a>
+</li>
+    </ul>
+</li>
 
             </ul>
             <div class="divider-white"></div>

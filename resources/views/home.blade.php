@@ -186,7 +186,7 @@
             <div class="container px-4 position-relative">
                 <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
                 <div class="logo-placeholder">
-                      <img src="{{asset('img/logo-ebkCare.png')}}" alt="Logo" width="40" class="logo-img">
+                      <img src="{{asset('img/logo_ebk-careGold.png')}}" alt="Logo" width="40" class="logo-img">
                 </div>
                 <a href="{{route('login')}}" class="login-btn">LOGIN</a>
                 <div class="nav-menu" id="navMenu">

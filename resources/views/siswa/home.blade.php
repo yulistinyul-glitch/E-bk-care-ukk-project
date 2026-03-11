@@ -151,14 +151,14 @@
             <p class="font-bold text-[10px] text-center leading-tight uppercase">Ajukan<br>Jadwal</p>
         </a>
 
-        <button class="flex flex-col items-center justify-center gap-2 p-4 bg-teal-50 hover:bg-teal-100 text-teal-600 rounded-[2rem] shadow-sm border border-teal-100 transition-all active:scale-95 group">
+        <a href="{{ route('siswa.kirim-saran')}}" class="flex flex-col items-center justify-center gap-2 p-4 bg-teal-50 hover:bg-teal-100 text-teal-600 rounded-[2rem] shadow-sm border border-teal-100 transition-all active:scale-95 group">
             <div class="p-2 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-teal-500">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>
             </div>
             <p class="font-bold text-[10px] text-center leading-tight uppercase">Kotak<br>Saran</p>
-        </button>
+        </a>
         </div>
    </div>
 

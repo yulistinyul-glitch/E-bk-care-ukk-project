@@ -8,15 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->string('id_pengguna', 6)->primary();
-            $table->string('username', 30)->unique();
-            $table->string('password');
-            $table->enum('role', ['Admin', 'GuruBK', 'Siswa']);
-            $table->string('image')->nullable();
-            $table->rememberToken();
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('users')) {
+            Schema::create('users', function (Blueprint $table) {
+                 $table->string('id_pengguna', 6)->primary();
+                $table->string('username', 30)->unique();
+                $table->string('password');
+                $table->enum('role', ['Admin', 'GuruBK', 'Siswa']);
+                $table->string('image')->nullable();
+                $table->rememberToken();
+                $table->timestamps();
+            });
+        }
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('username')->primary();

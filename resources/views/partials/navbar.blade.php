@@ -1,5 +1,5 @@
 <div class="fixed bottom-0 left-0 justify-center w-full z-50 bg-[#B1D0E0] rounded-t-4xl lg:hidden">
-    <nav class="w-full flex justify-around items-center p-6">
+    <nav class="w-full flex justify-around items-center p-3">
 
         <a href="{{ route('siswa.history')}}" class="group flex items-center justify-center w-14 h-14 rounded-full transition-all duration-500 ease-in-out hover:w-40 hover:bg-[#1A374D] hover:text-white overflow-hidden">
           <div class="flex justify-center shrink-0">

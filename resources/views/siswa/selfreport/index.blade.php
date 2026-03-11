@@ -1,69 +1,139 @@
 @extends('partials.app')
 
 @section('content')
-  <section class="lg:ml-28 px-6 lg:px-10 max-w-7xl mx-auto mb-20 font-['Poppins']">
-    <div class="bg-white shadow-md relative">
-      <div class="bg-blue-950 text-white items-start mx-auto p-3">
-        <h2 class="text-3xl">Self report</h2>
-        <small>jangan takut bersuara, identitasmu terlindungi disini!</small>
-      </div>
-      <div class="text-sm text-gray-700 mx-auto p-3.5">
-        <h4 class="font-bold">Halo!! selamat datang di self-report E-BK Care👋🏻</h4>
-        <p class="mb-4">tolong di baca terlebih dahulu deskripsi yaa..</p>
-        <p class="mb-4">Kami sangat amat berterimakasih dan mengapresiasi untuk kamu yang berani bersuara👏🏻, <br>
-           Form ini dibuat khusus untuk kamu yang ingin melaporkan kejadian yang kurang nyaman <br>
-           (seperti bullying atau hal tidak benar lainnya) yang menimpa dirimu atau temanmu.
-        </p>
-        <h4 class="font-bold mb-4">JANJI KAMI</h4>
-        <ol class="mb-4">
-          <li>- Identitasmu aman: Kami TIDAK merekam alamat email, nama, atau data pribadimu secara otomatis👁️‍🗨️.</li>
-          <li>- Hanya bukti & cerita: Kami hanya menerima isi laporan dan bukti yang kamu kirimkan saja📁.</li>
-          <li>- Kerahasiaan terjaga: Laporan ini hanya akan dibaca oleh tim kecil yang bertugas membantu menyelesaikan masalah ini secara bijak🙆🏻‍♀️.</li>
-        </ol>
-        <p>Kamu tidak sendirian Yuk, bantu buat sekolah kita jadi tempat yang lebih asik buat semua orang!❤️‍🩹❤️‍🩹</p>   
-      </div>
-        <span class="w-full bg-blue-950 h-1.5"></span>
-      <form action="#" method="POST">
-      @csrf
-      <div class="mb-4 p-3.5">
-        <label class="block text-sm font-medium text-gray-700 mb-2">Komitmen kejujuran</label>
-        <div class="flex-col flex">
-          <div>
-            <input type="checkbox" id="konfirmasi" name="konfirmasi" required>
-            <label for="konfirmasi" class="mb-2">"Saya dapat memastikan kejadian ini benar adanya"</label>
-          </div>
-          <div>
-            <input type="checkbox" id="konfirmasi" name="konfirmasi" required>
-            <label for="konfirmasi" class="mb-2">"Saya bersedia dan mengerti bahwa laporan yang kurang jelas atau kurang bukti mungkin tidak dapat diproses lebih lanjut"</label>
-          </div>
+<section class="lg:ml-28 px-4 lg:px-10 max-w-4xl mx-auto mb-20 font-['Poppins'] text-gray-800">
+
+  <div class="bg-linear-to-r from-blue-900 to-blue-800 rounded-t-3xl p-8 text-white shadow-lg">
+    <h2 class="text-3xl font-bold mb-2 flex items-center gap-2">
+      <span>🛡️</span> Self Report E-BK Care
+    </h2>
+    <p class="text-blue-100 opacity-90">Jangan takut bersuara, identitasmu terlindungi sepenuhnya disini!</p>
+  </div>
+
+  <div class="bg-white shadow-sm rounded-b-3xl p-6 lg:p-10 mb-5 border-x border-b border-gray-100">
+    <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-xl mb-10">
+      <h4 class="font-bold text-blue-900 mb-2 text-lg">Halo! Terimakasih sudah berani melapor 👋🏻</h4>
+      <p class="text-sm leading-relaxed mb-4 text-blue-800">
+        Form ini adalah ruang amanmu. Kami sangat menghargai keberanianmu untuk membantu menciptakan sekolah yang lebih nyaman!
+      </p>
+      <div class="grid md:grid-cols-3 gap-4 mt-4">
+        <div class="bg-white p-3 rounded-lg shadow-sm">
+          <span class="block text-xl mb-1">👁️‍🗨️</span>
+          <p class="text-[11px] font-semibold uppercase text-gray-500">Identitas Aman</p>
+          <p class="text-[12px]">Data Pribadi tidak direkam otomatis</p>
+        </div>
+        <div class="bg-white p-3 rounded-lg shadow-sm">
+          <span class="block text-xl mb1">📁</span>
+          <p class="text-[11px] font-semibold uppercase text-gray-600">Hanya bukti</p>
+          <p class="text-[12px]">Hanya fokus pada cerita dan bukti yang diberikan.</p>
+        </div>
+        <div class="bg-white p-3 rounded-lg shadow-sm">
+          <span class="block text-xl mb-1">🙆🏻‍♀️</span>
+          <p class="text-[11px] font-semibold uppercase text-gray-500">Tim terpercaya</p>
+          <p class="text-[12px]">Hanya dibaca tim khusus yang bijak</p>
         </div>
       </div>
-         
-        <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
-        <select name="kategori" class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none" id="">
-          <option value="Bullying">Bullying</option>
-          <option value="Ancaman">Ancaman</option>
-          <option value="Kekerasan">Kekerasan</option>
-          <option value="Masalah digital">Masalah digital</option>
-          <option value="Lingkungan sekolah">Lingkungan sekolah</option>
-          <option value="Pelanggaran">Pelanggaran</option>
-          <option value="Lainnya">Lainnya</option>
-        </select>
+    </div>
+  </div>
 
-      <div class="mb-6">
-        <label class="block text-sm font-medium text-gray-700 mb-2"></label>
-        <textarea name="deskripsi" rows="4" class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
-        placeholder="Ceritakan sedikit masalahmu..."></textarea>
-        @error('deskripsi')
-          <span class="text-red-500 text-xs">{{ $message }}</span>
-        @enderror
+  <form action="" enctype="multipart/form-data" class="space-y-8">
+    @csrf
+
+    <div class="space-y-4">
+      <h3 class="font-bold text-lg border-b pb-2">
+          1. Konfirmasi kejujuran!
+      </h3>
+      <div class="space-y-3">
+        <label for="" class="flex items-start gap-3 p-3 rounded-xl border border-gray-100 hover:bg-gray-50 cursor-pointer transition">
+          <input type="checkbox" name="" required class="mt-1 w-5 h-5 rounded border-gray-300 text-blue-400 focus:ring-blue-500">
+          <span class="text-sm">Saya memastikan kejadian ini benar adanya tanpa ada rekayasa</span>
+        </label>
+        <label class="flex items-start gap-3 p-3 rounded-xl border border-gray-100 hover:bg-gray-50 cursor-pointer transition">
+          <input type="checkbox" name="" required class="mt-1 w-5 h-5 rounded border-gray-300 text-blue-400 focus:ring-blue-500">
+          <span class="text-sm">Saya mengerti dan menerima, apabila bukti laporan kurang dan tidak jelas sumbernya akan sulit diproses lebih lanjut atau bahkan ditolak.</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <h3 class="font-bold text-lg borded-b pb-2">
+        2. Detail Kejadian
+      </h3>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-gray-700">Kaategori Masalah</label>
+          <select name="" id="" class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none appearance-none bg-gray-50">
+            <option value="Bullying">Bullying</option>
+            <option value="Ancaman">Ancaman</option>
+            <option value="Kekerasan">Kekerasan</option>
+            <option value="Masalah digital">Masalah digital</option>
+            <option value="Lingkungan sekolah">Lingkungan Sekolah</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+        </div>
+        <div class="space-y-2">
+          <label for="" class="text-sm font-semibold text-gray-700">Lokasi Kejadian</label>
+          <select name="" id="" class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none appearance-none bg-gray-50">
+            <option value="Kelas">Ruang Kelas</option>
+            <option value="Kantin">Kantin</option>
+            <option value="Toilet">Toilet</option>
+            <option value="Area belakang"> Area belakang</option>
+            <option value="Medsos">Media sosial</option>
+          </select>
+        </div>
+      </div>
+      <div class="space-y-2">
+        <label for="" class="text-sm font-semibold text-gray-700">Kapan kejadiannya terjadi?</label>
+        <p class="text-xs text-gray-500 italic mb-2">Contoh: "Kemarin saat jam istirahat" atau "Tadi pagi saat jam 8"</p>
+        <textarea name="" id="" rows="2" class="w-full p-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50" placeholder="Ceritakan waktu singkatnya..."></textarea>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <h3 class="font-bold text-lg border-b pb-2 text-red-600">3. Ceritakan Kisahmu</h3>
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-600">Apa yang terjadi? (Gunakan bahasa santai saja, yang penting jelas)</label>
+        <textarea name="kronologi" rows="5" class="w-full p-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50" placeholder="Tulis di sini..."></textarea>
+      </div>
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-600">Siapa pelakunya? (Sebutkan nama atau ciri-cirinya)</label>
+         <textarea name="pelaku" rows="3" class="w-full p-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50" placeholder="Contoh: Budi kelas 10 atau kakak kelas pakai jaket hitam..."></textarea>
+      </div>
+    </div>
+
+     <div class="space-y-4">
+        <h3 class="font-bold text-lg border-b pb-2">4. Lampirkan Bukti</h3>
+        <div class="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center hover:border-blue-400 transition cursor-pointer bg-gray-50">
+          <input type="file" id="pilih-file" name="bukti" class="hidden">
+          <label for="pilih-file" class="cursor-pointer">
+            <span class="text-4xl block mb-2">📸</span>
+            <span class="text-sm font-medium text-blue-600">Klik untuk upload foto atau dokumen</span>
+            <p class="text-xs text-gray-400 mt-1">Maksimal file 5MB (JPG, PNG, PDF)</p>
+          </label>
+        </div>
       </div>
 
-      <button type="submit" class="w-full bg-[#1a374c] text-white py-4 rounded-full font-semibold hover:bg-slate-800 transition-all">
-        Kirim permintaan
-      </button>
+      <div class="bg-gray-50 p-6 rounded-2xl space-y-4 border border-gray-100">
+        <h3 class="font-bold text-md text-gray-700">Opsi Tambahan: Apakah kamu bersedia dihubungi?</h3>
+        <p class="text-xs text-gray-500">Kami sangat menghormati jika kamu ingin tetap anonim.</p>
+        <div class="flex flex-col gap-3">
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="radio" name="anonim" value="ya" class="w-4 h-4 text-blue-600" checked>
+            <span class="text-sm italic text-gray-600">"Tidak, saya ingin tetap anonim sepenuhnya"</span>
+          </label>
+          <label class="flex flex-col gap-2">
+            <div class="flex items-center gap-3 cursor-pointer">
+              <input type="radio" name="anonim" value="tidak" class="w-4 h-4 text-blue-600">
+              <span class="text-sm">"Ya, silakan hubungi saya di:"</span>
+            </div>
+            <input type="text" placeholder="ID LINE / No. WhatsApp" class="ml-7 p-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+          </label>
+        </div>
+      </div>
 
-    </form>
-    </div>
-  </section>
-@endsection
+      <button type="submit" class="w-full bg-blue-900 text-white py-4 rounded-2xl font-bold text-lg shadow-lg hover:bg-blue-800 transform hover:-translate-y-1 transition-all">
+        Kirim Laporan ❤️‍🩹
+      </button>
+      <p class="text-center text-xs text-gray-400 mt-4 italic">Sekolah adalah tempat belajar yang aman. Kamu sudah melakukan hal yang benar.</p>
+  </form>
+</section>

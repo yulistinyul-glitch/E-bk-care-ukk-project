@@ -38,8 +38,10 @@ use App\Http\Controllers\Gurubk\ChatController;
 use App\Http\Controllers\Gurubk\E_SuratController;
 use App\Http\Controllers\Gurubk\KonselingController;
 use App\Http\Controllers\Gurubk\RiwayatPelanggaranController;
+use App\Http\Controllers\Gurubk\SaranController;
 use App\Http\Controllers\Siswa\KonselingSiswaController;
 use App\Http\Controllers\Siswa\KotakSuratController;
+use App\Http\Controllers\Siswa\SaranSiswaController;
 use Illuminate\Support\Facades\App;
 
 /*
@@ -196,6 +198,11 @@ Route::middleware(['auth', 'role:GuruBK'])->prefix('gurubk')->name('gurubk.')->g
     Route::post('/riwayatpelanggaran/store', [RiwayatPelanggaranController::class, 'store'])->name('riwayatpelanggaran.store'); 
     Route::resource('riwayatpelanggaran', RiwayatPelanggaranController::class);
 
+    // Saran
+    Route::get('/saran', [SaranController::class, 'index'])->name('saran.index');
+    Route::patch('/saran/{id}/read', [SaranController::class, 'markAsRead'])->name('saran.read');
+    Route::get('/saran/export', [SaranController::class, 'exportPdf'])->name('saran.export');
+
     // Self Report
     Route::prefix('selfreport')->name('selfreport.')->group(function () {
         Route::get('/', [SelfReportController::class, 'index'])->name('index');
@@ -253,10 +260,13 @@ Route::prefix('siswa')->name('siswa.')->group(function () {
         Route::get('/history', function() { return view('siswa.history'); })->name('history');
         Route::get('/profile', function() { return view('siswa.profile'); })->name('profile');
 
-        // chat
-        // Route::get('/chat', [DashboardSiswaController::class, 'chat'])->name('chat');
         Route::get('/chat/{id}', [KonselingSiswaController::class, 'chatRoom'])->name('chat');
         Route::post('/chat/send', [KonselingSiswaController::class, 'storeChat'])->name('chat.send');
+
+        Route::get('/kirim-saran', [SaranSiswaController::class, 'show'])->name('kirim-saran');
+        Route:: post('/kirim-saran/submit', [SaranSiswaController::class, 'store'])->name('saran.store');
+
+
         
     });
 });

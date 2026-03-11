@@ -49,7 +49,7 @@
 
         <div class="m-header text-center">
             <a href="{{ route('gurubk.dashboard') }}" class="b-brand">
-                <img src="{{ asset('assets/images/logo-abbr.png') }}" 
+                <img src="{{ asset('img/logo_ebk-careGold.png') }}" 
                      alt="Logo" 
                      class="logo logo-sm" />
             </a>
@@ -117,6 +117,13 @@
                     <a class="nxl-link {{ Route::is('gurubk.konseling.konseling') ? 'active' : '' }}" href="{{ route('gurubk.konseling.konseling') }}">
                         <span class="nxl-micon"><i class="feather-message-circle"></i></span>
                         <span class="nxl-mtext">List Konseling</span>
+                    </a>
+                </li>
+
+                  <li class="nxl-item">
+                    <a class="nxl-link {{ Route::is('gurubk.saran.index') ? 'active' : '' }}" href="{{ route('gurubk.saran.index') }}">
+                        <span class="nxl-micon"><i class="feather-message-circle"></i></span>
+                        <span class="nxl-mtext">Saran siswa</span>
                     </a>
                 </li>
 

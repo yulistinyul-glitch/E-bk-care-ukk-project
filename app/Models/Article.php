@@ -7,8 +7,9 @@ use Illuminate\Support\Str;
 
 class Article extends Model
 {
+    // Tambahkan 'excerpt' di sini
     protected $fillable = [
-        'title', 'slug', 'content', 'image', 'category', 'author', 'is_featured'
+        'title', 'slug', 'excerpt', 'content', 'image', 'category', 'author', 'is_featured'
     ];
 
     protected static function boot()

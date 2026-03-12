@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\KotakSaranController;
 use App\Http\Controllers\LayananController;
@@ -28,7 +29,7 @@ use App\Http\Controllers\Admin\TentangController as AdminTentangController;
 use App\Http\Controllers\Admin\GaleriController as AdminGaleriController;
 use App\Http\Controllers\Admin\LayananController as AdminLayananController;
 use App\Http\Controllers\Admin\SaranController as AdminSaranController;
-use App\Http\Controllers\Admin\AdminArticleController;
+use App\Http\Controllers\Admin\ArtikelController as AdminArtikelController;
 
 // Guru BK Controllers
 use App\Http\Controllers\GuruBk\SiswaController as GuruBkSiswaController;
@@ -50,15 +51,14 @@ use Illuminate\Support\Facades\App;
 | Public Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () { 
-    return view('home'); 
-})->name('home');
+
+// Rute utama - Ini yang akan memanggil data About
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home.index');
 
 Route::get('/login', function () {
     return view('auth.login'); 
 })->name('login');
-
-Route::get('/home', function () { return view('home'); })->name('home');
 Route::get('/tentang', [TentangController::class, 'index'])->name('tentang.index');
 Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
 Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('layanan.show');
@@ -85,7 +85,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/data/tentang', [AdminTentangController::class, 'edit'])->name('tentang.edit');
         Route::put('/data/tentang/update', [AdminTentangController::class, 'update'])->name('tentang.update'); 
 
-        // Route::resource('articles', AdminArticleController::class);
+Route::get('data/artikel', [AdminArtikelController::class, 'index'])->name('data.artikel.index');
+        Route::post('data/artikel', [AdminArtikelController::class, 'store'])->name('data.artikel.store');
+        Route::put('data/artikel/{id}', [AdminArtikelController::class, 'update'])->name('data.artikel.update');
+        Route::delete('data/artikel/{id}', [AdminArtikelController::class, 'destroy'])->name('data.artikel.destroy');
 
     Route::get('/data/kotaksaran', [AdminSaranController::class, 'index'])->name('data.kotaksaran');
     Route::post('/data/kotaksaran', [AdminSaranController::class, 'store'])->name('data.kotaksaran.store');

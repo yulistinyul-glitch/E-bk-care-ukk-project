@@ -14,9 +14,15 @@ class SaranController extends Controller
         $items = Suggestion::orderBy('section')->orderBy('order', 'asc')->get();
         return view('admin.data.kotaksaran', compact('items'));
     }
-
     public function store(Request $request)
     {
+        if ($request->section === 'teaser') {
+            $count = Suggestion::where('section', 'teaser')->count();
+            if ($count >= 4) {
+                return back()->withErrors(['error' => 'Maksimal 4 item untuk Teaser!']);
+            }
+        }
+
         $data = $request->validate([
             'section'     => 'required|string',
             'title'       => 'required|string|max:255',
@@ -30,7 +36,6 @@ class SaranController extends Controller
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('content', 'public');
         }
-
         if ($request->hasFile('video')) {
             $data['video'] = $request->file('video')->store('content', 'public');
         }
@@ -38,7 +43,6 @@ class SaranController extends Controller
         Suggestion::create($data);
         return back()->with('success', 'Data berhasil ditambahkan!');
     }
-
     public function update(Request $request, $id)
     {
         $item = Suggestion::findOrFail($id);
@@ -69,8 +73,6 @@ class SaranController extends Controller
     public function destroy($id)
     {
         $item = Suggestion::findOrFail($id);
-
-        // Hapus file fisik dari storage
         if ($item->image) Storage::disk('public')->delete($item->image);
         if ($item->video) Storage::disk('public')->delete($item->video);
 

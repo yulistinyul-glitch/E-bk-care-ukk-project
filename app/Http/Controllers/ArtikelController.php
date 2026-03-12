@@ -1,17 +1,24 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\Article;
 use Illuminate\Http\Request;
 
 class ArtikelController extends Controller
 {
-    public function index()
-    {
-        // Mengambil data asli dari database
-        $unggulan = Article::where('is_featured', true)->latest()->first();
-        $sidebar = Article::latest()->take(3)->get();
-        $semua_artikel = Article::latest()->get();
+public function index()
+{
+    // Ambil 4 artikel terbaru sebagai Unggulan
+    $unggulanList = Article::where('is_featured', true)->latest()->take(4)->get();
+    
+    // Pecah: 1 untuk Hero, 3 untuk Sidebar
+    $hero = $unggulanList->first(); // 1 Besar
+    $sidebar = $unggulanList->skip(1); // 3 Kecil
 
-        return view('artikel', compact('unggulan', 'sidebar', 'semua_artikel'));
-    }
+    // Ambil semua artikel yang TIDAK unggulan untuk bagian Grid
+    $semua_artikel = Article::where('is_featured', false)->latest()->get();
+
+    return view('artikel', compact('hero', 'sidebar', 'semua_artikel'));
+}
 }

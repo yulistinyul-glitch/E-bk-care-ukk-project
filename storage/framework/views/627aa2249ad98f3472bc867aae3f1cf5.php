@@ -23,34 +23,48 @@
 
         <div class="p-4">
             <ul class="nav nav-pills mb-3" id="saranTab" role="tablist">
-                <li class="nav-item"><button class="nav-link active" onclick="switchTab('tab-teaser', 'btnTeaser', this)">Teaser</button></li>
-                <li class="nav-item ms-2"><button class="nav-link" onclick="switchTab('tab-how-it-works', 'btnHow', this)">How It Works</button></li>
+                <li class="nav-item">
+                    <button class="nav-link" id="link-teaser" onclick="switchTab('tab-teaser', 'btnTeaser', this)">Teaser</button>
+                </li>
+                <li class="nav-item ms-2">
+                    <button class="nav-link" id="link-how" onclick="switchTab('tab-how-it-works', 'btnHow', this)">How It Works</button>
+                </li>
             </ul>
 
             <div class="tab-content">
                 <div id="tab-teaser" class="tab-pane">
                     <table class="table table-hover align-middle">
                         <thead><tr><th>No</th><th>Image</th><th>Judul</th><th>Icon</th><th>Deskripsi</th><th>Aksi</th></tr></thead>
-                        <tbody>
-                            <?php $__currentLoopData = $items->where('section', 'teaser'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <tr>
-                                <td><?php echo e($index + 1); ?></td>
-                                <td><img src="<?php echo e(asset('storage/'.$item->image)); ?>" style="width: 50px; border-radius: 5px;"></td>
-                                <td><?php echo e($item->title); ?></td>
-                                <td><i class="bi <?php echo e($item->icon); ?>"></i></td>
-                                <td><?php echo e(Str::limit($item->description, 20)); ?></td>
-                                <td>
-                                    <div class="d-flex gap-1">
-                                        <button class="btn btn-sm btn-outline-warning" onclick="bukaModal('editModal<?php echo e($item->id); ?>')">Edit</button>
-                                        <form action="<?php echo e(route('admin.data.kotaksaran.destroy', $item->id)); ?>" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
-                                            <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </tbody>
+                    <tbody>
+                        <?php
+                            $teaserItems = $items->where('section', 'teaser');
+                        ?>
+
+                        <?php $__currentLoopData = $teaserItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <tr>
+                            <td><?php echo e($loop->iteration); ?></td> 
+                            
+                            <td><img src="<?php echo e(asset('storage/'.$item->image)); ?>" style="width: 100px; border-radius: 5px;"></td>
+                            <td><?php echo e($item->title); ?></td>
+                            <td><i class="bi <?php echo e($item->icon); ?>"></i></td>
+                            <td>
+                                <div style="max-width: 200px; word-wrap: break-word;">
+                                    <?php echo e(Str::limit($item->description, 255)); ?>
+
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <button class="btn btn-sm btn-outline-warning" onclick="bukaModal('editModal<?php echo e($item->id); ?>')">Edit</button>
+                                    <form action="<?php echo e(route('admin.data.kotaksaran.destroy', $item->id)); ?>" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+                                        <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </tbody>
                     </table>
                 </div>
 
@@ -61,9 +75,14 @@
                             <?php $__currentLoopData = $items->where('section', 'how_it_works')->sortBy('order'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
                                 <td><?php echo e($item->order); ?></td>
-                                <td><img src="<?php echo e(asset('storage/'.$item->image)); ?>" style="width: 50px; border-radius: 5px;"></td>
+                                <td><img src="<?php echo e(asset('storage/'.$item->image)); ?>" style="width: 80px; border-radius: 5px;"></td>
                                 <td><?php echo e($item->title); ?></td>
-                                <td><?php echo e(Str::limit($item->description, 20)); ?></td>
+                                <td>
+                                    <div style="max-width: 200px; word-wrap: break-word;">
+                                        <?php echo e(Str::limit($item->description, 255)); ?>
+
+                                    </div>
+                                </td>
                                 <td><?php echo $item->video ? '<span class="badge bg-primary">Ada</span>' : '-'; ?></td>
                                 <td>
                                     <div class="d-flex gap-1">
@@ -147,20 +166,42 @@
 
 <script>
     function switchTab(tabId, btnId, el) {
+        localStorage.setItem('activeTab', tabId);
+        localStorage.setItem('activeBtn', btnId);
+
         document.querySelectorAll('.tab-pane').forEach(t => t.style.display = 'none');
-        document.getElementById(tabId).style.display = 'block';
         document.querySelectorAll('.btn-tambah').forEach(b => b.style.display = 'none');
-        document.getElementById(btnId).style.display = 'inline-block';
         document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+
+        document.getElementById(tabId).style.display = 'block';
+        document.getElementById(btnId).style.display = 'inline-block';
         el.classList.add('active');
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedTab = localStorage.getItem('activeTab');
+        const savedBtn = localStorage.getItem('activeBtn');
+
+        if (savedTab && savedBtn) {
+            const targetBtn = document.getElementById(savedTab === 'tab-teaser' ? 'link-teaser' : 'link-how');
+            if (targetBtn) targetBtn.click();
+        } else {
+            document.getElementById('link-teaser').click();
+        }
+    });
+
     function previewFile(input, id) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-            reader.onload = (e) => { document.getElementById(id).src = e.target.result; document.getElementById(id).style.display = 'block'; }
+            reader.onload = (e) => { 
+                const el = document.getElementById(id);
+                el.src = e.target.result; 
+                el.style.display = 'block'; 
+            }
             reader.readAsDataURL(input.files[0]);
         }
     }
+
     function bukaModal(id) { document.getElementById(id).classList.add('active'); }
     function tutupModal(id) { document.getElementById(id).classList.remove('active'); }
 </script>

@@ -3,7 +3,10 @@
 @section('title', 'Layanan - E-BK Care')
 
 @section('content')
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
 <style>
+    /* CSS Anda tetap sama tidak ada perubahan */
     :root {
         --teal-color: #20c997;
         --dark-navy: #1e2a3a;
@@ -114,33 +117,83 @@
         transform: translateY(-3px);
         box-shadow: 0 10px 20px rgba(32, 201, 151, 0.2);
     }
+
+   
+/* 1. Animasi ikon berdenyut */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.icon-animate {
+    animation: pulse 2s infinite ease-in-out;
+    display: inline-block;
+}
+
+/* 2. Efek hover untuk tombol (Gunakan .btn-login-hover pada class tombol) */
+.btn-login-hover {
+    transition: all 0.3s ease-in-out !important;
+    background-color: #0f2744 !important;
+    color: #ffffff !important;
+    border: none !important;
+    text-decoration: none !important; /* Memastikan tidak ada garis bawah */
+}
+
+.btn-login-hover:hover {
+    background-color: #1a406e !important; 
+    transform: translateY(-3px); /* Ditingkatkan sedikit agar lebih terlihat */
+    box-shadow: 0 8px 20px rgba(15, 39, 68, 0.3);
+}
+
+/* Tambahan: Efek panah bergerak saat tombol di-hover */
+.btn-login-hover:hover i {
+    transform: translateX(-4px);
+    transition: transform 0.3s ease;
+}
+
+/* 3. Modal di tengah (Hati-hati: hindari menimpa kelas bawaan Bootstrap secara global) */
+/* Gunakan class spesifik agar tidak merusak modal lain di website Anda */
+.custom-modal-center {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* Tambahan: Memastikan transisi modal smooth */
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
 </style>
 
 <section class="hero-service">
     <div class="container px-4" style="z-index: 2; position: relative;">
         <div class="row align-items-center">
             <div class="col-lg-5 mb-5 mb-lg-0">
-                <div class="hero-img-box">
+                <div class="hero-img-box" data-aos="fade-right">
                     <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=2070&auto=format&fit=crop" class="img-fluid w-100" alt="Counseling">
                 </div>
             </div>
-            <div class="col-lg-7 ps-lg-5">
+            <div class="col-lg-7 ps-lg-5" data-aos="fade-left">
                 <div class="title-accent">
-                    <h1 class="display-6 fw-bold mb-3" style="color: #222;">Committed To Helping<br>Siswa Meraih Prestasi</h1>
+                    <h2 class="display-6 fw-bold mb-3" style="color: #222; font-size: 40px;">Committed To Helping<br>Siswa Meraih Prestasi</h2>
                 </div>
                 <p class="text-muted mt-4" style="line-height: 1.8; font-size: 0.95rem;">
                     Kesejahteraan mental siswa adalah prioritas utama kami. Kami berkomitmen memberikan bimbingan profesional untuk membantu setiap siswa mencapai potensi terbaik mereka.
                 </p>
-                <a href="{{ route('galeri') }}" class="btn btn-link p-0 mt-3 text-teal fw-bold text-decoration-none border-bottom border-teal">Pelajari Filosofi Kami →</a>
+                <a href="{{ route('galeri') }}" class="btn btn-link p-0 mt-3 text-teal fw-bold text-decoration-none border-bottom border-teal">Lihat Galeri Kegiatan →</a>
             </div>
         </div>
     </div>
 </section>
+
+
 <section class="focus-areas section-padding">
     <div class="container px-4">
         <div class="mb-5">
-            <p class="area-sub mb-2">System Features</p>
-            <div style="border-left: 3px solid var(--gold-accent); padding-left: 15px;">
+            <p class="area-sub mb-2"  data-aos="fade-right">System Features</p>
+            <div style="border-left: 3px solid var(--gold-accent); padding-left: 15px;"  data-aos="fade-right">
                 <h2 class="fw-bold h1 text-white">Fitur Utama Layanan</h2>
             </div>
         </div>
@@ -148,16 +201,18 @@
         <div class="row g-4">
             @forelse($semua_layanan as $item)
                 <div class="col-12 col-md-6 col-lg-3">
-                    <div class="service-card-minimal">
+                    <div class="service-card-minimal" data-aos="fade-up">
                         <div class="icon-box">
                             <i class="bi {{ $item->icon }}"></i>
                         </div>
                         <h3 class="service-title">{{ $item->title }}</h3>
                         <p class="service-desc">{{ Str::limit($item->description, 120) }}</p>
-                        
-                        <a href="{{ route('login') }}?layanan={{ $item->slug }}" class="learn-more-link text-uppercase">
+                        <button type="button" class="btn btn-link learn-more-link text-uppercase p-0 border-0 text-start" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#loginModal" 
+                                data-layanan="{{ $item->slug }}">
                             Buka Fitur <i class="bi bi-arrow-right small"></i>
-                        </a>
+                        </button>
                     </div>
                 </div>
             @empty
@@ -167,7 +222,8 @@
     </div>
 </section>
 
-<section class="why-choose section-padding">
+
+<section class="why-choose section-padding" data-aos="fade-up">
     <div class="container px-4">
         <div class="row g-5 align-items-start">
             <div class="col-lg-6">
@@ -181,7 +237,7 @@
             </div>
             <div class="col-lg-6">
                 <ul class="list-bordered">
-                    <li>
+                    <li data-aos="fade-left">
                         <button class="list-trigger" type="button" data-bs-toggle="collapse" data-bs-target="#desc1" aria-expanded="false">
                             <i class="bi bi-chevron-right"></i> Layanan Orientasi & Informasi
                         </button>
@@ -191,7 +247,7 @@
                             </div>
                         </div>
                     </li>
-                    <li>
+                    <li data-aos="fade-left">
                         <button class="list-trigger" type="button" data-bs-toggle="collapse" data-bs-target="#desc2" aria-expanded="false">
                             <i class="bi bi-chevron-right"></i> Layanan Konseling Perorangan
                         </button>
@@ -201,7 +257,7 @@
                             </div>
                         </div>
                     </li>
-                    <li>
+                    <li data-aos="fade-left">
                         <button class="list-trigger" type="button" data-bs-toggle="collapse" data-bs-target="#desc3" aria-expanded="false">
                             <i class="bi bi-chevron-right"></i> Layanan Konseling Kelompok
                         </button>
@@ -211,7 +267,7 @@
                             </div>
                         </div>
                     </li>
-                    <li>
+                    <li data-aos="fade-left">
                         <button class="list-trigger" type="button" data-bs-toggle="collapse" data-bs-target="#desc4" aria-expanded="false">
                             <i class="bi bi-chevron-right"></i> Layanan Penempatan & Penyaluran
                         </button>
@@ -221,23 +277,56 @@
                             </div>
                         </div>
                     </li>
-                    <li>
+                    <li data-aos="fade-left">  
                         <button class="list-trigger" type="button" data-bs-toggle="collapse" data-bs-target="#desc5" aria-expanded="false">
                             <i class="bi bi-chevron-right"></i> Layanan Advokasi
                         </button>
                         <div class="collapse" id="desc5">
                             <div class="desc-collapse">
-                               Berfungsi untuk melindungi dan memulihkan hak-hak siswa yang mungkin terabaikan atau terdampak oleh kebijakan yang tidak adil. Guru BK bertindak sebagai pembela kepentingan siswa untuk memastikan mereka mendapatkan perlindungan hukum dan moral.
+                                Berfungsi untuk melindungi dan memulihkan hak-hak siswa yang mungkin terabaikan atau terdampak oleh kebijakan yang tidak adil. Guru BK bertindak sebagai pembela kepentingan siswa untuk memastikan mereka mendapatkan perlindungan hukum dan moral.
                             </div>
                         </div>
                     </li>
                 </ul>
                 
-                <a href="#" class="btn-label shadow-sm">
+                <a href="{{ route('home') }}" class="btn-label shadow-sm">
                   Konsultasi Sekarang <i class="bi bi-arrow-right ms-2"></i>
                 </a>
             </div>
         </div>
     </div>
+
+    
 </section>
+<div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 350px; width: 90%; margin: auto;">
+        <div class="modal-content" style="font-family: 'Poppins', sans-serif; border-radius: 20px; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.15);">
+            <div class="modal-body text-center p-4">
+                <div class="icon-animate mb-3">
+                    <i class="bi bi-person-lock" style="font-size: 2.5rem; color: #0f2744;"></i>
+                </div>
+                
+                <h6 class="fw-bold mb-2" style="color: #0f2744; font-size: 1.1rem;">Akses Diperlukan</h6>
+                <p class="text-muted mb-4 px-2" style="font-size: 0.9rem;">Silakan login untuk membuka fitur layanan ini!</p>
+                
+                <a id="loginRedirectBtn" href="#" 
+                   class="btn btn-primary d-inline-flex align-items-center justify-content-center px-4 py-2 btn-login-hover" 
+                   style="border-radius: 10px; font-size: 0.85rem; text-decoration: none; border: none;">
+                    <i class="bi bi-arrow-left me-2"></i> Lanjutkan ke Login
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    AOS.init({ duration: 1000, once: true, offset: 100 });
+
+var loginModal = document.getElementById('loginModal');
+    loginModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var layananSlug = button.getAttribute('data-layanan');
+        var loginBtn = document.getElementById('loginRedirectBtn');
+        loginBtn.href = "{{ route('login') }}?layanan=" + layananSlug;
+    });
+</script>
 @endsection

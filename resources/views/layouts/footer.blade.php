@@ -148,55 +148,57 @@
   margin-top: 4rem;
 }
 </style>
-
 <footer class="footer">
   <div class="container px-4">
     <div class="row g-5">
 
       <div class="col-12 col-md-6 col-xl-6" data-aos="fade-up" data-aos-delay="100">
-        <h3 class="footer-logo">Tasty Food</h3>
+        <h3 class="footer-logo">E-BK Care</h3>
         <p class="footer-desc">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          Platform layanan bimbingan konseling sekolah yang aman, nyaman, dan terpercaya. Kami hadir untuk membantu setiap siswa meraih kesejahteraan mental dan akademik dengan privasi yang terjaga.
         </p>
         <div class="footer-social">
-          <a href="https://facebook.com" target="_blank"><img src="/img/001-facebook.png" alt="Facebook"></a>
-          <a href="https://twitter.com" target="_blank"><img src="/img/002-twitter.png" alt="Twitter/X"></a>
+          <a href="#"><img src="/img/001-facebook.png" alt="FB"></a>
+          <a href="#"><img src="/img/002-twitter.png" alt="IG"></a>
         </div>
       </div>
 
       <div class="col-12 col-md-6 col-xl-2" data-aos="fade-up" data-aos-delay="200">
-        <h5>Useful Links</h5>
+        <h5>Layanan</h5>
         <ul class="footer-links">
-          <li><a href="#">Blog</a></li>
-          <li><a href="#">Hewan</a></li>
-          <li><a href="#">Galeri</a></li>
-          <li><a href="#">Testimonial</a></li>
+          <li><a href="#">Konseling Online</a></li>
+          <li><a href="#">Jadwal Konseling</a></li>
+          <li><a href="#">Self-Report</a></li>
+          <li><a href="#">FAQ</a></li>
         </ul>
       </div>
 
       <div class="col-12 col-md-6 col-xl-2" data-aos="fade-up" data-aos-delay="300">
-        <h5>Privacy</h5>
+        <h5>Informasi</h5>
         <ul class="footer-links">
-          <li><a href="#">Karir</a></li>
           <li><a href="#">Tentang Kami</a></li>
-          <li><a href="#">Kontak Kami</a></li>
-          <li><a href="#">Servis</a></li>
+          <li><a href="#">Kebijakan Privasi</a></li>
+          <li><a href="#">Syarat & Ketentuan</a></li>
+          <li><a href="#">Bantuan Teknis</a></li>
         </ul>
       </div>
 
       <div class="col-12 col-md-6 col-xl-2" data-aos="fade-up" data-aos-delay="400">
-        <h5>Contact Info</h5>
-<ul class="footer-contact">
-    <li><img src="/img/email-2.png"><span>{{ $locations->email ?? 'email@anda.com' }}</span></li>
-    <li><img src="/img/call.png"><span>{{ $locations->phone ?? '-' }}</span></li>
-    <li><img src="/img/lokasi.png"><span>{{ $locations->address ?? 'Alamat Belum Diatur' }}</span></li>
-</ul>
+        <h5>Kontak</h5>
+        <ul class="footer-contact">
+          <li><img src="/img/email-2.png"><span>{{ $locations->email ?? 'bk@sekolah.sch.id' }}</span></li>
+          <li><img src="/img/call.png"><span>{{ $locations->phone ?? '-' }}</span></li>
+          <li><img src="/img/lokasi.png"><span>{{ $locations->address ?? 'Ruang BK Sekolah' }}</span></li>
+        </ul>
+        <a href="/self-report" class="footer-report-btn">
+            <i class="fas fa-exclamation-triangle"></i> Lapor Anonim
+        </a>
       </div>
 
     </div>
   </div>
 
   <div class="footer-copyright">
-    © Copyright 2025. All rights reserved.
+    © 2026 E-BK Care. Seluruh hak cipta dilindungi.
   </div>
 </footer>

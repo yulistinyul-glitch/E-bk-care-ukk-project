@@ -150,28 +150,29 @@
                 <span class="nxl-mtext">Tentang</span>
             </a>
         </li>
-{{-- <li class="nxl-item {{ Request::is('admin/articles*') ? 'active' : '' }}">
-    <a href="{{ route('admin.articles.index') }}" class="nxl-link">
-        <span class="nxl-mtext">Artikel</span>
-    </a>
-</li> --}}
-<li class="nxl-item {{ Request::is('admin/data/layanan*') ? 'active' : '' }}">
+    <li class="nxl-item {{ Request::is('admin/data/layanan*') ? 'active' : '' }}">
     <a href="{{ route('admin.layanan.index') }}" class="nxl-link">
         <span class="nxl-mtext">Layanan</span>
     </a>
-</li>
+    </li>
 
-<li class="nxl-item {{ Request::is('admin/data/galeri*') ? 'active' : '' }}">
-    <a href="{{ route('admin.data.galeri.index') }}" class="nxl-link">
-        <span class="nxl-mtext">Galeri</span>
+    <li class="nxl-item {{ Request::is('admin/data/galeri*') ? 'active' : '' }}">
+        <a href="{{ route('admin.data.galeri.index') }}" class="nxl-link">
+            <span class="nxl-mtext">Galeri</span>
+        </a>
+    </li>
+
+    <li class="nxl-item {{ Request::is('admin/data/kotaksaran*') ? 'active' : '' }}">
+        <a href="{{ route('admin.data.kotaksaran') }}" class="nxl-link">
+            <span class="nxl-mtext">Kotak Saran</span>
+        </a>
+    </li>
+    <li class="nxl-item {{ Request::is('admin/data/artikel*') ? 'active' : '' }}">
+    <a href="{{ route('admin.data.artikel.index') }}" class="nxl-link">
+        <span class="nxl-mtext">Artikel</span>
     </a>
 </li>
 
-<li class="nxl-item {{ Request::is('admin/data/kotaksaran*') ? 'active' : '' }}">
-    <a href="{{ route('admin.data.kotaksaran') }}" class="nxl-link">
-        <span class="nxl-mtext">Kotak Saran</span>
-    </a>
-</li>
     </ul>
 </li>
 

@@ -20,4 +20,5 @@ class SelfReport extends Model
         'file',
         'status_verifikasi'
     ];
+
 }

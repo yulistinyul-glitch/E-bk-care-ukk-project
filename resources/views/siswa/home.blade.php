@@ -248,11 +248,11 @@
       <h3 class="leading-tight text-white text-[20px] md:text-lg font-bold">QUICK ACTION</h3>
       <p class="leading-tight text-white text-s[10px] md:text-xs font-medium">Ada kejadian apa hari ini? <br> Laporkan disini!!</p>
     </div>
-    <div class="shrink-0">
+    <a href="{{ route('siswa.selfreport') }}" class="shrink-0">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 15 15">
-        <path fill="#fff" d="M8.293 2.293a1 1 0 0 1 1.414 0l4.5 4.5a1 1 0 0 1 0 1.414l-4.5 4.5a1 1 0 0 1-1.414-1.414L11 8.5H1.5a1 1 0 0 1 0-2H11L8.293 3.707a1 1 0 0 1 0-1.414" />
+          <path fill="#fff" d="M8.293 2.293a1 1 0 0 1 1.414 0l4.5 4.5a1 1 0 0 1 0 1.414l-4.5 4.5a1 1 0 0 1-1.414-1.414L11 8.5H1.5a1 1 0 0 1 0-2H11L8.293 3.707a1 1 0 0 1 0-1.414" />
       </svg>
-    </div>
+    </a>
   </div>
 
  <div class="mx-auto mt-4 font-['Poppins']">
@@ -263,36 +263,52 @@
                 Status Laporanmu
             </h3>
         </div>
+
+        <div class="mt-6 bg-blue-50 p-6 rounded-3xl border-2 border-dashed border-blue-200">
+            <h4 class="text-sm font-bold text-blue-900 mb-3 flex items-center gap-2">
+                <span>🔍</span> Lacak Laporan Manual
+            </h4>
+            <form action="{{ route('siswa.selfreport.check') }}" method="POST" class="flex gap-2">
+                @csrf
+                <input type="text" name="id_report" placeholder="Masukkan ID (Contoh: SR-A1B2)" 
+                      class="flex-1 p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-blue-400 text-sm uppercase font-mono">
+                <button type="submit" class="bg-blue-900 text-white px-5 rounded-xl text-sm font-bold hover:bg-blue-800 transition-all">
+                    Cek
+                </button>
+            </form>
+            <p class="text-[10px] text-blue-600 mt-2 italic">*Gunakan ID yang kamu dapatkan saat mengirim laporan.</p>
+          </div>
         <div class="flex flex-col space-y-2">
-    
-          <div class="group flex items-center justify-between p-4 border-b border-gray-100 transition-all hover:bg-gray-100 cursor-pointer rounded-xl">
-              <span class="font-semibold text-gray-700">Laporan#12-april-2026</span>
-              
-              <div style="background-color: #dcfce7; color: #166534;" class="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  Selesai
-              </div>
-          </div>
 
-          <div class="group flex items-center justify-between p-4 border-b border-gray-100 transition-all hover:bg-gray-100 cursor-pointer rounded-xl">
-              <span class="font-semibold text-gray-700">Laporan#20-maret-2026</span>
-              
-              <div style="background-color: #fee2e2; color: #991b1b;" class="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                  Ditolak
-              </div>
-          </div>
+          @forelse ($reports as $report)
+          <div class="group flex items-center justify-between p-4 border-b border-gray-100 transition-all hover:bg-gray-100 rounded-xl">
+            <div class="flex flex-col">
+                <span class="font-semibold text-gray-700">Laporan #{{ $report->id_report }}</span>
+                <span class="text-[10px] text-gray-400">Kategori: {{ ucfirst($report->kategori_masalah) }}</span>
+            </div>
+            
 
-          <div class="group flex items-center justify-between p-4 border-b border-gray-100 transition-all hover:bg-gray-100 cursor-pointer rounded-xl">
-              <span class="font-semibold text-gray-700">Laporan#12-januari-2026</span>
-              
-              <div style="background-color: #B8D2E0; color: #1A374D;" class="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm">
+            @if($report->status_verifikasi == 'disetujui')
+                <div class="bg-green-100 text-green-700 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>Selesai
+                </div>
+            @elseif($report->status_verifikasi == 'ditolak')
+                <div class="bg-red-100 text-red-800 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>Ditolak
+                </div>
+            @else
+                <div class="bg-blue-100 text-blue-900 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
                   Diproses
-              </div>
-          </div>
-
-
+                </div>
+            @endif
+        </div>
+         @empty
+        <div class="text-center py-6">
+            <p class="text-sm text-gray-400 italic">Belum ada laporan aktif dari perangkat ini.</p>
+            <p class="text-[10px] text-gray-400 mt-1">*Laporan anonim hanya muncul sementara di dashboard ini.</p>
+        </div>
+        @endforelse
     </div>
   </div>
 </div>

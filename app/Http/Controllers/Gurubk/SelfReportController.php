@@ -5,6 +5,8 @@ namespace App\Http\Controllers\GuruBK;
 use App\Http\Controllers\Controller;
 use App\Models\SelfReport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class SelfReportController extends Controller
 {
@@ -15,7 +17,6 @@ class SelfReportController extends Controller
                     ->get();
 
         $active = 'index'; 
-
         return view('gurubk.selfreport.index', compact('reports', 'active'));
     }
 
@@ -26,14 +27,12 @@ class SelfReportController extends Controller
                     ->get();
 
         $active = 'arsip'; 
-
         return view('gurubk.selfreport.arsip', compact('reports', 'active'));
     }
 
     public function detail($id)
     {
-        $report = SelfReport::findOrFail($id);
-
+        $report = SelfReport::where('id_report', $id)->firstOrFail();
         $active = 'detail'; 
 
         return view('gurubk.selfreport.detail', compact('report', 'active'));
@@ -45,8 +44,10 @@ class SelfReportController extends Controller
             'status' => 'required|in:disetujui,ditolak'
         ]);
 
-        $report = SelfReport::findOrFail($id);
+        $report = SelfReport::where('id_report', $id)->firstOrFail();
         $report->status_verifikasi = $request->status;
+        
+        $report->id_gurubk = Auth::user()->id_gurubk; 
         $report->save();
 
         return redirect()->route('gurubk.selfreport.arsip')

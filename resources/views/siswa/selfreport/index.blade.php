@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <form action="" enctype="multipart/form-data" class="space-y-8">
+  <form action="{{ route('siswa.selfreport.store')}}" method="POST" enctype="multipart/form-data" class="space-y-8">
     @csrf
 
     <div class="space-y-4">
@@ -59,10 +59,11 @@
       <h3 class="font-bold text-lg borded-b pb-2">
         2. Detail Kejadian
       </h3>
+
       <div class="grid md:grid-cols-2 gap-4">
         <div class="space-y-2">
           <label class="text-sm font-semibold text-gray-700">Kaategori Masalah</label>
-          <select name="" id="" class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none appearance-none bg-gray-50">
+          <select name="kategori_masalah" required id="" class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none appearance-none bg-gray-50">
             <option value="Bullying">Bullying</option>
             <option value="Ancaman">Ancaman</option>
             <option value="Kekerasan">Kekerasan</option>
@@ -71,9 +72,10 @@
             <option value="Lainnya">Lainnya</option>
           </select>
         </div>
+
         <div class="space-y-2">
           <label for="" class="text-sm font-semibold text-gray-700">Lokasi Kejadian</label>
-          <select name="" id="" class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none appearance-none bg-gray-50">
+          <select name="lokasi" required id="" class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none appearance-none bg-gray-50">
             <option value="Kelas">Ruang Kelas</option>
             <option value="Kantin">Kantin</option>
             <option value="Toilet">Toilet</option>
@@ -82,10 +84,11 @@
           </select>
         </div>
       </div>
+
       <div class="space-y-2">
         <label for="" class="text-sm font-semibold text-gray-700">Kapan kejadiannya terjadi?</label>
         <p class="text-xs text-gray-500 italic mb-2">Contoh: "Kemarin saat jam istirahat" atau "Tadi pagi saat jam 8"</p>
-        <textarea name="" id="" rows="2" class="w-full p-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50" placeholder="Ceritakan waktu singkatnya..."></textarea>
+        <textarea name="waktu_kejadian" required id="" rows="2" class="w-full p-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50" placeholder="Ceritakan waktu singkatnya..."></textarea>
       </div>
     </div>
 
@@ -93,18 +96,19 @@
       <h3 class="font-bold text-lg border-b pb-2 text-red-600">3. Ceritakan Kisahmu</h3>
       <div class="space-y-2">
         <label class="text-sm font-medium text-gray-600">Apa yang terjadi? (Gunakan bahasa santai saja, yang penting jelas)</label>
-        <textarea name="kronologi" rows="5" class="w-full p-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50" placeholder="Tulis di sini..."></textarea>
+        <textarea name="isi_laporan" required rows="5" class="w-full p-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50" placeholder="Tulis di sini..."></textarea>
       </div>
+
       <div class="space-y-2">
         <label class="text-sm font-medium text-gray-600">Siapa pelakunya? (Sebutkan nama atau ciri-cirinya)</label>
-         <textarea name="pelaku" rows="3" class="w-full p-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50" placeholder="Contoh: Budi kelas 10 atau kakak kelas pakai jaket hitam..."></textarea>
+         <textarea name="pelaku" required rows="3" class="w-full p-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50" placeholder="Contoh: Budi kelas 10 atau kakak kelas pakai jaket hitam..."></textarea>
       </div>
     </div>
 
      <div class="space-y-4">
         <h3 class="font-bold text-lg border-b pb-2">4. Lampirkan Bukti</h3>
         <div class="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center hover:border-blue-400 transition cursor-pointer bg-gray-50">
-          <input type="file" id="pilih-file" name="bukti" class="hidden">
+          <input type="file" id="pilih-file" name="bukti" class="hidden" required>
           <label for="pilih-file" class="cursor-pointer">
             <span class="text-4xl block mb-2">📸</span>
             <span class="text-sm font-medium text-blue-600">Klik untuk upload foto atau dokumen</span>
@@ -126,7 +130,7 @@
               <input type="radio" name="anonim" value="tidak" class="w-4 h-4 text-blue-600">
               <span class="text-sm">"Ya, silakan hubungi saya di:"</span>
             </div>
-            <input type="text" placeholder="ID LINE / No. WhatsApp" class="ml-7 p-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-blue-400">
+            <input type="text" name="kontak_pengirim" placeholder="ID LINE / No. WhatsApp" class="ml-7 p-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-blue-400">
           </label>
         </div>
       </div>
@@ -136,4 +140,25 @@
       </button>
       <p class="text-center text-xs text-gray-400 mt-4 italic">Sekolah adalah tempat belajar yang aman. Kamu sudah melakukan hal yang benar.</p>
   </form>
+
+  @if(session('success_report'))
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl">
+        <div class="text-5xl mb-4">🎉</div>
+        <h3 class="text-xl font-bold text-gray-800">Laporan Terkirim!</h3>
+        <p class="text-sm text-gray-500 mt-2">Simpan kode di bawah ini untuk memantau status laporanmu secara anonim:</p>
+        
+        <div class="bg-blue-50 border-2 border-dashed border-blue-200 rounded-2xl p-4 my-5">
+            <span class="text-2xl font-mono font-bold text-blue-900 tracking-widest">
+                {{ session('success_report') }}
+            </span>
+        </div>
+
+        <button onclick="this.parentElement.parentElement.remove()" class="w-full bg-blue-900 text-white py-3 rounded-xl font-bold">
+            Saya Sudah Mencatatnya
+        </button>
+    </div>
+</div>
+@endif
 </section>
+@endsection

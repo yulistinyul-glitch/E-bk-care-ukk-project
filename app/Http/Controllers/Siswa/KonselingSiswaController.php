@@ -10,6 +10,7 @@ use App\Models\KotakSurats;
 use App\Models\Chat;
 use App\Events\BotResponded;
 use App\Models\Siswa;
+use App\Models\SelfReport;
 use Illuminate\Support\Facades\Auth;
 
 class KonselingSiswaController extends Controller
@@ -69,31 +70,38 @@ class KonselingSiswaController extends Controller
 
     public function home()
     {
-        $user = Auth::user();
-        $siswa = Siswa::where('id_pengguna', $user->id_pengguna)->first();
-    
-         if (!$siswa) { abort(404, 'Data Siswa Tidak Ditemukan'); }
+    $user = Auth::user();
+    $siswa = Siswa::where('id_pengguna', $user->id_pengguna)->first();
 
-        $id_siswa = $siswa->id_siswa; // Gunakan ini secara konsisten
+    if (!$siswa) { 
+        abort(404, 'Data Siswa Tidak Ditemukan'); 
+    }
 
-        $unreadMessages = \App\Models\KotakSurats::where('id_siswa', $id_siswa)
-                        ->where('is_read', false)
-                        ->count();
+    $id_siswa = $siswa->id_siswa;
 
-        $lastChat = Chat::whereHas('konseling', function($query) use ($id_siswa) {
+    $unreadMessages = \App\Models\KotakSurats::where('id_siswa', $id_siswa)
+                    ->where('is_read', false)
+                    ->count();
+
+    $lastChat = Chat::whereHas('konseling', function($query) use ($id_siswa) {
                     $query->where('id_siswa', $id_siswa);
                 })->latest()->first();
 
-        $jadwalTerdekat = CounselingSession::whereHas('request', function($query) use ($id_siswa) {
-            $query->where('id_siswa', $id_siswa);
-        })
-        ->where('status', 'dijadwalkan') 
-        ->where('scheduled_date', '>=', now())
-        ->orderBy('scheduled_date', 'asc')
-        ->orderBy('scheduled_time', 'asc')
-        ->first();
-        
-        return view('siswa.home', compact('lastChat', 'jadwalTerdekat', 'unreadMessages'));
+    $jadwalTerdekat = CounselingSession::whereHas('request', function($query) use ($id_siswa) {
+        $query->where('id_siswa', $id_siswa);
+    })
+    ->where('status', 'dijadwalkan') 
+    ->where('scheduled_date', '>=', now())
+    ->orderBy('scheduled_date', 'asc')
+    ->orderBy('scheduled_time', 'asc')
+    ->first();
+
+    $sessionIds = session()->get('my_reports', []);
+    $reports = \App\Models\SelfReport::whereIn('id_report', $sessionIds)
+                ->orderBy('created_at', 'desc')
+                ->get();
+    
+    return view('siswa.home', compact('lastChat', 'jadwalTerdekat', 'unreadMessages', 'reports'));
     }
 
     public function storeChat(Request $request)

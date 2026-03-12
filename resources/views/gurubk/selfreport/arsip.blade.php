@@ -57,7 +57,7 @@
                                 </td>
 
                                 <td class="text-center">
-                                    <a href="{{ route('gurubk.selfreport.show', $report->id) }}"
+                                    <a href="{{ route('gurubk.selfreport.show', $report->id_report) }}"
                                        class="btn-detail">
                                         👁 Detail
                                     </a>

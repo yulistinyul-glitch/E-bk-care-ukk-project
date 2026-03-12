@@ -42,6 +42,7 @@ use App\Http\Controllers\Gurubk\SaranController;
 use App\Http\Controllers\Siswa\KonselingSiswaController;
 use App\Http\Controllers\Siswa\KotakSuratController;
 use App\Http\Controllers\Siswa\SaranSiswaController;
+use App\Http\Controllers\Siswa\SelfReportSiswaController;
 use Illuminate\Support\Facades\App;
 
 /*
@@ -207,7 +208,8 @@ Route::middleware(['auth', 'role:GuruBK'])->prefix('gurubk')->name('gurubk.')->g
     Route::prefix('selfreport')->name('selfreport.')->group(function () {
         Route::get('/', [SelfReportController::class, 'index'])->name('index');
         Route::get('/arsip', [SelfReportController::class, 'arsip'])->name('arsip');
-        Route::get('/{id}', [SelfReportController::class, 'show'])->name('show');
+        Route::get('/{id}', [SelfReportController::class, 'detail'])->name('show');
+        Route::post('/verifikasi/{id}', [SelfReportController::class, 'verifikasi'])->name('verifikasi');
     });
 
     // Data Siswa
@@ -266,7 +268,10 @@ Route::prefix('siswa')->name('siswa.')->group(function () {
         Route::get('/kirim-saran', [SaranSiswaController::class, 'show'])->name('kirim-saran');
         Route:: post('/kirim-saran/submit', [SaranSiswaController::class, 'store'])->name('saran.store');
 
-
+        Route::get('/selfreport', [SelfReportSiswaController::class, 'show'])->name('selfreport');        
+        Route::post('/selfreport/check', [SelfReportSiswaController::class, 'checkStatus'])->name('selfreport.check');
+        Route::post('/selfreport/store', [SelfReportSiswaController::class, 'store'])->name('selfreport.store');
+        Route::get('/selfreport/store', function() { return redirect()->route('siswa.selfreport');});
         
     });
 });
@@ -279,4 +284,3 @@ Route::post('/logout', function () {
     return redirect('/');
 })->name('logout');
 
-Route::get('/selfreport', function () { return view('siswa.selfreport.index'); })->name('selfreport');

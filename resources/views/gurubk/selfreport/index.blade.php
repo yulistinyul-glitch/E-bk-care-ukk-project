@@ -89,7 +89,7 @@
 
                 <div class="report-card"
                      data-bs-toggle="modal"
-                     data-bs-target="#detailModal{{ $report->id }}">
+                     data-bs-target="#detailModal{{ $report->id_report }}">
 
                     <div class="d-flex justify-content-between mb-2">
                         <span class="badge bg-warning text-dark">
@@ -102,69 +102,16 @@
                     </div>
 
                     <h6 class="fw-bold">
-                        {{ $report->kategori }}
+                        {{ $report->kategori_masalah }}
                     </h6>
 
                     <p class="small text-muted mb-0">
-                        {{ \Illuminate\Support\Str::limit($report->deskripsi, 90) }}
+                        {{ \Illuminate\Support\Str::limit($report->isi_laporan, 90) }}
                     </p>
 
                 </div>
 
-            </div>
-
-            <div class="modal fade" id="detailModal{{ $report->id }}" tabindex="-1">
-                <div class="modal-dialog">
-                    <div class="modal-content rounded-4">
-
-                        <div class="modal-header">
-                            <h5 class="modal-title">
-                                Detail Laporan #{{ $report->id }}
-                            </h5>
-                            <button type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="modal"></button>
-                        </div>
-
-                        <div class="modal-body">
-
-                            <p><strong>Kategori:</strong> {{ $report->kategori }}</p>
-                            <p><strong>Tanggal:</strong>
-                                {{ \Carbon\Carbon::parse($report->tanggal_lapor)->format('d F Y') }}
-                            </p>
-
-                            <p><strong>Deskripsi:</strong></p>
-                            <p>{{ $report->deskripsi }}</p>
-
-                        </div>
-
-                        <div class="modal-footer">
-
-                            <form action="{{ route('gurubk.selfreport.verifikasi', $report->id) }}"
-                                  method="POST"
-                                  class="d-flex gap-2">
-                                @csrf
-
-                                <button type="submit"
-                                        name="status"
-                                        value="disetujui"
-                                        class="btn btn-success">
-                                    ✔ Setujui
-                                </button>
-
-                                <button type="submit"
-                                        name="status"
-                                        value="ditolak"
-                                        class="btn btn-danger">
-                                    ✖ Tolak
-                                </button>
-                            </form>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+            </div>   
 
         @empty
 
@@ -181,5 +128,68 @@
     </div>
 
 </div>
+@foreach ($reports as $report)     
+    <div class="modal fade" 
+         id="detailModal{{ $report->id_report }}" 
+         tabindex="-1" 
+         data-bs-backdrop="true" 
+         data-bs-focus="false"
+         style="z-index: 9999;"> <div class="modal-dialog modal-dialog-centered"> <div class="modal-content rounded-4 border-0 shadow">
 
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">
+                        Detail Laporan #{{ $report->id_report }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body py-4">
+                    <div class="mb-3">
+                        <label class="text-muted small d-block">Kategori Masalah</label>
+                        <span class="fw-semibold text-primary">{{ $report->kategori_masalah }}</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="text-muted small d-block">Tanggal Kejadian</label>
+                        <span class="fw-semibold">{{ \Carbon\Carbon::parse($report->tanggal_lapor)->format('d F Y') }}</span>
+                    </div>
+
+                    <hr class="text-gray-200">
+
+                    <p class="text-muted small mb-1">Deskripsi Kronologi:</p>
+                    <div class="p-3 bg-light rounded-3 text-dark">
+                        {{ $report->isi_laporan }}
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0 pt-0">
+                    <form action="{{ route('gurubk.selfreport.verifikasi', $report->id_report) }}"
+                          method="POST"
+                          class="d-flex gap-2 w-100">
+                        @csrf
+                        <button type="submit" name="status" value="disetujui" class="btn btn-success flex-fill rounded-3 py-2">
+                            ✔ Setujui
+                        </button>
+                        <button type="submit" name="status" value="ditolak" class="btn btn-danger flex-fill rounded-3 py-2">
+                            ✖ Tolak
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+@endforeach
+
+{{-- js --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const myModals = document.querySelectorAll('.modal');
+        myModals.forEach(modal => {
+            modal.addEventListener('show.bs.modal', function () {
+                document.body.appendChild(this);
+            });
+        });
+    });
+</script>
 @endsection

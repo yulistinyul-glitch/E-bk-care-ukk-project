@@ -93,7 +93,7 @@
                 </li>
 
                 <li class="nxl-item">
-                    <a href="" class="nxl-link">
+                    <a href="{{ route('gurubk.riwayatpelanggaran.akumulasi')}}" class="nxl-link">
                         <span class="nxl-micon"><i class="feather-file-text"></i></span>
                         <span class="nxl-mtext">Akumulasi Poin Siswa</span>
                     </a>

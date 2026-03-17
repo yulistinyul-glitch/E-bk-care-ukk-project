@@ -5,8 +5,8 @@
     }
 
     .profile-frame {
-        width: 90px;
-        height: 90px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
         padding: 4px;
         background: #ffffff;
@@ -48,7 +48,7 @@
     <div class="navbar-wrapper">
         <div class="m-header text-center">
             <a href="{{ route('gurubk.dashboard') }}" class="b-brand">
-                <img src="{{ asset('assets/images/bbc.png') }}" 
+                <img src="{{ asset('img/logo_ebk-careGold.png') }}"
                      alt="Logo" 
                      class="logo logo-sm" />
             </a>

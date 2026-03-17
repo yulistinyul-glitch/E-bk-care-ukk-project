@@ -139,24 +139,60 @@
 <div class="center-wrapper">
     <div class="form-box">
         <h4 class="text-center">Catat Pelanggaran Siswa</h4>
-
-        {{-- Form Filter (Hanya untuk ambil data dropdown) --}}
         <form action="{{ route('gurubk.riwayatpelanggaran.create') }}" method="GET">
+            {{-- Hidden Inputs untuk menjaga state --}}
+            <input type="hidden" name="tingkatan_pilih" value="{{ request('tingkatan_pilih') }}">
+            <input type="hidden" name="jurusan_pilih" value="{{ request('jurusan_pilih') }}">
+            <input type="hidden" name="id_kelas" value="{{ request('id_kelas') }}">
+            <input type="hidden" name="id_siswa" value="{{ request('id_siswa') }}">
+            <input type="hidden" name="kategori_pilih" value="{{ request('kategori_pilih') }}">
+            <input type="hidden" name="id_pelanggaran" value="{{ request('id_pelanggaran') }}">
+
             <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Pilih Kelas</label>
-                    <select name="id_kelas" class="form-select" onchange="this.form.submit()">
-                        <option value="">Pilih Kelas</option>
-                        @foreach($kelas as $k)
-                            <option value="{{ $k->id_kelas }}" {{ request('id_kelas') == $k->id_kelas ? 'selected' : '' }}>
-                                {{ $k->nama_lengkap }}
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Tingkatan</label>
+                    {{-- HAPUS this.disabled=true --}}
+                    <select name="tingkatan_pilih" class="form-select" onchange="this.form.submit()">
+                        <option value="">Pilih...</option>
+                        @foreach($tingkatan_list as $t)
+                            <option value="{{ $t->nama_kelas }}" {{ request('tingkatan_pilih') == $t->nama_kelas ? 'selected' : '' }}>
+                                {{ $t->nama_kelas }}
                             </option>
                         @endforeach
                     </select>
                 </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Jurusan</label>
+                    <select name="jurusan_pilih" class="form-select" onchange="this.form.submit()" {{ !request('tingkatan_pilih') ? 'disabled' : '' }}>
+                        <option value="">Pilih...</option>
+                        @foreach($jurusan_list as $j)
+                            <option value="{{ $j->jurusan }}" {{ request('jurusan_pilih') == $j->jurusan ? 'selected' : '' }}>
+                                {{ $j->jurusan }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Nama Kelas</label>
+                    <select name="id_kelas" class="form-select" onchange="this.form.submit()" {{ !request('jurusan_pilih') ? 'disabled' : '' }}>
+                        <option value="">Pilih...</option>
+                        @foreach($kelas as $k)
+                            @if($k->nama_kelas == request('tingkatan_pilih') && $k->jurusan == request('jurusan_pilih'))
+                                <option value="{{ $k->id_kelas }}" {{ request('id_kelas') == $k->id_kelas ? 'selected' : '' }}>
+                                    {{ $k->nama_kelas }} {{ $k->jurusan }} {{ $k->nomor_ruang }}
+                                </option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Nama Siswa</label>
-                    <select name="id_siswa" class="form-select" onchange="this.form.submit()">
+                    <select name="id_siswa" class="form-select" onchange="this.form.submit()" {{ !request('id_kelas') ? 'disabled' : '' }}>
                         <option value="">Pilih Siswa</option>
                         @foreach($siswa as $s)
                             <option value="{{ $s->id_siswa }}" {{ request('id_siswa') == $s->id_siswa ? 'selected' : '' }}>
@@ -165,18 +201,18 @@
                         @endforeach
                     </select>
                 </div>
-            </div>
 
-            <div class="mb-3">
-                <label class="form-label">Kategori Pelanggaran</label>
-                <select name="kategori_pilih" class="form-select" onchange="this.form.submit()">
-                    <option value="">Pilih Kategori</option>
-                    @foreach($kategori as $kat)
-                        <option value="{{ $kat->kategori_pelanggaran }}" {{ request('kategori_pilih') == $kat->kategori_pelanggaran ? 'selected' : '' }}>
-                            {{ $kat->kategori_pelanggaran }}
-                        </option>
-                    @endforeach
-                </select>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Kategori Pelanggaran</label>
+                    <select name="kategori_pilih" class="form-select" onchange="this.form.submit()">
+                        <option value="">Pilih Kategori</option>
+                        @foreach($kategori as $kat)
+                            <option value="{{ $kat->kategori_pelanggaran }}" {{ request('kategori_pilih') == $kat->kategori_pelanggaran ? 'selected' : '' }}>
+                                {{ $kat->kategori_pelanggaran }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
 
             <div class="mb-3">
@@ -197,10 +233,12 @@
         {{-- Form Simpan (Utama) --}}
         <form action="{{ route('gurubk.riwayatpelanggaran.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            {{-- Input Hidden untuk melempar data filter ke Store --}}
+            {{-- hidden input --}}
             <input type="hidden" name="id_siswa" value="{{ request('id_siswa') }}">
             <input type="hidden" name="id_pelanggaran" value="{{ request('id_pelanggaran') }}">
-
+            <input type="hidden" name="tingkatan_pilih" value="{{ request('tingkatan_pilih') }}">
+            <input type="hidden" name="jurusan_pilih" value="{{ request('jurusan_pilih') }}">
+            <input type="hidden" name="id_kelas" value="{{ request('id_kelas') }}">
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Tingkatan</label>

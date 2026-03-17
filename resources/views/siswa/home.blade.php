@@ -3,7 +3,7 @@
 
 @section('content')
 {{-- Header profile --}}
-<div class="lg:ml-28 px-6 lg:px-10 max-w-7xl mx-auto">
+<div class="lg:ml-28 px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto">
 
 
 <div class="max-w-7xl mx-auto px-6 lg:px-10 mt-6 font-['Poppins'] ">
@@ -26,6 +26,34 @@
      </div>
   </div>
 </div>
+
+@php
+    $authSiswa = auth()->user() ? \App\Models\Siswa::where('id_pengguna', auth()->user()->id_pengguna)->first() : null;
+    
+    $suratBaru = null;
+    if ($authSiswa) {
+        $suratBaru = \App\Models\KotakSurats::where('id_siswa', $authSiswa->id_siswa)
+                                          ->where('is_read', false)
+                                          ->first();
+    }
+    
+@endphp
+
+@if ($suratBaru)
+<div class="alert alert-danger border shadow-lg d-flex align-items-center fade show" role="alert" style="border-radius: 15px;">
+  <div class="p-2 bg-white rounded-circle me-3">
+    <i class="bi bi-exclamation-octagon-fill text-danger fs-4"></i>
+  </div>
+  <div>
+    <h6 class="fw-bold mb-0 text-dark">⚠️Peringatan Penting!!🚨</h6>
+    <small class="text-dark">Kamu memiliki surat peringatan baru yang belum dibaca.</small>
+  </div>
+  <a href="{{ route('siswa.kotaksurat.index') }}" class="btn btn-danger btn-sm rounded-pill ms-auto px-4">
+    Buka sekarang
+  </a>
+</div>
+  
+@endif
 
 {{-- mood tracker --}}
 <h3 class="text-blue-950 font-bold mb-4 text-center text-lg my-4">How are you feeling today? don't be afraid to tell me</h3>
@@ -95,112 +123,154 @@
   </button>
 </div>
 
-
-{{-- kotak surat - bar point - btn mulai chat baru --}}
-  <div class="my-10 mx-5 font-['Poppins']">
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+@php
+    // Ambil data siswa jika belum ada
+    $authSiswa = $siswa ?? (\App\Models\Siswa::where('id_pengguna', auth()->user()->id_pengguna)->first());
     
-    <div class="flex flex-col gap-4">
-      <div>
-        <p class="text-slate-500 text-xs md:text-sm font-medium ml-1 mb-2">Surat/Jadwal konseling</p>
-        <a href="{{ route('siswa.kotaksurat.index') }}" class="relative inline-block p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:bg-gray-50 transition-all">
-         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 56 56" class="text-blue-950">
-          <path fill="currentColor" d="M28.047 30.707c.984 0 1.875-.445 2.883-1.477L51.32 9.05c-.867-.843-2.484-1.241-4.804-1.241H8.78c-1.969 0-3.351.375-4.125 1.148l20.508 20.274c1.008 1.007 1.922 1.476 2.883 1.476M2.71 44.418l16.57-16.383L2.664 11.652c-.352.657-.54 1.782-.54 3.399v25.875c0 1.664.212 2.836.587 3.492m50.625-.023c.351-.68.54-1.829.54-3.47V15.052c0-1.57-.165-2.696-.517-3.328L36.812 28.035ZM9.484 48.19h37.734c1.97 0 3.329-.375 4.102-1.125L34.445 30.332l-1.57 1.57c-1.594 1.547-3.117 2.25-4.828 2.25s-3.235-.703-4.828-2.25l-1.57-1.57L4.796 47.043c.89.773 2.46 1.148 4.687 1.148"/></svg>
-          @if ($unreadMessages > 0)
-            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-bounce">
-              {{ $unreadMessages }}
-            </span>
-          @endif
-        </a>
-      </div>
+    // Pastikan $totalPoin terdefinisi (Hitung dari relasi jika null)
+    if (!isset($totalPoin)) {
+        $totalPoin = $authSiswa ? \DB::table('riwayat_pelanggarans')->where('id_siswa', $authSiswa->id_siswa)->sum('poin') : 0;
+    }
 
-      <div class="bg-white p-5 rounded-4xl shadow-sm border border-gray-100">
-        <h3 class="text-sm font-bold text-[#1A374C] mb-3">Jadwal Terdekat</h3>
-        @if ($jadwalTerdekat)
-          <div class="bg-blue-50 p-3 rounded-2xl border border-blue-100">
-            <div class="flex items-center gap-3 mb-2">
-              <div class="bg-blue-500 text-white p-2 rounded-lg text-xs">
-                <i class="fas fa-calendar-alt"></i>
+    // Pastikan $status terdefinisi
+    if (!isset($status)) {
+        if ($totalPoin <= 20) {
+            $status = ['bg' => 'bg-emerald-50', 'text' => 'text-emerald-600', 'label' => 'Aman'];
+        } elseif ($totalPoin <= 50) {
+            $status = ['bg' => 'bg-amber-50', 'text' => 'text-amber-600', 'label' => 'Waspada'];
+        } else {
+            $status = ['bg' => 'bg-rose-50', 'text' => 'text-rose-600', 'label' => 'Bahaya'];
+        }
+    }
+
+    // Pastikan variabel lain tidak bikin crash
+    $unreadMessages = $unreadMessages ?? 0;
+    $jadwalTerdekat = $jadwalTerdekat ?? null;
+@endphp
+{{-- Container Utama --}}
+<div class="my-6 mx-4 sm:my-8 sm:mx-6 lg:my-8 lg:mx-4 font-['Poppins']">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        
+        {{-- SISI KIRI: Notif & Jadwal (Mobile: Order 2) --}}
+        <div class="md:col-span-4 flex flex-col gap-5 order-2 md:order-1">
+            <div class="flex items-center justify-between px-1">
+                <p class="text-slate-500 text-xs md:text-sm font-semibold uppercase tracking-wider">Akses Cepat</p>
+                <a href="{{ route('siswa.kotaksurat.index') }}" class="relative p-3 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all active:scale-90">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-900">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    @if ($unreadMessages > 0)
+                        <span class="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-white animate-bounce">
+                            {{ $unreadMessages }}
+                        </span>
+                    @endif
+                </a>
+            </div>
+
+            <div class="bg-white p-5 rounded-[2.5rem] shadow-sm border border-gray-50 group hover:border-blue-100 transition-all">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-1.5 h-4 bg-blue-500 rounded-full"></div>
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-tight">Jadwal Terdekat</h3>
+                </div>
+                
+                @if ($jadwalTerdekat)
+                    <div class="bg-linear-to-br from-blue-50 to-indigo-50 p-4 rounded-[1.8rem] border border-blue-100">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="bg-white p-2 rounded-xl shadow-sm">
+                                <i class="fas fa-calendar-alt text-blue-500 text-xs"></i>
+                            </div>
+                            <p class="text-xs font-bold text-blue-900 uppercase">
+                                {{ \Carbon\Carbon::parse($jadwalTerdekat->scheduled_date)->format('d M Y') }}
+                            </p>
+                        </div>
+                        <div class="flex flex-col gap-1 ml-1">
+                            <span class="text-[10px] text-blue-600 font-bold uppercase tracking-wide italic">
+                                <i class="far fa-clock mr-1"></i> {{ $jadwalTerdekat->scheduled_time }}
+                            </span>
+                            <span class="text-[10px] text-blue-500 font-medium truncate italic">
+                                <i class="fas fa-map-marker-alt mr-1"></i> {{ $jadwalTerdekat->location_link }}
+                            </span>
+                        </div>
+                    </div>
+                @else
+                    <div class="py-6 flex flex-col items-center opacity-40">
+                        <i class="fas fa-calendar-day text-2xl mb-2 text-slate-300"></i>
+                        <p class="text-[10px] font-medium uppercase tracking-widest text-slate-400">Belum ada jadwal</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        {{-- TENGAH: Layanan (Mobile: Grid 2 Kolom) --}}
+        <div class="md:col-span-3 flex flex-col gap-4 order-3 md:order-2">
+            <p class="text-slate-500 text-xs md:text-sm font-semibold px-1 uppercase tracking-wider">Layanan</p>
+            <div class="grid grid-cols-2 md:grid-cols-1 gap-4">
+                <a href="{{ route('siswa.konseling.create') }}" class="flex flex-col items-center justify-center gap-2 p-5 bg-blue-50/50 hover:bg-blue-50 rounded-[2.5rem] border-2 border-dashed border-blue-100 transition-all active:scale-95 group">
+                    <div class="p-3 bg-white rounded-2xl shadow-sm text-blue-500 group-hover:rotate-12 transition-transform">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
+                    </div>
+                    <p class="font-bold text-[10px] text-blue-900 uppercase tracking-tighter">Ajukan Jadwal</p>
+                </a>
+
+                <a href="{{ route('siswa.kirim-saran')}}" class="flex flex-col items-center justify-center gap-2 p-5 bg-emerald-50/50 hover:bg-emerald-50 rounded-[2.5rem] border-2 border-dashed border-emerald-100 transition-all active:scale-95 group text-emerald-600">
+                    <div class="p-3 bg-white rounded-2xl shadow-sm group-hover:-rotate-12 transition-transform">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <p class="font-bold text-[10px] text-emerald-900 uppercase tracking-tighter">Kotak Saran</p>
+                </a>
+            </div>
+        </div>
+
+        {{-- KANAN: Poin & Button Utama (Mobile: Order 1) --}}
+        <div class="md:col-span-5 flex flex-col gap-6 order-1 md:order-3">
+            <div class="bg-white p-6 rounded-[3rem] shadow-xl shadow-slate-200/50 border border-gray-50 flex flex-col gap-4 relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-slate-50 rounded-full opacity-50"></div>
+                
+                <div class="flex justify-between items-center relative z-10">
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Kesehatan Poin</p>
+                    <span class="px-3 py-1 {{ $status['bg'] }} {{ $status['text'] }} rounded-full text-[10px] font-black uppercase italic tracking-widest">
+                        {{ $status['label'] }}
+                    </span>
+                </div>
+
+               <div class="flex items-center gap-6 relative z-10">
+                  {{-- Menampilkan angka total poin --}}
+                  <div class="text-2xl font-black {{ $status['text'] }} tracking-tighter italic">
+                      {{ $totalPoin }}
+                  </div>
+                  
+                  <div class="flex-1">
+                      <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden border border-slate-50 shadow-inner">
+                          {{-- Progress bar menggunakan $totalPoin --}}
+                          <div class="{{ $totalPoin > 50 ? 'bg-rose-500' : ($totalPoin > 20 ? 'bg-amber-400' : 'bg-emerald-500') }} h-full transition-all duration-1000" 
+                              style="width: {{ min($totalPoin, 100) }}%">
+                          </div>
+                      </div>
+                      <p class="text-[9px] text-slate-400 mt-2 font-bold uppercase tracking-tight">Akumulasi Poin Pelanggaran / 100</p>
+                  </div>
               </div>
-              <p class="text-xs font-bold text-blue-900">
-                {{ \Carbon\Carbon::parse($jadwalTerdekat->scheduled_date)->format('d M Y') }}
-              </p>
-            </div>
-            <p class="text-[10px] text-blue-700 font-medium ml-1">
-              {{ $jadwalTerdekat->scheduled_time }} • {{ $jadwalTerdekat->location_link }}
-            </p>
-          </div>
-        @else
-          <p class="text-gray-400 text-[10px] italic text-center py-2">Belum ada jadwal.</p>
-        @endif
-      </div>
-    </div>
 
-   <div class="flex flex-col gap-2">
-    <p class="text-slate-500 text-xs md:text-sm font-medium ml-1">Layanan</p>
-    <div class="grid grid-cols-1 gap-3">
-        <a href="{{ route('siswa.konseling.create') }}" class="flex flex-col items-center justify-center gap-2 p-4 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-[2rem] shadow-sm border border-blue-100 transition-all active:scale-95 group">
-            <div class="p-2 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-blue-500">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <line x1="19" y1="8" x2="19" y2="14"></line>
-                    <line x1="16" y1="11" x2="22" y2="11"></line>
-                </svg>
+                <form action="{{route('siswa.chat', $lastChat->konseling_id)}}" method="GET" class="mt-2">
+                    <button class="group w-full bg-slate-900 hover:bg-black text-white py-5 flex items-center justify-center gap-3 rounded-4xl shadow-2xl transition-all hover:-translate-y-1 active:scale-95">
+                        <span class="font-black tracking-[0.2em] text-xs uppercase">Hubungi mentor</span>
+                        <div class="bg-white/10 p-1 rounded-full group-hover:bg-emerald-500 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                            </svg>
+                        </div>
+                    </button>
+                </form>
             </div>
-            <p class="font-bold text-[10px] text-center leading-tight uppercase">Ajukan<br>Jadwal</p>
-        </a>
-
-        <a href="{{ route('siswa.kirim-saran')}}" class="flex flex-col items-center justify-center gap-2 p-4 bg-teal-50 hover:bg-teal-100 text-teal-600 rounded-[2rem] shadow-sm border border-teal-100 transition-all active:scale-95 group">
-            <div class="p-2 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-teal-500">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-            </div>
-            <p class="font-bold text-[10px] text-center leading-tight uppercase">Kotak<br>Saran</p>
-        </a>
         </div>
-   </div>
 
-    <div class="col-span-2 flex flex-col gap-4 justify-end">
-      <div class="flex flex-col gap-2">
-        <p class="text-slate-500 text-xs md:text-sm font-medium ml-1">Poin Pelanggaran</p>
-        <div class="bg-orange-50 border border-orange-100 p-4 flex items-center justify-between rounded-2xl shadow-sm">
-          <div class="flex items-center gap-3">
-            <div class="p-2 bg-orange-200 text-orange-700 rounded-lg">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5 text-orange-600">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-              </svg>
-            </div>
-            <p class="text-orange-800 font-bold text-sm">Status Poin</p>
-          </div>
-          <p class="font-black text-2xl text-orange-600">50</p>
-        </div>
-      </div>
-
-      <form action="#" method="GET">
-        <button class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-5 flex items-center justify-center gap-3 rounded-[1.5rem] shadow-lg shadow-emerald-100 transition-all hover:-translate-y-1 active:scale-95">
-          <span class="font-bold tracking-widest text-sm">MULAI KONSELING</span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-          </svg>
-        </button>
-      </form>
     </div>
-  </div>
 </div>
 
 {{-- Message Preview --}}
 <div class="mx-5 mt-8 font-['Poppins']">
-    <div class="flex justify-between items-center mb-3">
-        <h4 class="text-slate-500 text-xs md:text-sm font-medium ml-1">Percakapan Terbaru</h4>
-        @if($lastChat)
-      <a href="{{ route('siswa.chat', $lastChat->konseling_id) }}" class="text-blue-600 text-[10px] font-bold hover:underline tracking-widest">BUKA CHAT</a>
-      @else
-      <span class="text-slate-400 text-[10px] tracking-widest">TIDAK ADA CHAT</span>
-     @endif
-    </div>
-
+    
+    <label class="text-sm font-bold p-2">Chat</label>
     @if($lastChat)
     <a href="{{ route('siswa.chat', $lastChat->konseling_id) }}" class="flex items-center gap-4 bg-white p-4 rounded-3xl shadow-sm border border-gray-100 hover:bg-gray-50 transition-all active:scale-[0.98]">
         <div class="relative">
@@ -245,8 +315,8 @@
       </svg>
     </div>
     <div class="flex-1 min-w-0">
-      <h3 class="leading-tight text-white text-[20px] md:text-lg font-bold">QUICK ACTION</h3>
-      <p class="leading-tight text-white text-s[10px] md:text-xs font-medium">Ada kejadian apa hari ini? <br> Laporkan disini!!</p>
+      <h3 class="leading-tight text-white text-base sm:text-lg md:text-lg font-bold">QUICK ACTION</h3>
+      <p class="leading-tight text-white text-xs sm:text-sm md:text-xs font-medium">Ada kejadian apa hari ini? <br> Laporkan disini!!</p>
     </div>
     <a href="{{ route('siswa.selfreport') }}" class="shrink-0">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 15 15">
@@ -317,10 +387,10 @@
 
 
 {{-- card motivasi & reminder --}}
-<div id="card-container" class="p-3 sm:p-4 md:p-4 gap-3 sm:gap-4 md:gap-4 mb-28 flex overflow-x-auto scroll-snap-x-mandatory scrollbar-hide 
-        md:grid md:grid-cols-3 md:grid-rows-2 md:overflow-visible md:justify-items-center md:mx-auto md:max-w-5xl">
+<div id="card-container" class="p-3 sm:p-4 md:p-4 lg:p-5 gap-3 sm:gap-4 md:gap-4 lg:gap-5 mb-28 flex overflow-x-auto scroll-snap-x-mandatory scrollbar-hide 
+        md:grid md:grid-cols-3 md:grid-rows-2 md:overflow-visible md:justify-items-center md:mx-auto md:max-w-5xl lg:max-w-6xl xl:max-w-7xl">
             
-          <div class="card min-w-[250px] md:min-w-0 h-auto p-5 rounded-2xl border-2 border-[#541212] flex flex-col gap-3 items-center text-center font-bold scroll-snap-align-start
+          <div class="card min-w-64 md:min-w-0 h-auto p-5 rounded-2xl border-2 border-[#541212] flex flex-col gap-3 items-center text-center font-bold scroll-snap-align-start
               transition-all duration-300 ease-out hover:-translate-y-3 hover:shadow-[0_20px_50px_rgba(252,165,165,0.5)] cursor-pointer" 
               style="background: linear-gradient(135deg, #fca5a5, #ffffff);">
               <div class="flex gap-3.5 items-center">
@@ -335,7 +405,7 @@
           </div>
 
        
-          <div class="card min-w-[250px] md:min-w-0 h-auto p-5 rounded-2xl border-2 border-[#3a1254] flex flex-col gap-3 items-center text-center font-bold scroll-snap-align-start
+          <div class="card min-w-64 md:min-w-0 h-auto p-5 rounded-2xl border-2 border-[#3a1254] flex flex-col gap-3 items-center text-center font-bold scroll-snap-align-start
               transition-all duration-300 ease-out hover:-translate-y-3 hover:shadow-[0_20px_50px_rgba(191,165,252,0.5)] cursor-pointer" 
               style="background: linear-gradient(135deg, #bfa5fc, #ffffff);">
               <div class="flex gap-3.5 items-center">
@@ -350,7 +420,7 @@
           </div>
 
        
-          <div class="card min-w-[250px] md:min-w-0 h-auto p-5 rounded-2xl border-2 border-[#125254] flex flex-col gap-3 items-center text-center font-bold scroll-snap-align-start
+          <div class="card min-w-64 md:min-w-0 h-auto p-5 rounded-2xl border-2 border-[#125254] flex flex-col gap-3 items-center text-center font-bold scroll-snap-align-start
               transition-all duration-300 ease-out hover:-translate-y-3 hover:shadow-[0_20px_50px_rgba(165,222,252,0.5)] cursor-pointer" 
               style="background: linear-gradient(135deg, #a5defc, #ffffff);">
               <div class="flex gap-3.5 items-center">
@@ -365,7 +435,7 @@
           </div>
 
       
-          <div class="card min-w-[250px] md:min-w-0 h-auto p-5 rounded-2xl border-2 border-[#125416] flex flex-col gap-3 items-center text-center font-bold scroll-snap-align-start
+          <div class="card min-w-64 md:min-w-0 h-auto p-5 rounded-2xl border-2 border-[#125416] flex flex-col gap-3 items-center text-center font-bold scroll-snap-align-start
               transition-all duration-300 ease-out hover:-translate-y-3 hover:shadow-[0_20px_50px_rgba(147,255,154,0.5)] cursor-pointer" 
               style="background: linear-gradient(135deg, #93ff9a, #ffffff);">
               <div class="flex gap-3.5 items-center">
@@ -380,7 +450,7 @@
           </div>
 
    
-          <div class="card min-w-[250px] md:min-w-0 h-auto p-5 rounded-2xl border-2 border-[#4d1254] flex flex-col gap-3 items-center text-center font-bold scroll-snap-align-start
+          <div class="card min-w-64 md:min-w-0 h-auto p-5 rounded-2xl border-2 border-[#4d1254] flex flex-col gap-3 items-center text-center font-bold scroll-snap-align-start
               transition-all duration-300 ease-out hover:-translate-y-3 hover:shadow-[0_20px_50px_rgba(248,165,252,0.5)] cursor-pointer" 
               style="background: linear-gradient(135deg, #f8a5fc, #ffffff);">
               <div class="flex gap-3.5 items-center">
@@ -395,7 +465,7 @@
           </div>
 
 
-          <div class="card min-w-[250px] md:min-w-0 h-auto p-5 rounded-2xl border-2 border-[#544712] flex flex-col gap-3 items-center text-center font-bold scroll-snap-align-start
+          <div class="card min-w-64 md:min-w-0 h-auto p-5 rounded-2xl border-2 border-[#544712] flex flex-col gap-3 items-center text-center font-bold scroll-snap-align-start
               transition-all duration-300 ease-out hover:-translate-y-3 hover:shadow-[0_20px_50px_rgba(253,240,127,0.5)] cursor-pointer" 
               style="background: linear-gradient(135deg, #fdf07f, #ffffff);">
               <div class="flex gap-3.5 items-center">

@@ -21,4 +21,9 @@ class KotakSurats extends Model
     protected $casts = [
         'is_read' => 'boolean',
     ];
+
+    public function siswa()
+    {
+        return $this->belongsTo(Siswa::class, 'id_siswa');
+    }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Gurubk;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Siswa, Gurubk, TemplateSurat, ESurat};
+use App\Models\{Chat, CounselingRequest, Siswa, Gurubk, TemplateSurat, ESurat, KotakSurats};
 use App\Mail\LaporanBKMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\File;
@@ -96,7 +96,19 @@ class E_SuratController extends Controller
             'status' => 'draft',
         ]);
 
-        return redirect()->back()->with('success', 'Surat Berhasil Dibuat (Status: Draft)');
+        $konseling = CounselingRequest::findOrCreate(
+            ['id_siswa' => $request->id_siswa, 'status' => 'ongoing'],
+            ['id' => 'KNS' . time(), 'topik' => 'Pemberitahuan Sistem']
+        );
+
+        Chat::create([
+            'konseling_id' => $konseling->id,
+            'sender_type' => 'gurubk',
+            'message' => "⚠️ ALERT SISTEM: Halo {$dataSiswa->nama_siswa}, surat peringatan ({$request->nomor_surat_resmi}) telah diterbitkan untukmu karena: {$request->keterangan_tambahan}. Silakan cek menu 'Kotak Surat' untuk melihat detailnya.",
+            'is_read' => false
+        ]);
+
+        return redirect()->back()->with('success', 'Surat Berhasil Dibuat & Bot telah mengirim notifikasi ke Siswa!');
     }
 
     public function print_pdf($id)
@@ -125,45 +137,65 @@ class E_SuratController extends Controller
     }
 
 public function send_email($id)
-{
-    // 1. Ambil data surat beserta relasi wali kelas
-    $surat = ESurat::with(['siswa.kelas.walikelas'])->where('id_surat', $id)->firstOrFail();
-    $emailWali = $surat->siswa->kelas->walikelas->email ?? null;
+    {
+        // 1. Ambil data surat beserta relasi wali kelas
+        $surat = ESurat::with(['siswa.kelas.walikelas'])->where('id_surat', $id)->firstOrFail();
+        $emailWali = $surat->siswa->kelas->walikelas->email ?? null;
 
-    if (!$emailWali) {
-        return redirect()->back()->with('error', 'Gagal! Email Wali Kelas tidak ditemukan di database.');
+        if (!$emailWali) {
+            return redirect()->back()->with('error', 'Gagal! Email Wali Kelas tidak ditemukan di database.');
+        }
+
+        // 2. Tentukan path PDF (Mengonversi nama file .docx ke .pdf)
+        $fileNamePdf = str_replace('.docx', '.pdf', $surat->file_generate);
+        $pdfPath = storage_path('app/public/generated_surats/' . $fileNamePdf);
+
+        // 3. Cek fisik file PDF sebelum lanjut
+        if (!File::exists($pdfPath)) {
+            return redirect()->back()->with('error', 'File PDF tidak ditemukan di folder penyimpanan.');
+        }
+
+        // 4. Bungkus data untuk Mailable
+        $rincian = [
+            'subjek'   => 'Pemberitahuan SP: ' . $surat->siswa->nama_siswa,
+            'surat'    => $surat,
+            'pdf_path' => $pdfPath,
+            'nama_file'=> 'Surat_Peringatan_' . $surat->siswa->nama_siswa . '.pdf'
+        ];
+
+        try {
+            // 5. Kirim Email
+            Mail::to($emailWali)->send(new LaporanBKMail($rincian));
+
+            // 6. Update status ke 'sent'
+            $surat->update(['status' => 'sent']);
+            KotakSurats::create([
+                'id_siswa' => $surat->id_siswa,
+                'judul' => 'Surat Peringatan Baru: ' . $surat->nomor_surat_resmi,
+                'pesan' => "Pemberitahuan resmi mengenai:" . $surat->keterangan_tambahan,
+                'file_pdf' => str_replace('.docx', '.pdf', $surat->file_generate),
+                'is_read' => false,
+            ]);
+
+            $konseling = CounselingRequest::where('id_siswa', $surat->id_siswa)
+                                           ->whereIn('status', ['ongoing', 'accepted'])
+                                           ->first();
+            if ($konseling) {
+                Chat::create([
+                    'konseling_id' => $konseling->id,
+                    'sender_type' => 'gurubk',
+                    'message' => "🤖 [BOT ALERT]: Halo, surat SP ({$surat->nomor_surat_resmi}) telah dikirim ke wali kelasmu dan sudah tersedia di Kotak Suratmu. Harap segera dicek.",
+                    'is_read' => false
+                ]);
+            }
+
+            return redirect()->route('gurubk.e_surat.index')
+                            ->with('success', 'Surat Berhasil Dikirim ke Wali Kelas (' . $emailWali . ')');
+
+       
+        } catch (\Exception $e) {
+            // Jika ada kesalahan SMTP atau jaringan
+            return redirect()->back()->with('error', 'Gagal mengirim email: ' . $e->getMessage());
+        }
     }
-
-    // 2. Tentukan path PDF (Mengonversi nama file .docx ke .pdf)
-    $fileNamePdf = str_replace('.docx', '.pdf', $surat->file_generate);
-    $pdfPath = storage_path('app/public/generated_surats/' . $fileNamePdf);
-
-    // 3. Cek fisik file PDF sebelum lanjut
-    if (!File::exists($pdfPath)) {
-        return redirect()->back()->with('error', 'File PDF tidak ditemukan di folder penyimpanan.');
-    }
-
-    // 4. Bungkus data untuk Mailable
-    $rincian = [
-        'subjek'   => 'Pemberitahuan SP: ' . $surat->siswa->nama_siswa,
-        'surat'    => $surat,
-        'pdf_path' => $pdfPath,
-        'nama_file'=> 'Surat_Peringatan_' . $surat->siswa->nama_siswa . '.pdf'
-    ];
-
-    try {
-        // 5. Kirim Email
-        Mail::to($emailWali)->send(new LaporanBKMail($rincian));
-
-        // 6. Update status ke 'sent'
-        $surat->update(['status' => 'sent']);
-
-        return redirect()->route('gurubk.e_surat.index')
-                         ->with('success', 'Surat Berhasil Dikirim ke Wali Kelas (' . $emailWali . ')');
-
-    } catch (\Exception $e) {
-        // Jika ada kesalahan SMTP atau jaringan
-        return redirect()->back()->with('error', 'Gagal mengirim email: ' . $e->getMessage());
-    }
-}
 }

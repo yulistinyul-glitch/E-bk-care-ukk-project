@@ -156,7 +156,7 @@
                 @forelse($riwayat as $index => $r)
                 <tr>
                     <td>{{ $index + 1 }}</td>
-                    <td>{{ \Carbon\Carbon::parse($r->tanggal)->format('d/m/Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($r->tanggal_kejadian)->format('d/m/Y') }}</td>
                     <td class="fw-bold text-dark text-start">{{ $r->siswa->nama_siswa }}</td>
                     <td>{{ $r->siswa->kelas->nama_lengkap }}</td>
                     <td class="text-start">{{ $r->pelanggaran->jenis_kegiatan }}</td>

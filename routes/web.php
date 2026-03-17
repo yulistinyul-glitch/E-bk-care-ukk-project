@@ -196,12 +196,17 @@ Route::middleware(['auth', 'role:GuruBK'])->prefix('gurubk')->name('gurubk.')->g
     Route::post('/counseling-requests/{id}/approve', [KonselingController::class, 'approve'])->name('counseling.approve');
     Route::get('/jadwal-konseling', [KonselingController::class, 'listKonseling'])->name('konseling.konseling');
     Route::patch('/konseling/{id}/status', [KonselingController::class, 'updateStatus'])->name('konseling.updateStatus');
-    // Riwayat Pelanggaran
-    Route::get('/get-siswa/{id_kelas}', [RiwayatPelanggaranController::class, 'getSiswa'])->name('riwayatpelanggaran.getSiswa'); 
-    Route::get('/get-pelanggaran/{id}', [RiwayatPelanggaranController::class, 'getPelanggaran'])->name('riwayatpelanggaran.getPelanggaran'); 
-    Route::post('/riwayatpelanggaran/store', [RiwayatPelanggaranController::class, 'store'])->name('riwayatpelanggaran.store'); 
-    Route::resource('riwayatpelanggaran', RiwayatPelanggaranController::class);
 
+    // Riwayat Pelanggaran
+    Route::get('/riwayatpelanggaran', [RiwayatPelanggaranController::class, 'index'])->name('riwayatpelanggaran.index');
+    Route::get('/riwayatpelanggaran/create', [RiwayatPelanggaranController::class, 'create'])->name('riwayatpelanggaran.create');
+    Route::post('/riwayatpelanggaran/store', [RiwayatPelanggaranController::class, 'store'])->name('riwayatpelanggaran.store');
+    Route::get('/get-kelas-filter', [RiwayatPelanggaranController::class, 'getKelasByJurusan'])->name('get.kelas.filter');
+    Route::get('/get-siswa-filter/{id_kelas}', [RiwayatPelanggaranController::class, 'getSiswaByKelas'])->name('get.siswa.filter');
+
+    // Akumulasi poin pelanggaran 
+
+    Route::get('/akumulasi-pelanggaran', [RiwayatPelanggaranController::class, 'akumulasi'])->name('riwayatpelanggaran.akumulasi');
     // Saran
     Route::get('/saran', [SaranController::class, 'index'])->name('saran.index');
     Route::patch('/saran/{id}/read', [SaranController::class, 'markAsRead'])->name('saran.read');

@@ -78,69 +78,43 @@
                     </a>
                 </li>
 
-                <li class="nxl-item">
-                    <a href="{{ route('gurubk.siswa.index') }}" class="nxl-link">
+                <li class="nxl-item nxl-hasmenu">
+                    <a href="javascript:void(0);" class="nxl-link">
                         <span class="nxl-micon"><i class="feather-users"></i></span>
-                        <span class="nxl-mtext">Data Siswa</span>
+                        <span class="nxl-mtext">Manajemen Siswa</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                     </a>
+                    <ul class="nxl-submenu">
+                        <li class="nxl-item"><a class="nxl-link" href="{{ route('gurubk.siswa.index') }}">Data Siswa</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{{ route('gurubk.riwayatpelanggaran.index') }}">Data Pelanggaran</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{{ route('gurubk.riwayatpelanggaran.akumulasi')}}">Akumulasi Poin</a></li>
+                    </ul>
                 </li>
 
-                <li class="nxl-item">
-                    <a href="{{ route('gurubk.riwayatpelanggaran.index') }}" class="nxl-link">
-                        <span class="nxl-micon"><i class="feather-layers"></i></span>
-                        <span class="nxl-mtext">Data Pelanggaran</span>
-                    </a>
-                </li>
-
-                <li class="nxl-item">
-                    <a href="{{ route('gurubk.riwayatpelanggaran.akumulasi')}}" class="nxl-link">
-                        <span class="nxl-micon"><i class="feather-file-text"></i></span>
-                        <span class="nxl-mtext">Akumulasi Poin Siswa</span>
-                    </a>
-                </li>
-
-                <li class="nxl-item">
-                    <a href="{{ route('gurubk.chat.index') }}" class="nxl-link">
+                <li class="nxl-item nxl-hasmenu">
+                    <a href="javascript:void(0);" class="nxl-link">
                         <span class="nxl-micon"><i class="feather-message-circle"></i></span>
-                        <span class="nxl-mtext">Pesan Konseling</span>
+                        <span class="nxl-mtext">Layanan Konseling</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                     </a>
+                    <ul class="nxl-submenu">
+                        <li class="nxl-item"><a class="nxl-link" href="{{ route('gurubk.chat.index') }}">Pesan Chat</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{{ route('gurubk.konseling.index') }}">Request Konseling</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{{ route('gurubk.konseling.konseling') }}">List Konseling</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{{ route('gurubk.saran.index') }}">Saran Siswa</a></li>
+                    </ul>
                 </li>
 
-                 <li class="nxl-item">
-                    <a class="nxl-link {{ Route::is('gurubk.konseling.*') ? 'active' : '' }}" href="{{ route('gurubk.konseling.index') }}">
-                        <span class="nxl-micon"><i class="feather-message-circle"></i></span>
-                        <span class="nxl-mtext">Request Konseling</span>
-                    </a>
-                </li>
-
-                <li class="nxl-item">
-                    <a class="nxl-link {{ Route::is('gurubk.konseling.konseling') ? 'active' : '' }}" href="{{ route('gurubk.konseling.konseling') }}">
-                        <span class="nxl-micon"><i class="feather-message-circle"></i></span>
-                        <span class="nxl-mtext">List Konseling</span>
-                    </a>
-                </li>
-
-                  <li class="nxl-item">
-                    <a class="nxl-link {{ Route::is('gurubk.saran.index') ? 'active' : '' }}" href="{{ route('gurubk.saran.index') }}">
-                        <span class="nxl-micon"><i class="feather-message-circle"></i></span>
-                        <span class="nxl-mtext">Saran siswa</span>
-                    </a>
-                </li>
-
-                <li class="nxl-item">
-                    <a href="{{ route('gurubk.selfreport.index') }}" class="nxl-link">
-                        <span class="nxl-micon"><i class="feather-edit"></i></span>
-                        <span class="nxl-mtext">Self Report</span>
-                    </a>
-                </li>
-
-                <li class="nxl-item">
-                    <a href="{{ route('gurubk.e_surat.index') }}" class="nxl-link">
+                <li class="nxl-item nxl-hasmenu">
+                    <a href="javascript:void(0);" class="nxl-link">
                         <span class="nxl-micon"><i class="feather-printer"></i></span>
-                        <span class="nxl-mtext">Cetak E-SP</span>
+                        <span class="nxl-mtext">Administrasi</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                     </a>
+                    <ul class="nxl-submenu">
+                        <li class="nxl-item"><a class="nxl-link" href="{{ route('gurubk.selfreport.index') }}">Self Report</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{{ route('gurubk.e_surat.index') }}">Cetak E-SP</a></li>
+                    </ul>
                 </li>
             </ul>
+
             <div class="divider-white"></div>
             <div class="logout-btn">
                 <form method="POST" action="{{ route('logout')}}">

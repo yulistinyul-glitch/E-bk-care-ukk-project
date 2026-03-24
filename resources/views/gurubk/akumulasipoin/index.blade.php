@@ -74,9 +74,12 @@
                             {{ $s->status_sp }}
                         </span>
                     </td>
-                    <td>
+                    <td style="display: flex; gap: 10px;">
                         <a href="{{ route('gurubk.riwayatpelanggaran.akumulasi', ['search' => $s->nama_siswa]) }}" class="btn btn-sm btn-outline-primary rounded-pill">
                             Lihat Detail
+                        </a>
+                        <a href="{{ route('gurubk.e_surat.index', ['id_siswa' => $s->id_siswa]) }}" class="btn btn-sm btn-danger shadow-sm">
+                            <i class="bi bi-file-earmark-plus"></i>Buat E-SP
                         </a>
                     </td>
                 </tr>

@@ -37,7 +37,6 @@
     </section>
 
     <style>
-      /* Gunakan CSS murni jika @apply tidak ter-compile */
       .active-tab { background-color: #2563eb; color: white; box-shadow: 0 10px 15px -3px rgba(147, 197, 253, 0.5); }
       .inactive-tab { background-color: white; color: #9ca3af; border: 1px solid #e5e7eb; }
       

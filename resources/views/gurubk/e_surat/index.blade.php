@@ -185,5 +185,14 @@
         document.getElementById('auto_walikelas').value = opt.getAttribute('data-walikelas');
         document.getElementById('nama_walikelas_input').value = opt.getAttribute('data-walikelas');
     }
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const idSiswa = urlParams.get('id_siswa');
+
+        if(idSiswa) {
+            document.getElementById('siswa_select').value = idSiswa;
+            isiOtomatis();
+        }
+    }
 </script>
 @endsection

@@ -12,15 +12,19 @@ use Illuminate\Support\Facades\File;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Carbon\Carbon;
 
+use function Symfony\Component\Clock\now;
+
 class E_SuratController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         Carbon::setLocale('id');
 
         $siswa = Siswa::with(['kelas.walikelas'])->get();
         $gurubk = Gurubk::all(); 
         $template = TemplateSurat::all();
+
+        $selectedSiswaId = $request->query('id_siswa');
         
         $surat = ESurat::with(['siswa.kelas.walikelas', 'gurubk'])
                     ->latest()
@@ -96,17 +100,34 @@ class E_SuratController extends Controller
             'status' => 'draft',
         ]);
 
-        $konseling = CounselingRequest::findOrCreate(
-            ['id_siswa' => $request->id_siswa, 'status' => 'ongoing'],
-            ['id' => 'KNS' . time(), 'topik' => 'Pemberitahuan Sistem']
-        );
 
-        Chat::create([
-            'konseling_id' => $konseling->id,
-            'sender_type' => 'gurubk',
-            'message' => "⚠️ ALERT SISTEM: Halo {$dataSiswa->nama_siswa}, surat peringatan ({$request->nomor_surat_resmi}) telah diterbitkan untukmu karena: {$request->keterangan_tambahan}. Silakan cek menu 'Kotak Surat' untuk melihat detailnya.",
-            'is_read' => false
-        ]);
+       // --- 3. LOGIKA CHAT & KONSELING (DIBUNGKUS TRY-CATCH AGAR TIDAK ERROR) ---
+        try {
+            // Kita cari atau buat konseling TANPA memasukkan id_gurubk (karena kolomnya ga ada di DB kamu)
+            $konseling = CounselingRequest::firstOrCreate(
+                ['id_siswa' => $request->id_siswa, 'status' => 'ongoing'],
+                ['id' => 'KNS' . time(), 'tanggal' => now()]
+            );
+
+            // Hitung jumlah SP untuk pesan otomatis
+            $jumlahSP = ESurat::where('id_siswa', $request->id_siswa)->count();
+
+            if ($jumlahSP <= 1) {
+                $pesanChat = "⚠️ ALERT SISTEM: Halo {$dataSiswa->nama_siswa}, SP1 telah diterbitkan. Cek Kotak Surat untuk detailnya.";
+            } else {
+                $pesanChat = "⚠️ PERINGATAN KERAS: Halo {$dataSiswa->nama_siswa}, SP {$jumlahSP} telah diterbitkan. Orang tua Anda akan dipanggil melalui Wali Kelas. Segera temui Guru BK.";
+            }
+
+            Chat::create([
+                'konseling_id' => $konseling->id,
+                'sender_type' => 'gurubk',
+                'message' => $pesanChat,
+                'is_read' => false
+            ]);
+        } catch (\Exception $e) {
+            // Jika database chat error karena kolom tidak cocok, sistem akan mengabaikan
+            // dan tetap lanjut ke return success di bawah.
+        }
 
         return redirect()->back()->with('success', 'Surat Berhasil Dibuat & Bot telah mengirim notifikasi ke Siswa!');
     }

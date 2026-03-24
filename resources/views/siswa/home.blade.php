@@ -9,8 +9,8 @@
 <div class="max-w-7xl mx-auto px-6 lg:px-10 mt-6 font-['Poppins'] ">
   <div class="mx-auto  bg-[#1A374C] text-white p-5 rounded-b-[40px] shadow-lg">
      <div class="flex items-center gap-4 md:gap-4">
-      <div class="w-24 h-24 md:w-20 md:h-20 bg-white text-black rounded-full flex items-center justify-center shrink-0 border-2 border-blue-400 overflow-hidden text-xs font-bold uppercase">
-        Profile
+      <div class="w-24 h-24 md:w-20 md:h-20 text-black rounded-full flex items-center justify-center shrink-0 border-2 border-blue-400 overflow-hidden text-xs font-bold uppercase">
+        <img src="{{ Auth::user()->siswa->foto ? asset('storage/profile_siswa/' . Auth::user()->siswa->foto) : asset('img/guruProfile.jpg')}}" alt="Profile" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
       </div>
       <div class="flex-1 min-w-0">
         <h2 class="text-lg md:text-xl font-bold  leading-tight uppercase">
@@ -124,7 +124,6 @@
 </div>
 
 @php
-    // Ambil data siswa jika belum ada
     $authSiswa = $siswa ?? (\App\Models\Siswa::where('id_pengguna', auth()->user()->id_pengguna)->first());
     
     // Pastikan $totalPoin terdefinisi (Hitung dari relasi jika null)

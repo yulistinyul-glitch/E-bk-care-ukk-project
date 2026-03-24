@@ -145,7 +145,7 @@ body {
             @foreach($konseling as $k)
             <a href="?id={{ $k->id }}" style="text-decoration:none;color:inherit;">
                 <div class="chat-user {{ request('id')==$k->id?'active':'' }}">
-                    <img src="{{ $k->siswa->avatar ?? asset('images/default-avatar.png') }}" class="avatar">
+                   <img src="{{ $k->siswa->foto ? asset('storage/profile_siswa/' . $k->siswa->foto) : asset('images/default-avatar.png') }}" class="avatar">
                     <div>
                         <h6>{{ $k->siswa->nama_siswa }}
                             @php $unread=$k->chats->where('is_read',0)->where('sender_type','siswa')->count(); @endphp
@@ -163,7 +163,7 @@ body {
 
         @if($selectedChat)
         <div class="chat-navbar">
-            <img src="{{ $selectedChat->siswa->avatar ?? asset('images/default-avatar.png') }}" class="avatar">
+            <img src="{{ $selectedChat->siswa->foto ? asset('storage/profile_siswa/' . $selectedChat->siswa->foto) : asset('img/guruProfile.jpg')}}" class="avatar">
             <div>
                 {{ $selectedChat->siswa->nama_siswa }}
                 <div class="status-box">Status: {{ ucfirst($selectedChat->status_konseling) }}</div>

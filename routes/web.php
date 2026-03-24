@@ -226,11 +226,16 @@ Route::middleware(['auth', 'role:GuruBK'])->prefix('gurubk')->name('gurubk.')->g
     Route::get('/siswa/{id}', [GuruBkSiswaController::class, 'show'])->name('siswa.show');
 
     // E-Surat
-    Route::get('e_surat/{id}/export', [E_SuratController::class, 'export'])->name('e_surat.export');
-    Route::get('e_surat/{id}/email', [E_SuratController::class, 'sendEmail'])->name('e_surat.email');
-    Route::get('e_surat/{id}/selesai', [E_SuratController::class, 'selesai'])->name('e_surat.selesai');
-    Route::resource('e_surat', E_SuratController::class)->except(['destroy']);
-    
+    Route::get('esp/print{id}', [E_SuratController::class, 'print_pdf'])->name('e_surat.print_pdf');
+    Route::post('e_surat/send-email/{id}', [E_SuratController::class, 'send_email'])->name('e_surat.send_email');
+    Route::resource('e_surat', E_SuratController::class)->names([
+        'index' => 'e_surat.index',
+        'store' => 'e_surat.store',
+        'create' => 'e_surat_create',
+        'show' => 'e_surat.show',
+        'update' => 'e_surat.update',
+        'edit' => 'e_surat.edit',
+    ])->parameters([ 'e_surat' => 'id'])->except(['destroy']);
     // Logout
     Route::post('/logout', [GuruAuthController::class, 'logout'])->name('logout');
 });
@@ -268,7 +273,7 @@ Route::prefix('siswa')->name('siswa.')->group(function () {
 
         Route::get('/home', [KonselingSiswaController::class, 'home'])->name('home');
         Route::get('/history', function() { return view('siswa.history'); })->name('history');
-        Route::get('/profile', function() { return view('siswa.profile'); })->name('profile');
+        Route::get('/profile', [DashboardSiswaController::class, 'profile'])->name('profile');
 
         Route::get('/chat/{id}', [KonselingSiswaController::class, 'chatRoom'])->name('chat');
         Route::post('/chat/send', [KonselingSiswaController::class, 'storeChat'])->name('chat.send');
@@ -280,6 +285,8 @@ Route::prefix('siswa')->name('siswa.')->group(function () {
         Route::post('/selfreport/check', [SelfReportSiswaController::class, 'checkStatus'])->name('selfreport.check');
         Route::post('/selfreport/store', [SelfReportSiswaController::class, 'store'])->name('selfreport.store');
         Route::get('/selfreport/store', function() { return redirect()->route('siswa.selfreport');});
+
+        Route::post('/update-foto', [DashboardSiswaController::class, 'updateFoto'])->name('update_foto');
         
     });
 });

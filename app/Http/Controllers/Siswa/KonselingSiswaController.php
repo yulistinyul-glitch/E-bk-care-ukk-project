@@ -39,7 +39,7 @@ class KonselingSiswaController extends Controller
     {
 
         $request->validate([
-            'kategori' => 'required',
+            'kategori' => 'required|in:Pribadi,Sosial,Belajar,Karir',
             'pilihan_metode' => 'required',
             'deskripsi' => 'required|min:10',
         ]);

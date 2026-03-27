@@ -10,6 +10,7 @@ use App\Models\CounselingSession;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class DashboardSiswaController extends Controller
 {
@@ -29,6 +30,40 @@ class DashboardSiswaController extends Controller
         })->where('scheduled_date', '>=', now())->first();
 
         return view('siswa.home', compact('lastChat', 'unreadMessages', 'jadwalTerdekat'));
+    }
+
+    public function history()
+    {
+        $id_siswa = Auth::user()->id_siswa;
+
+        $allHistory = \App\Models\KotakSurats::where('id_siswa', $id_siswa)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $riwayatJadwal = $allHistory->filter(function($item) {
+            return str_contains(strtolower($item->judul_surat), 'undangan') || 
+                str_contains(strtolower($item->judul_surat), 'jadwal');
+        })->map(function($item) {
+            return [
+                'title' => $item->judul_surat,
+                'date'  => $item->created_at->translatedFormat('d M Y'),
+                'time'  => $item->created_at->format('H:i'),
+                'status'=> $item->status ?? 'selesai' // Sesuaikan dengan kolom status di db mu
+            ];
+        })->values();
+
+        $riwayatReport = $allHistory->filter(function($item) {
+            return !str_contains(strtolower($item->judul_surat), 'undangan');
+        })->map(function($item) {
+            return [
+                'title' => $item->judul_surat,
+                'date'  => $item->created_at->translatedFormat('d M Y'),
+                'time'  => null,
+                'status'=> 'selesai'
+            ];
+        })->values();
+
+    return view('siswa.history', compact('riwayatJadwal', 'riwayatReport'));
     }
 
     public function chat()
@@ -52,45 +87,38 @@ class DashboardSiswaController extends Controller
     }
 
     public function updateFoto(Request $request)
-{
-    $request->validate([
-        'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-    ]);
-
-    $user = Auth::user();
-    $siswa = $user->siswa;
-
-    // Pastikan siswa ditemukan
-    if (!$siswa) {
-        return redirect()->back()->with('error', 'Data siswa tidak ditemukan.');
-    }
-
-    if ($request->hasFile('foto')) {
-        $file = $request->file('foto');
-        
-        // 1. Buat nama file unik
-        $fileName = 'foto_' . $siswa->id_siswa . '_' . time() . '.' . $file->getClientOriginalExtension();
-
-        // 2. Tentukan path tujuan ke folder public yang kamu buat manual tadi
-        $targetPath = public_path('storage/profile_siswa');
-
-        // 3. Hapus foto lama di folder public jika ada (opsional tapi bagus)
-        if ($siswa->foto && file_exists($targetPath . '/' . $siswa->foto)) {
-            unlink($targetPath . '/' . $siswa->foto);
-        }
-
-        // 4. PINDAHKAN FILE SECARA FISIK (Paling Penting)
-        // Fungsi move() lebih stabil di Windows daripada storeAs()
-        $file->move($targetPath, $fileName);
-
-        // 5. Update nama file di database
-        $siswa->update([
-            'foto' => $fileName
+    {
+        $request->validate([
+            'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        return redirect()->back()->with('success', 'Foto profil berhasil diperbarui! ✨');
-    }
+        $user = Auth::user();
+        $siswa = $user->siswa;
 
-    return redirect()->back()->with('error', 'Gagal mengunggah foto.');
-}
+        if (!$siswa) {
+            return redirect()->back()->with('error', 'Data siswa tidak ditemukan.');
+        }
+
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            
+            $fileName = 'foto_' . $siswa->id_siswa . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+            $targetPath = public_path('storage/profile_siswa');
+
+            if ($siswa->foto && file_exists($targetPath . '/' . $siswa->foto)) {
+                unlink($targetPath . '/' . $siswa->foto);
+            }
+
+            $file->move($targetPath, $fileName);
+
+            $siswa->update([
+                'foto' => $fileName
+            ]);
+
+            return redirect()->back()->with('success', 'Foto profil berhasil diperbarui! ✨');
+        }
+
+        return redirect()->back()->with('error', 'Gagal mengunggah foto.');
+    }
 }

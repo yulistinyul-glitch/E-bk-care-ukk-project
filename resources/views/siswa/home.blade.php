@@ -154,7 +154,7 @@
         <div class="md:col-span-4 flex flex-col gap-5 order-2 md:order-1">
             <div class="flex items-center justify-between px-1">
                 <p class="text-slate-500 text-xs md:text-sm font-semibold uppercase tracking-wider">Akses Cepat</p>
-                <a href="{{ route('siswa.kotaksurat.index') }}" class="relative p-3 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all active:scale-90">
+                <a href="{{ route('siswa.kotaksurat.index') }}" class="relative p-3 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all active:scale-90 cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-900">
                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                         <polyline points="22,6 12,13 2,6"></polyline>
@@ -205,14 +205,14 @@
         <div class="md:col-span-3 flex flex-col gap-4 order-3 md:order-2">
             <p class="text-slate-500 text-xs md:text-sm font-semibold px-1 uppercase tracking-wider">Layanan</p>
             <div class="grid grid-cols-2 md:grid-cols-1 gap-4">
-                <a href="{{ route('siswa.konseling.create') }}" class="flex flex-col items-center justify-center gap-2 p-5 bg-blue-50/50 hover:bg-blue-50 rounded-[2.5rem] border-2 border-dashed border-blue-100 transition-all active:scale-95 group">
+                <a href="{{ route('siswa.konseling.create') }}" class="flex flex-col items-center justify-center gap-2 p-5 bg-blue-50/50 hover:bg-blue-50 rounded-[2.5rem] border-2 border-dashed border-blue-100 transition-all active:scale-95 group cursor-pointer">
                     <div class="p-3 bg-white rounded-2xl shadow-sm text-blue-500 group-hover:rotate-12 transition-transform">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
                     </div>
                     <p class="font-bold text-[10px] text-blue-900 uppercase tracking-tighter">Ajukan Jadwal</p>
                 </a>
 
-                <a href="{{ route('siswa.kirim-saran')}}" class="flex flex-col items-center justify-center gap-2 p-5 bg-emerald-50/50 hover:bg-emerald-50 rounded-[2.5rem] border-2 border-dashed border-emerald-100 transition-all active:scale-95 group text-emerald-600">
+                <a href="{{ route('siswa.kirim-saran')}}" class="flex flex-col items-center justify-center gap-2 p-5 bg-emerald-50/50 hover:bg-emerald-50 rounded-[2.5rem] border-2 border-dashed border-emerald-100 transition-all active:scale-95 group text-emerald-600 cursor-pointer">
                     <div class="p-3 bg-white rounded-2xl shadow-sm group-hover:-rotate-12 transition-transform">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                     </div>
@@ -251,7 +251,7 @@
               </div>
 
                 <form action="{{route('siswa.chat', $lastChat->konseling_id)}}" method="GET" class="mt-2">
-                    <button class="group w-full bg-slate-900 hover:bg-black text-white py-5 flex items-center justify-center gap-3 rounded-4xl shadow-2xl transition-all hover:-translate-y-1 active:scale-95">
+                    <button class="group w-full bg-slate-900 hover:bg-black text-white py-5 flex items-center justify-center gap-3 rounded-4xl shadow-2xl transition-all hover:-translate-y-1 active:scale-95 cursor-pointer">
                         <span class="font-black tracking-[0.2em] text-xs uppercase">Hubungi mentor</span>
                         <div class="bg-white/10 p-1 rounded-full group-hover:bg-emerald-500 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">

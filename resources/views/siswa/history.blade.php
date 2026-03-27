@@ -45,17 +45,12 @@
     </style>
 
     <script>
-      let currentTab = 'jadwal';
-      const dataJadwal = [
-        { title: "Konseling Offline", date: "09 Feb 2026", time: "10:00", status: "mendatang" },
-        { title: "Konseling Online", date: "05 Feb 2026", time: "13:00", status: "selesai" },
-        { title: "Konseling Offline", date: "01 Feb 2026", time: "09:00", status: "dibatalkan" }
-      ];
+      console.log("Data Jadwal:", @json($riwayatJadwal));
+      console.log("Data Report:", @json($riwayatReport));
 
-      const dataReport = [
-        { title: "Self Report Bulanan", date: "10 Feb 2026", time: null, status: "selesai" },
-        { title: "Laporan G-Form Kesehatan", date: "08 Feb 2026", time: null, status: "ditolak" }
-      ];
+      let currentTab = 'jadwal';
+      const dataJadwal = @json($riwayatJadwal);
+      const dataReport = @json($riwayatReport);
 
       function swichTab(type) {
         currentTab = type;
@@ -104,10 +99,12 @@
 
       function getStatusColor(status) {
         switch(status.toLowerCase()) {
-          case 'selesai': return { border: 'border-green-500', bg: 'bg-green-100', text: 'text-green-600' };
+          case 'selesai':
+          case 'disetujui' : return { border: 'border-green-500', bg: 'bg-green-100', text: 'text-green-600' };
           case 'dibatalkan':
-          case 'ditolak': return { border: 'border-red-500', bg: 'bg-red-100', text: 'text-red-600' };
-          case 'mendatang': return { border: 'border-blue-600', bg: 'bg-blue-100', text: 'text-blue-600' };
+          case 'ditolak' : return { border: 'border-red-500', bg: 'bg-red-100', text: 'text-red-600' };
+          case 'mendatang' :
+          case 'proses' : return { border: 'border-blue-500', bg: 'bg-blue-100', text: 'text-blue-600' };
           default: return { border: 'border-gray-300', bg: 'bg-gray-100', text: 'text-gray-500' };
         }
       }

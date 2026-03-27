@@ -272,7 +272,7 @@ Route::prefix('siswa')->name('siswa.')->group(function () {
         Route::post('/mailbox/{id}/read', [KonselingSiswaController::class, 'markAsRead'])->name('mailbox.read');
 
         Route::get('/home', [KonselingSiswaController::class, 'home'])->name('home');
-        Route::get('/history', function() { return view('siswa.history'); })->name('history');
+        Route::get('/history', [DashboardSiswaController::class, 'history'])->name('history');
         Route::get('/profile', [DashboardSiswaController::class, 'profile'])->name('profile');
 
         Route::get('/chat/{id}', [KonselingSiswaController::class, 'chatRoom'])->name('chat');

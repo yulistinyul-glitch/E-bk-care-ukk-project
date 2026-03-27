@@ -9,7 +9,7 @@ use App\Http\Controllers\KotakSaranController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\TentangController;
 use App\Http\Controllers\GalleryController;
-use App\Http\Controllers\BlogController;
+use App\Http\Controllers\LaporanBulananController;
 // SISWA, GURU, ADMIN
 
 
@@ -18,6 +18,7 @@ use App\Http\Controllers\Siswa\SiswaAuthController;
 use App\Http\Controllers\Gurubk\GuruAuthController;
 use App\Http\Controllers\Admin\DashboardAdminController;
 use App\Http\Controllers\Siswa\DashboardSiswaController;
+use App\Http\Controllers\Admin\AutentikasiController;
 use App\Http\Controllers\Admin\GurubkController;
 use App\Http\Controllers\Admin\SiswaController;
 use App\Http\Controllers\Admin\KelasController;
@@ -66,8 +67,6 @@ Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index
 Route::get('/kotaksaran', [KotakSaranController::class, 'index'])->name('kotaksaran');
 
 Route::get('/galeri', [GalleryController::class, 'index'])->name('galeri');
-Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
-Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 /*
 |--------------------------------------------------------------------------
@@ -79,13 +78,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit'); 
 
+        Route::get('/autentikasi', [AutentikasiController::class, 'index'])->name('autentikasi');
+       Route::post('/autentikasi/logout/{id}', [AutentikasiController::class, 'forceLogout'])->name('forceLogout');
+        
     Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/dashboard', [DashboardAdminController::class, 'dashboard'])->name('dashboard');
+
+      Route::get('/laporan', [LaporanBulananController::class, 'adminIndex'])->name('admin.laporan.index');
+    Route::post('/laporan/{laporan}/update-status', [LaporanBulananController::class, 'adminUpdateStatus'])->name('admin.laporan.update_status');
 
     Route::get('/data/tentang', [AdminTentangController::class, 'edit'])->name('tentang.edit');
         Route::put('/data/tentang/update', [AdminTentangController::class, 'update'])->name('tentang.update'); 
 
-Route::get('data/artikel', [AdminArtikelController::class, 'index'])->name('data.artikel.index');
+    Route::get('data/artikel', [AdminArtikelController::class, 'index'])->name('data.artikel.index');
         Route::post('data/artikel', [AdminArtikelController::class, 'store'])->name('data.artikel.store');
         Route::put('data/artikel/{id}', [AdminArtikelController::class, 'update'])->name('data.artikel.update');
         Route::delete('data/artikel/{id}', [AdminArtikelController::class, 'destroy'])->name('data.artikel.destroy');
@@ -109,6 +114,7 @@ Route::resource('data/galeri', AdminGaleriController::class)->names([
     'update'  => 'data.galeri.update',
     'destroy' => 'data.galeri.destroy',
 ]);
+
 // Route History
 Route::get('siswa/history', [SiswaController::class, 'history'])
     ->name('siswa.history');
@@ -143,19 +149,29 @@ Route::delete('siswa/{id}/force-delete', [SiswaController::class, 'forceDelete']
     Route::get('template_surats/{id}/download', [TemplateSuratController::class, 'download'])
         ->name('template_surats.download');
 
-    // Walikelas
-    Route::post('walikelas/import', [WalikelasController::class, 'import'])->name('walikelas.import');
-    Route::get('walikelas/cetak-semua', [WalikelasController::class, 'cetakSemua'])->name('walikelas.cetak.semua');
-    Route::resource('walikelas', WalikelasController::class);
+// Route Khusus Walikelas (Taruh di ATAS resource)
+Route::get('walikelas/history', [WalikelasController::class, 'history'])->name('walikelas.history');
+Route::post('walikelas/{id}/restore', [WalikelasController::class, 'restore'])->name('walikelas.restore');
+Route::delete('walikelas/{id}/force-delete', [WalikelasController::class, 'forceDelete'])->name('walikelas.forceDelete');
 
+// Route Utility (Import & Export)
+Route::post('walikelas/import', [WalikelasController::class, 'import'])->name('walikelas.import');
+Route::get('walikelas/cetak-semua', [WalikelasController::class, 'cetakSemua'])->name('walikelas.cetak.semua');
+
+// Route Resource (Standard CRUD: index, create, store, show, edit, update, destroy)
+Route::resource('walikelas', WalikelasController::class);
     // Pelanggaran
-    Route::get('pelanggaran/history', [PelanggaranController::class, 'history'])->name('pelanggaran.history');
-    Route::get('pelanggaran/import', [PelanggaranController::class, 'importForm'])->name('pelanggaran.import.form');
-    Route::post('pelanggaran/import', [PelanggaranController::class, 'import'])->name('pelanggaran.import');
-    Route::get('pelanggaran/cetak-semua', [PelanggaranController::class, 'cetakSemua'])->name('pelanggaran.cetak-semua');
-    Route::post('pelanggaran/{id}/restore', [PelanggaranController::class, 'restore'])->name('pelanggaran.restore');
-    Route::delete('pelanggaran/{id}/force-delete', [PelanggaranController::class, 'forceDelete'])->name('pelanggaran.forceDelete');
-    Route::resource('pelanggaran', PelanggaranController::class);
+// Route Khusus (WAJIB DI ATAS)
+Route::get('pelanggaran/history', [PelanggaranController::class, 'history'])->name('pelanggaran.history');
+Route::get('pelanggaran/cetak-semua', [PelanggaranController::class, 'cetakSemua'])->name('pelanggaran.cetak-semua');
+Route::post('pelanggaran/import', [PelanggaranController::class, 'import'])->name('pelanggaran.import');
+
+// Route Restore & Force Delete
+Route::post('pelanggaran/{id}/restore', [PelanggaranController::class, 'restore'])->name('pelanggaran.restore');
+Route::delete('pelanggaran/{id}/force-delete', [PelanggaranController::class, 'forceDelete'])->name('pelanggaran.forceDelete');
+
+// Route Resource (WAJIB DI BAWAH)
+Route::resource('pelanggaran', PelanggaranController::class);
     });
 
     Route::prefix('monitoring')->group(function () {
@@ -177,14 +193,18 @@ Route::delete('siswa/{id}/force-delete', [SiswaController::class, 'forceDelete']
 | GURU BK ROUTES
 |--------------------------------------------------------------------------
 */
-// 1. Rute LOGIN (Bisa diakses tanpa login)
-Route::prefix('gurubk')->name('gurubk.')->group(function () {
-    Route::get('/login', [GuruAuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [GuruAuthController::class, 'login'])->name('login.submit');
-});
+    // 1. Rute LOGIN (Bisa diakses tanpa login)
+    Route::prefix('gurubk')->name('gurubk.')->group(function () {
+        Route::get('/login', [GuruAuthController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [GuruAuthController::class, 'login'])->name('login.submit');
+    });
 
 Route::middleware(['auth', 'role:GuruBK'])->prefix('gurubk')->name('gurubk.')->group(function () {
 
+Route::get('/laporan', [LaporanBulananController::class, 'guruIndex'])->name('laporan.index');
+Route::get('/laporan/create', [LaporanBulananController::class, 'create'])
+    ->name('laporan.create');
+    Route::post('/laporan/store', [LaporanBulananController::class, 'guruStore'])->name('laporan.store');
     // Dashboard & Chat
     Route::get('/dashboard', [DashboardbkController::class, 'dashboard'])->name('dashboard');
     Route::get('chat', [ChatController::class, 'index'])->name('chat.index');

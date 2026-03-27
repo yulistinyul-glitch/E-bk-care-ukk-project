@@ -1,0 +1,165 @@
+:root {
+    --teal-color: #20c997;
+    --dark-navy: #1e2a3a;
+    --light-bg: #fcfdfe;
+    --gold-accent: #d4af37; 
+}
+
+.text-teal { color: var(--teal-color) !important; }
+.section-padding { padding: 120px 0; }
+.hero-service { background-color: var(--light-bg); padding: 80px 0; position: relative; overflow: hidden;}
+.hero-service::after { content: "✕"; position: absolute; top: -50px; right: -30px;  font-size: 300px; color: #f1f1f1; z-index: 0; font-weight: bold; opacity: 0.5; pointer-events: none; }
+.why-choose::before { content: "✕"; position: absolute; bottom: -50px; left: -30px; font-size: 250px; color: #f8f9fa; z-index: 0; font-weight: bold; pointer-events: none; }
+
+ @media (max-width: 991.98px) {
+    .hero-service::after, .why-choose::before {
+         display: none; 
+    }
+    .section-padding { padding: 60px 0; }
+    .hero-service { padding: 40px 0; }
+}
+
+.hero-img-box { position: relative; z-index: 1; }
+.hero-img-box img { border-radius: 0; box-shadow: 15px 15px 0px var(--light-bg), 15px 15px 0px 1px #ddd; }
+.title-accent { border-left: 3px solid var(--gold-accent); padding-left: 15px; }
+
+.focus-areas {
+    background: linear-gradient(#1e2a3ad9, #1e2a3ad9), 
+        url('/img/fitur.jpg');
+    background-size: cover; background-position: center; background-attachment: fixed;
+    color: white;
+}
+
+.area-sub { letter-spacing: 2px; font-size: 0.8rem; font-weight: 700; color: #aaa; text-transform: uppercase; }
+.service-card-minimal { cursor: pointer; padding: 20px 20px; text-align: left; height: 100%; display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.1); 
+    background: rgba(255,255,255,0.02); transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.service-card-minimal:hover {  background: rgba(255,255,255,0.05); border-color: var(--gold-accent); transform: translateY(-5px); }
+.icon-box { font-size: 2.5rem; margin-bottom: 30px; color: white; opacity: 0.9; }
+.service-title { color: white; font-size: 1rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+.service-desc { font-size: 0.85rem; color: #ccc; line-height: 1.8; margin-bottom: 25px; }
+.learn-more-link {
+    color: var(--gold-accent);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.8rem;
+    margin-top: auto;
+    letter-spacing: 1.5px; /* Sedikit lebih lebar agar terlihat mewah */
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); /* Transisi halus */
+    display: inline-flex;
+    align-items: center;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* --- EFEK HOVER (SAAT KURSOR DI ATAS) --- */
+.learn-more-link:hover {
+    color: var(--teal-color) !important; /* Berubah jadi Hijau */
+    transform: translateX(8px); /* Teks bergeser sedikit ke kanan */
+    text-decoration: none !important;
+}
+
+/* Animasi Khusus untuk Icon Panah */
+.learn-more-link i {
+    margin-left: 6px;
+    transition: transform 0.4s ease;
+    display: inline-block;
+}
+
+.learn-more-link:hover i {
+    transform: translateX(5px); /* Panah maju lebih jauh dari teks */
+    color: var(--teal-color);
+}
+
+/* --- EFEK KLIK (SAAT DITEKAN) --- */
+.learn-more-link:active, 
+.learn-more-link:focus {
+    color: var(--teal-color) !important;
+    outline: none !important;
+    box-shadow: none !important;
+    transform: scale(0.95); /* Sedikit mengecil pas diklik (efek tekan) */
+}
+
+.why-choose { background-color: white; position: relative; overflow: hidden; }
+.list-bordered { list-style: none; padding: 0; position: relative; z-index: 1; }
+.list-bordered li { border-bottom: 1px solid #eee; }
+.list-trigger { width: 100%; padding: 18px 0; display: flex; align-items: center;background: none; border: none; font-weight: 500;
+        color: #444; font-size: 0.95rem; cursor: pointer; text-align: left; transition: color 0.3s ease;
+}
+.list-trigger:hover { color: var(--teal-color); }
+.list-trigger i {  color: var(--teal-color); font-size: 0.75rem; margin-right: 15px; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); display: inline-block; }
+.list-trigger[aria-expanded="true"] i { transform: rotate(90deg); }
+.desc-collapse { font-size: 0.88rem; color: #666; line-height: 1.7; padding-bottom: 20px; padding-left: 28px; }
+
+/* --- HOVER KHUSUS: HIJAU KE GOLD --- */
+.btn-galeri-hover {
+    /* Warna Hijau (Teal) */
+    color: #20c997 !important; 
+    transition: all 0.4s ease !important;
+    text-decoration: none !important;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 700;
+}
+
+/* State: Hover, Active (saat diklik), dan Focus (setelah diklik) */
+.btn-galeri-hover:hover, 
+.btn-galeri-hover:active, 
+.btn-galeri-hover:focus {
+    /* Warna Gold dari variable :root kamu */
+    color: var(--gold) !important; 
+    transform: translateX(10px);
+    text-decoration: none !important;
+    /* Menghilangkan bayangan/outline hitam default browser */
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Animasi Panah */
+.btn-galeri-hover span {
+    margin-left: 5px;
+    display: inline-block;
+    transition: transform 0.4s ease;
+}
+
+.btn-galeri-hover:hover span {
+    transform: translateX(5px);
+}
+
+.btn-label {
+        display: inline-flex;
+        align-items: center;
+        background-color: var(--dark-navy);
+        color: white;
+        padding: 12px 40px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 4px;
+        border: none;
+        transition: all 0.4s ease;
+        margin-top: 10px;
+        text-decoration: none;
+        position: relative;
+        z-index: 1;
+        margin-left: 26px;
+    }
+.btn-label:hover { background-color: var(--teal-color); color: white; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(32, 201, 151, 0.2); }
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.icon-animate { animation: pulse 2s infinite ease-in-out; display: inline-block; }
+.btn-login-hover { transition: all 0.3s ease-in-out !important; background-color: #0f2744 !important; color: #ffffff !important;
+    border: none !important; text-decoration: none !important; 
+}
+.btn-login-hover:hover { background-color: #1a406e !important; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(15, 39, 68, 0.3); }
+.btn-login-hover:hover i { transform: translateX(-4px); transition: transform 0.3s ease; }
+.custom-modal-center { display: flex !important; align-items: center; justify-content: center; min-height: 100vh;}
+.modal.fade .modal-dialog { transition: transform 0.3s ease-out, opacity 0.3s ease-out; }

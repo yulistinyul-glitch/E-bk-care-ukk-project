@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\KotakSurats;
 use App\Models\CounselingSession;
-// Perbaikan: Gunakan Facades\Auth
 use Illuminate\Support\Facades\Auth; 
 
 class DashboardSiswaController extends Controller

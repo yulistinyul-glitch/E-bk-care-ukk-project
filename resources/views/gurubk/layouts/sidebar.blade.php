@@ -140,7 +140,14 @@
                         <span class="nxl-mtext">Cetak E-SP</span>
                     </a>
                 </li>
-            </ul>
+<li class="nxl-item">
+    <a class="nxl-link {{ Route::is('gurubk.laporan.*') ? 'active' : '' }}" 
+       href="{{ route('gurubk.laporan.index') }}">
+        <span class="nxl-micon"><i class="feather-file-text"></i></span>
+        <span class="nxl-mtext">Laporan Bulanan</span>
+    </a>
+</li>
+ </ul>
             <div class="divider-white"></div>
             <div class="logout-btn">
                 <form method="POST" action="{{ route('logout')}}">

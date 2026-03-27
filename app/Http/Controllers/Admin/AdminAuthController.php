@@ -30,7 +30,7 @@ class AdminAuthController extends Controller
     }
 
     return back()->withErrors([
-        'username' => 'Username atau password salah',
+        'username' => 'Username atau password salah.',
     ])->withInput();
 }
 }

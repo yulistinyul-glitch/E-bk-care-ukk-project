@@ -30,4 +30,14 @@ class Gurubk extends Model
     {
         return $this->belongsTo(User::class, 'id_pengguna', 'id_pengguna');
     }
+
+    public function laporanBulanan()
+    {
+        return $this->hasMany(LaporanBulanan::class, 'guru_bk_id');
+    }
+
+    public function siswa()
+    {
+        return $this->hasMany(Siswa::class, 'guru_bk_id');
+    }
 }

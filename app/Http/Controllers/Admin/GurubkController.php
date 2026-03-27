@@ -19,7 +19,6 @@ class GurubkController extends Controller
 
     public function create()
     {
-        // Mencari ID terakhir untuk ditampilkan otomatis di form
         $lastGuru = Gurubk::orderBy('id_gurubk', 'desc')->first();
         $lastGuruNum = $lastGuru ? (int) substr($lastGuru->id_gurubk, 2) : 0;
         $nextID = 'GB' . str_pad($lastGuruNum + 1, 3, '0', STR_PAD_LEFT);
@@ -30,7 +29,6 @@ class GurubkController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            // digits_between:1,18 memastikan NIP tidak lebih dari 18 angka (mencegah error database)
             'NIP' => 'required|numeric|digits_between:1,18|unique:gurubks,NIP',
             'nama_gurubk' => 'required',
             'JK' => 'required|in:L,P',
@@ -40,12 +38,11 @@ class GurubkController extends Controller
         ]);
 
         DB::transaction(function () use ($request) {
-            // 1. Generate ID Pengguna (USRxxx)
+            // 1. Generate ID Pengguna
             $lastUser = User::orderBy('id_pengguna', 'desc')->first();
             $lastNumber = $lastUser ? (int) substr($lastUser->id_pengguna, 3) : 0;
             $id_pengguna = 'USR' . str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
 
-            // 2. Simpan ke tabel User (Login menggunakan NIP)
             User::create([
                 'id_pengguna' => $id_pengguna,  
                 'username'    => $request->NIP,
@@ -53,12 +50,11 @@ class GurubkController extends Controller
                 'role'        => 'GuruBK'
             ]);
 
-            // 3. Generate ID Guru BK (GBxxx)
+            // 2. Generate ID Guru BK
             $lastGuru = Gurubk::orderBy('id_gurubk', 'desc')->first();
             $lastGuruNum = $lastGuru ? (int) substr($lastGuru->id_gurubk, 2) : 0;
             $id_gurubk = 'GB' . str_pad($lastGuruNum + 1, 3, '0', STR_PAD_LEFT);
 
-            // 4. Simpan ke tabel Gurubk
             Gurubk::create([
                 'id_gurubk'   => $id_gurubk,
                 'id_pengguna' => $id_pengguna, 
@@ -72,18 +68,19 @@ class GurubkController extends Controller
         });
 
         return redirect()->route('admin.gurubk.index')
-                         ->with('success', 'Data Guru BK berhasil ditambahkan. Username & Password: NIP');
+                         ->with('success', 'Data Guru BK berhasil ditambahkan.');
     }
 
     public function edit($id)
     {
-        $gurubk = Gurubk::findOrFail($id); 
+        // Cari menggunakan kolom id_gurubk secara eksplisit
+        $gurubk = Gurubk::where('id_gurubk', $id)->firstOrFail(); 
         return view('admin.gurubk.edit', compact('gurubk'));
     }
 
     public function update(Request $request, $id)
     {
-        $gurubk = Gurubk::findOrFail($id);
+        $gurubk = Gurubk::where('id_gurubk', $id)->firstOrFail();
 
         $request->validate([
             'NIP' => 'required|numeric|digits_between:1,18|unique:gurubks,NIP,' . $id . ',id_gurubk',
@@ -103,7 +100,6 @@ class GurubkController extends Controller
             'alamat' => $request->alamat,
         ]);
 
-        // Sinkronisasi username jika NIP berubah
         User::where('id_pengguna', $gurubk->id_pengguna)->update([
             'username' => $request->NIP
         ]);
@@ -113,15 +109,17 @@ class GurubkController extends Controller
 
     public function destroy($id)
     {
-        $guru = Gurubk::findOrFail($id);
+        // Cari data berdasarkan Primary Key custom
+        $guru = Gurubk::where('id_gurubk', $id)->firstOrFail();
 
         DB::transaction(function () use ($guru) {
-            // Menghapus User terkait terlebih dahulu
+            // Hapus User/Akun terlebih dahulu
             User::where('id_pengguna', $guru->id_pengguna)->delete();
+            // Hapus data Guru BK secara permanen
             $guru->delete();
         });
 
         return redirect()->route('admin.gurubk.index')
-                         ->with('success', 'Data Guru BK dan akun aksesnya berhasil dihapus.');
+                         ->with('success', 'Data Guru BK dan akun aksesnya berhasil dihapus permanen.');
     }
 }

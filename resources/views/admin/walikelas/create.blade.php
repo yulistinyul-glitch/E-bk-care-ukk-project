@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Input Data Walikelas</title>
-
-    {{-- Google Font: Poppins --}}
+    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
@@ -101,7 +100,12 @@
             box-shadow: 0 4px 12px rgba(93, 95, 239, 0.3); 
         }
 
-        .alert { font-size: 0.8rem; border-radius: 10px; }
+        .error-msg {
+            color: #d63031;
+            font-size: 0.75rem;
+            margin-top: 4px;
+            font-weight: 500;
+        }
     </style>
 </head>
 
@@ -109,70 +113,88 @@
 
 <div class="form-box">
     <h4 class="text-center">Input Data Walikelas</h4>
-
-    @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul class="mb-0">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-    @endif
     
     <form action="{{ route('admin.walikelas.store') }}" method="POST">
         @csrf
 
+        {{-- ID Walikelas --}}
         <div class="mb-3">
-            <label class="form-label">ID Walikelas (Otomatis Melanjutkan)</label>
-            {{-- Menggunakan variabel dari controller seperti $nextWaliID --}}
-            <input type="text" name="id_walikelas" class="form-control" value="{{ $nextWaliID }}" readonly required>
-            <small class="text-muted" style="font-size: 0.75rem;">ID diatur sistem agar urut dengan data import.</small>
+            <label class="form-label">ID Walikelas (Otomatis)</label>
+            <input type="text" name="id_walikelas" class="form-control" value="{{ $nextWaliID }}" readonly>
+            <small class="text-muted" style="font-size: 0.7rem;">ID diatur sistem agar tetap berurutan.</small>
         </div>
 
         <div class="row">
+            {{-- NIP --}}
             <div class="col-md-6 mb-3">
-                <label class="form-label">NIP</label>
-                <input type="text" name="NIP" class="form-control" placeholder="Masukkan NIP..." required>
+                <label class="form-label">NIP (18 Digit)</label>
+                <input type="text" 
+                       name="NIP" 
+                       id="nip_input"
+                       class="form-control @error('NIP') is-invalid @enderror" 
+                       placeholder="Masukkan NIP..." 
+                       value="{{ old('NIP') }}" 
+                       maxlength="18"
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                <div class="d-flex justify-content-between">
+                    <small id="nip_counter" class="text-muted" style="font-size: 0.7rem;">0/18 digit</small>
+                    @error('NIP') <div class="error-msg text-end">{{ $message }}</div> @enderror
+                </div>
             </div>
+
+            {{-- Jenis Kelamin --}}
             <div class="col-md-6 mb-3">
                 <label class="form-label">Jenis Kelamin</label>
-                <select name="JK" class="form-select" required>
+                <select name="JK" class="form-select @error('JK') is-invalid @enderror">
                     <option value="">Pilih JK</option>
-                    <option value="L">Laki-laki</option>
-                    <option value="P">Perempuan</option>
+                    <option value="L" {{ old('JK') == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                    <option value="P" {{ old('JK') == 'P' ? 'selected' : '' }}>Perempuan</option>
                 </select>
+                @error('JK') <div class="error-msg">{{ $message }}</div> @enderror
             </div>
         </div>
 
+        {{-- Nama Guru --}}
         <div class="mb-3">
             <label class="form-label">Nama Lengkap Guru</label>
-            <input type="text" name="nama_walikelas" class="form-control" placeholder="Nama beserta gelar..." required>
+            <input type="text" name="nama_guru" class="form-control @error('nama_guru') is-invalid @enderror" 
+                   placeholder="Nama beserta gelar..." value="{{ old('nama_guru') }}">
+            @error('nama_guru') <div class="error-msg">{{ $message }}</div> @enderror
         </div>
 
         <div class="row">
+            {{-- Kelas --}}
             <div class="col-md-6 mb-3">
                 <label class="form-label">Kelas</label>
-                <select name="id_kelas" class="form-select" required>
+                <select name="id_kelas" class="form-select @error('id_kelas') is-invalid @enderror">
                     <option value="">Pilih Kelas</option>
                     @foreach ($kelas as $k)
-                        <option value="{{ $k->id_kelas }}">
+                        <option value="{{ $k->id_kelas }}" {{ old('id_kelas') == $k->id_kelas ? 'selected' : '' }}>
                             {{ $k->nama_kelas == 10 ? 'X' : ($k->nama_kelas == 11 ? 'XI' : 'XII') }}
                             {{ $k->jurusan }}
                             {{ $k->nomor_ruang }}
                         </option>
                     @endforeach
                 </select>
+                @error('id_kelas') <div class="error-msg">{{ $message }}</div> @enderror
             </div>
+
+            {{-- No Telepon --}}
             <div class="col-md-6 mb-3">
                 <label class="form-label">No. Telepon</label>
-                <input type="text" name="no_telp" class="form-control" placeholder="08...">
+                <input type="text" name="no_telp" class="form-control @error('no_telp') is-invalid @enderror" 
+                       placeholder="08..." value="{{ old('no_telp') }}"
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                @error('no_telp') <div class="error-msg">{{ $message }}</div> @enderror
             </div>
         </div>
 
+        {{-- Alamat --}}
         <div class="mb-3">
             <label class="form-label">Alamat</label>
-            <textarea name="alamat" class="form-control" rows="2" placeholder="Alamat lengkap..."></textarea>
+            <textarea name="alamat" class="form-control @error('alamat') is-invalid @enderror" 
+                      rows="2" placeholder="Alamat lengkap...">{{ old('alamat') }}</textarea>
+            @error('alamat') <div class="error-msg">{{ $message }}</div> @enderror
         </div>
 
         <div class="button-group">
@@ -181,6 +203,27 @@
         </div>
     </form>
 </div>
+
+<script>
+    // Logic untuk counter digit NIP
+    const nipInput = document.getElementById('nip_input');
+    const nipCounter = document.getElementById('nip_counter');
+
+    function updateCounter() {
+        const length = nipInput.value.length;
+        nipCounter.innerText = `${length}/18 digit`;
+        if(length === 18) {
+            nipCounter.style.color = '#5D5FEF';
+            nipCounter.style.fontWeight = 'bold';
+        } else {
+            nipCounter.style.color = '#6c757d';
+            nipCounter.style.fontWeight = 'normal';
+        }
+    }
+
+    nipInput.addEventListener('input', updateCounter);
+    window.addEventListener('load', updateCounter); // Update saat halaman load (jika ada old value)
+</script>
 
 </body>
 </html>

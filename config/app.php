@@ -27,7 +27,7 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
-
+'footer' => env('APP_FOOTER', 'Nama Sekolah / Perusahaan'),
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode

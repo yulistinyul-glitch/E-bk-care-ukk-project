@@ -68,13 +68,22 @@ class KelasController extends Controller
             ->with('success', 'Data kelas berhasil diupdate');
     }
 
-    public function destroy($id)
-    {
-        // Gunakan where agar Laravel mencari di kolom id_kelas, bukan 'id'
-        $kelas = Kelas::where('id_kelas', $id)->firstOrFail();
+public function destroy($kelas)
+{
+    try {
+        // 1. Cari data berdasarkan id_kelas yang dikirim dari route
+        // Kita gunakan where secara eksplisit agar lebih aman
+        $data = \App\Models\Kelas::where('id_kelas', $kelas)->firstOrFail();
 
-        $kelas->delete();
+        // 2. Eksekusi Hapus Permanen
+        $data->delete();
 
-        return back()->with('success', 'Data kelas berhasil dihapus');
+        // 3. Kembali ke halaman sebelumnya dengan pesan sukses
+        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil dihapus permanen!');
+        
+    } catch (\Exception $e) {
+        // Jika gagal (misal karena ada data siswa yang terhubung/foreign key)
+        return back()->with('error', 'Gagal menghapus: ' . $e->getMessage());
     }
+}
 }

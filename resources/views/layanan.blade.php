@@ -3,170 +3,6 @@
 @section('title', 'Layanan - E-BK Care')
 
 @section('content')
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-<style>
-    /* CSS Anda tetap sama tidak ada perubahan */
-    :root {
-        --teal-color: #20c997;
-        --dark-navy: #1e2a3a;
-        --light-bg: #fcfdfe;
-        --gold-accent: #d4af37; 
-    }
-
-    .text-teal { color: var(--teal-color) !important; }
-    .section-padding { padding: 100px 0; }
-
-    .hero-service { background-color: var(--light-bg); padding: 80px 0; position: relative; overflow: hidden;}
-    .hero-service::after { content: "✕"; position: absolute; top: -50px; right: -30px;  font-size: 300px; color: #f1f1f1; z-index: 0; font-weight: bold; opacity: 0.5; pointer-events: none; }
-    .why-choose::before { content: "✕"; position: absolute; bottom: -50px; left: -30px; font-size: 250px; color: #f8f9fa; z-index: 0; font-weight: bold; pointer-events: none; }
-
-    @media (max-width: 991.98px) {
-        .hero-service::after, .why-choose::before {
-            display: none; 
-        }
-        .section-padding { padding: 60px 0; }
-        .hero-service { padding: 40px 0; }
-    }
-
-    .hero-img-box { position: relative; z-index: 1; }
-    .hero-img-box img { border-radius: 0; box-shadow: 15px 15px 0px var(--light-bg), 15px 15px 0px 1px #ddd; }
-    .title-accent { border-left: 3px solid var(--gold-accent); padding-left: 15px; }
-
-    .focus-areas {
-        background: linear-gradient(rgba(30, 42, 58, 0.85), rgba(30, 42, 58, 0.85)), 
-                    url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop');
-        background-size: cover; background-position: center; background-attachment: fixed;
-        color: white;
-    }
-
-    .area-sub { letter-spacing: 2px; font-size: 0.8rem; font-weight: 700; color: #aaa; text-transform: uppercase; }
-    .service-card-minimal {
-        padding: 40px 20px;
-        text-align: left;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        border: 1px solid rgba(255,255,255,0.1);
-        background: rgba(255,255,255,0.02);
-        transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
-
-    .service-card-minimal:hover {  background: rgba(255,255,255,0.05); border-color: var(--teal-color); transform: translateY(-5px); }
-    .icon-box { font-size: 2.5rem; margin-bottom: 30px; color: white; opacity: 0.9; }
-    .service-title { font-size: 1rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
-    .service-desc { font-size: 0.85rem; color: #ccc; line-height: 1.8; margin-bottom: 25px; }
-    .learn-more-link { 
-        color: var(--gold-accent); 
-        text-decoration: none; 
-        font-weight: 700; 
-        font-size: 0.8rem; 
-        margin-top: auto;
-        letter-spacing: 1px;
-    }
-
-    .why-choose { background-color: white; position: relative; overflow: hidden; }
-    .list-bordered { list-style: none; padding: 0; position: relative; z-index: 1; }
-    .list-bordered li { border-bottom: 1px solid #eee; }
-    .list-trigger {
-        width: 100%;
-        padding: 18px 0;
-        display: flex;
-        align-items: center;
-        background: none;
-        border: none;
-        font-weight: 500;
-        color: #444;
-        font-size: 0.95rem;
-        cursor: pointer;
-        text-align: left;
-        transition: color 0.3s ease;
-    }
-
-    .list-trigger:hover { color: var(--teal-color); }
-    .list-trigger i { 
-        color: var(--teal-color); 
-        font-size: 0.75rem; 
-        margin-right: 15px;
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        display: inline-block;
-    }
-    .list-trigger[aria-expanded="true"] i { transform: rotate(90deg); }
-    .desc-collapse { font-size: 0.88rem; color: #666; line-height: 1.7; padding-bottom: 20px; padding-left: 28px; }
-    .btn-label {
-        display: inline-flex;
-        align-items: center;
-        background-color: var(--dark-navy);
-        color: white;
-        padding: 12px 28px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        border-radius: 4px;
-        border: none;
-        transition: all 0.4s ease;
-        margin-top: 25px;
-        text-decoration: none;
-        position: relative;
-        z-index: 1;
-    }
-    .btn-label:hover {
-        background-color: var(--teal-color);
-        color: white;
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(32, 201, 151, 0.2);
-    }
-
-   
-/* 1. Animasi ikon berdenyut */
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.15); }
-    100% { transform: scale(1); }
-}
-
-.icon-animate {
-    animation: pulse 2s infinite ease-in-out;
-    display: inline-block;
-}
-
-/* 2. Efek hover untuk tombol (Gunakan .btn-login-hover pada class tombol) */
-.btn-login-hover {
-    transition: all 0.3s ease-in-out !important;
-    background-color: #0f2744 !important;
-    color: #ffffff !important;
-    border: none !important;
-    text-decoration: none !important; /* Memastikan tidak ada garis bawah */
-}
-
-.btn-login-hover:hover {
-    background-color: #1a406e !important; 
-    transform: translateY(-3px); /* Ditingkatkan sedikit agar lebih terlihat */
-    box-shadow: 0 8px 20px rgba(15, 39, 68, 0.3);
-}
-
-/* Tambahan: Efek panah bergerak saat tombol di-hover */
-.btn-login-hover:hover i {
-    transform: translateX(-4px);
-    transition: transform 0.3s ease;
-}
-
-/* 3. Modal di tengah (Hati-hati: hindari menimpa kelas bawaan Bootstrap secara global) */
-/* Gunakan class spesifik agar tidak merusak modal lain di website Anda */
-.custom-modal-center {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-}
-
-/* Tambahan: Memastikan transisi modal smooth */
-.modal.fade .modal-dialog {
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-}
-</style>
-
 <section class="hero-service">
     <div class="container px-4" style="z-index: 2; position: relative;">
         <div class="row align-items-center">
@@ -177,12 +13,14 @@
             </div>
             <div class="col-lg-7 ps-lg-5" data-aos="fade-left">
                 <div class="title-accent">
-                    <h2 class="display-6 fw-bold mb-3" style="color: #222; font-size: 40px;">Committed To Helping<br>Siswa Meraih Prestasi</h2>
+                    <h2 class="font-poppins display-6 fw-bold mb-4" style="color: #222; font-size: 36px; line-height: 1.3;">Committed To Helping<br>Siswa Meraih Prestasi</h2>
                 </div>
-                <p class="text-muted mt-4" style="line-height: 1.8; font-size: 0.95rem;">
+                <p class="text-muted mt-4" style="line-height: 2; font-size: 0.95rem;">
                     Kesejahteraan mental siswa adalah prioritas utama kami. Kami berkomitmen memberikan bimbingan profesional untuk membantu setiap siswa mencapai potensi terbaik mereka.
                 </p>
-                <a href="{{ route('galeri') }}" class="btn btn-link p-0 mt-3 text-teal fw-bold text-decoration-none border-bottom border-teal">Lihat Galeri Kegiatan →</a>
+                <a href="{{ route('galeri') }}" class="mt-4 p-0 font-poppins btn-galeri-hover">
+                    Lihat Galeri Kegiatan <span>→</span>
+                </a>
             </div>
         </div>
     </div>
@@ -192,16 +30,16 @@
 <section class="focus-areas section-padding">
     <div class="container px-4">
         <div class="mb-5">
-            <p class="area-sub mb-2"  data-aos="fade-right">System Features</p>
-            <div style="border-left: 3px solid var(--gold-accent); padding-left: 15px;"  data-aos="fade-right">
-                <h2 class="fw-bold h1 text-white">Fitur Utama Layanan</h2>
+            <p class="font-montserrat area-sub mb-3"  data-aos="fade-right">System Features</p>
+            <div style="border-left: 2px solid var(--gold-accent); padding-left: 15px;"  data-aos="fade-right">
+                <h2 class="font-poppins fw-bold text-white" style="font-size: 30px; margin-bottom: 80px;">Fitur Utama Layanan</h2>
             </div>
         </div>
 
         <div class="row g-4">
             @forelse($semua_layanan as $item)
                 <div class="col-12 col-md-6 col-lg-3">
-                    <div class="service-card-minimal" data-aos="fade-up">
+                    <div class="font-poppins service-card-minimal" data-aos="fade-up">
                         <div class="icon-box">
                             <i class="bi {{ $item->icon }}"></i>
                         </div>
@@ -227,8 +65,8 @@
     <div class="container px-4">
         <div class="row g-5 align-items-start">
             <div class="col-lg-6">
-                <p class="area-sub mb-2">Counseling Program</p>
-                <div style="border-left: 3px solid var(--gold-accent); padding-left: 15px;">
+                <p class="font-montserrat area-sub mb-3">Counseling Program</p>
+                <div style="border-left: 2px solid var(--gold-accent); padding-left: 15px;">
                     <h2 class="fw-bold h1">Mengapa Pilih E-BK Care?</h2>
                 </div>
                 <p class="mt-4 text-muted" style="line-height: 1.8;">
@@ -290,7 +128,7 @@
                 </ul>
                 
                 <a href="{{ route('home') }}" class="btn-label shadow-sm">
-                  Konsultasi Sekarang <i class="bi bi-arrow-right ms-2"></i>
+                  Mulai Konsultasi
                 </a>
             </div>
         </div>
@@ -309,7 +147,7 @@
                 <h6 class="fw-bold mb-2" style="color: #0f2744; font-size: 1.1rem;">Akses Diperlukan</h6>
                 <p class="text-muted mb-4 px-2" style="font-size: 0.9rem;">Silakan login untuk membuka fitur layanan ini!</p>
                 
-                <a id="loginRedirectBtn" href="#" 
+                <a id="loginRedirectBtn" href="{{ route('home') }}" 
                    class="btn btn-primary d-inline-flex align-items-center justify-content-center px-4 py-2 btn-login-hover" 
                    style="border-radius: 10px; font-size: 0.85rem; text-decoration: none; border: none;">
                     <i class="bi bi-arrow-left me-2"></i> Lanjutkan ke Login

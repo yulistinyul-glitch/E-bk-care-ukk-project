@@ -7,11 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB; 
 use App\Mail\OtpMail;
 use App\Models\User;
 use Carbon\Carbon;
-
-
 
 class SiswaAuthController extends Controller
 {
@@ -22,27 +21,45 @@ class SiswaAuthController extends Controller
    public function login(Request $request) {
     $request->validate([
         'username' => 'required', 
-        'password' => 'required', // Input NIPD
+        'password' => 'required',
     ]);
 
-    // 1. CARI DI DATA YANG SUDAH ADA (Tabel Siswas)
+    // 1. LOGIN PERTAMA (BYPASS)
     $siswa = \App\Models\Siswa::where('nama_siswa', $request->username)
                 ->where('NIPD', $request->password)
                 ->first();
 
     if ($siswa) {
-        $user = $siswa->user; // Ambil akun di tabel users yang terhubung
+        $user = $siswa->user;
 
-        // Cek apakah dia memang belum aktivasi (is_first_login == 1)
         if ($user && $user->is_first_login == 1) {
-            // LOGIN OTOMATIS (Bypass/Tanpa cek password di tabel users)
-            Auth::login($user); 
+            Auth::login($user);
+
+            // ✅ SET LOGIN
+            DB::table('users')
+                ->where('id_pengguna', Auth::id())
+                ->update([
+                    'last_activity' => time()
+                ]);
+
             return redirect()->route('siswa.setup-password');
         }
     }
 
-    // 2. JALUR LOGIN BIASA (Untuk yang sudah aktivasi/ganti password)
-    if (Auth::attempt(['username' => $request->username, 'password' => $request->password, 'role' => 'Siswa'])) {
+    // 2. LOGIN NORMAL
+    if (Auth::attempt([
+        'username' => $request->username, 
+        'password' => $request->password, 
+        'role' => 'Siswa'
+    ])) {
+
+        // ✅ SET LOGIN
+        DB::table('users')
+            ->where('id_pengguna', Auth::id())
+            ->update([
+                'last_activity' => time()
+            ]);
+
         return redirect()->intended(route('siswa.home'));
     }
 
@@ -74,20 +91,17 @@ class SiswaAuthController extends Controller
 
         Mail::to($user->email)->send(new OtpMail($otp));
 
-        $hiddenEmail = substr($user->email, 0, 3) . '****' . substr($user->email, strpos($user->email, "@"));
-        
         return redirect()->route('siswa.verify-otp-page', ['username' => $user->username])
                  ->with('success', "Kode OTP telah dikirim...");
     }
 
-   
     public function showVerifyOtpForm($username) {
         return view('auth.verify-code', ['username' => $username]);
     }
 
     public function verifyOtp(Request $request) {
         $request->validate([
-            'username' => 'required', // Kita gunakan username untuk cari user
+            'username' => 'required',
             'otp' => 'required|digits:6',
             'new_password' => 'required|min:8|confirmed'
         ]);
@@ -141,14 +155,12 @@ class SiswaAuthController extends Controller
         'password' => 'required|min:8|confirmed',
     ]);
 
-    // Ambil user yang sedang login (dari proses Alur A tadi)
     $user = User::with('siswa')->find(Auth::id());
     
     if (!$user || !$user->siswa) {
         return redirect()->route('siswa.login')->withErrors(['error' => 'Data tidak ditemukan.']);
     }
 
-    // Update data di tabel users
     $user->update([
         'username' => $user->siswa->NIPD,
         'email' => $request->email,
@@ -169,11 +181,9 @@ class SiswaAuthController extends Controller
     $request->validate([
         'username' => 'required',
         'otp' => 'required',
-        'new_password' => 'required|min:8|confirmed', // Mencari input 'new_password_confirmation'
+        'new_password' => 'required|min:8|confirmed',
     ]);
 
-    // Cari user berdasarkan username dan otp
-    // PASTIKAN: nama kolom di database sudah kamu ubah dari 'otp_exprires_at' jadi 'otp_expires_at'
     $user = User::where('username', $request->username)
                 ->where('otp_code', $request->otp)
                 ->first();

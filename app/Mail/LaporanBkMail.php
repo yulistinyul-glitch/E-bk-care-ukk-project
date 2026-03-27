@@ -21,10 +21,9 @@ class LaporanBKMail extends Mailable
     public function build()
     {
         $email = $this->subject($this->rincian['subjek'])
-                      ->view('emails.surat_walikelas') // File blade di resources/views/emails/
+                      ->view('emails.surat_walikelas') 
                       ->with('surat', $this->rincian['surat']);
 
-        // Cek apakah file PDF ada sebelum dilampirkan
         if (File::exists($this->rincian['pdf_path'])) {
             $email->attach($this->rincian['pdf_path'], [
                 'as' => $this->rincian['nama_file'],

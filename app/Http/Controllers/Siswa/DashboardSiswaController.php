@@ -7,10 +7,14 @@ use App\Models\Chat;
 use App\Models\KotakSurats;
 use App\Models\Siswa;
 use App\Models\CounselingSession;
+<<<<<<< HEAD
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+=======
+use Illuminate\Support\Facades\Auth; 
+>>>>>>> 4a836d07790973a95339febfcbbbd61ca5ae5e7a
 
 class DashboardSiswaController extends Controller
 {

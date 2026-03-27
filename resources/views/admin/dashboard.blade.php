@@ -75,7 +75,7 @@
                 @endforeach
             </div>
 
-            {{-- User Table --}}
+
             <div class="card border-0 shadow mb-4 text-start" style="border-radius: 20px;">
                 <div class="card-header bg-white border-0 py-4 px-4">
                     <h6 class="fw-bold m-0" style="color: #1a233a;">Manajemen Sesi & Autentikasi Pengguna</h6>
@@ -84,44 +84,43 @@
                     <table class="table align-middle mb-0">
                         <thead class="small text-muted text-uppercase" style="background: #f8fafc;">
                             <tr>
-                                <th class="py-3 border-0 ps-3">User / ID</th>
-                                <th class="py-3 border-0">Jabatan</th>
-                                <th class="py-3 border-0 text-center">Status</th>
-                                <th class="py-3 border-0 text-center">Terakhir Akses</th>
-                                <th class="py-3 border-0 text-end pe-3">Aksi</th>
+                                <th>User / ID</th>
+                                <th>Jabatan</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Terakhir Akses</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $authUsers = [
-                                    ['name' => 'Budi Sudarsono', 'id' => 'BK-001', 'role' => 'Guru BK', 'status' => 'Online', 'time' => 'Baru Saja'],
-                                    ['name' => 'Heny Rahmawati', 'id' => 'WL-042', 'role' => 'Wali Kelas', 'status' => 'Offline', 'time' => '2 Jam Lalu'],
-                                    ['name' => 'Andi Wijaya', 'id' => 'BK-003', 'role' => 'Guru BK', 'status' => 'Online', 'time' => '5 Menit Lalu'],
-                                ];
-                            @endphp
-                            @foreach($authUsers as $u)
+                            @forelse($latestAuth as $u)
                             <tr>
-                                <td class="ps-3 border-bottom-0 py-3">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold" style="width: 35px; height: 35px; background: #1a233a; font-size: 11px;">
-                                            {{ substr($u['name'], 0, 1) }}
-                                        </div>
-                                        <div>
-                                            <span class="fw-bold small d-block">{{ $u['name'] }}</span>
-                                            <small class="text-muted" style="font-size: 10px;">ID: {{ $u['id'] }}</small>
-                                        </div>
-                                    </div>
+                                <td>
+                                    {{ $u->nama_tampil }}
+                                    <br>
+                                    <small class="text-muted">ID: {{ $u->id_tampil }}</small>
                                 </td>
-                                <td class="small border-bottom-0">{{ $u['role'] }}</td>
-                                <td class="text-center border-bottom-0">
-                                    <span class="badge rounded-pill px-2 {{ $u['status'] == 'Online' ? 'bg-success-subtle text-success' : 'bg-light text-muted' }}" style="font-size: 10px;">{{ $u['status'] }}</span>
+                                <td>{{ $u->role }}</td>
+                                <td class="text-center">
+                                    @php
+                                        $statusClass = match($u->status) {
+                                            'Sedang Login' => 'bg-success-subtle text-success',
+                                            'Telah Logout' => 'bg-danger-subtle text-danger',
+                                            'Belum Login' => 'bg-light text-muted',
+                                            default => 'bg-light text-muted',
+                                        };
+                                    @endphp
+                                    <span class="badge rounded-pill px-2 {{ $statusClass }}">
+                                        {{ $u->status }}
+                                    </span>
                                 </td>
-                                <td class="text-center small text-muted border-bottom-0">{{ $u['time'] }}</td>
-                                <td class="text-end pe-3 border-bottom-0">
-                                    <button class="btn btn-sm btn-light text-danger rounded-2 border"><i class="feather-log-out" style="font-size: 12px;"></i></button>
+                                <td class="text-center">
+                                    {{ $u->last_activity ? \Carbon\Carbon::createFromTimestamp($u->last_activity)->locale('id')->diffForHumans() : '-' }}
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">Belum ada autentikasi pengguna.</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

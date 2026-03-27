@@ -14,7 +14,19 @@ class User extends Authenticatable
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = ['id_pengguna', 'username', 'password', 'role', 'image', 'email', 'otp_code', 'otp_expires_at', 'is_first_login'];
+    protected $fillable = [
+        'id_pengguna',
+        'username',
+        'password',
+        'role',
+        'image',
+        'email',
+        'otp_code',
+        'otp_expires_at',
+        'is_first_login',
+        'last_activity' 
+    ];
+
     protected $hidden = ['password', 'remember_token'];
 
     public function siswa() {
@@ -37,5 +49,10 @@ class User extends Authenticatable
     public function walikelas()
     {
         return $this->hasMany(Kelas::class, 'id_walikelas', 'id_pengguna');
+    }
+
+    public function getNamaLengkapAttribute()
+    {
+        return $this->siswa->nama_siswa ?? $this->gurubk->nama_guru ?? $this->admin->nama_admin ?? 'Administrator';
     }
 }

@@ -3,10 +3,6 @@
 @section('title', 'Data Walikelas')
 
 @section('content')
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
 <style>
     body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; }
     .header-title { font-size: 24px; font-weight: 800; color: #333; }
@@ -57,7 +53,7 @@
             <span class="header-subtitle">Kelola informasi guru yang bertugas sebagai wali kelas.</span>
         </div>
         <div class="d-flex gap-2">
-            <a href="" class="btn-history">
+            <a href="{{ route(('admin.walikelas.history')) }}" class="btn-history">
                 <i class="bi bi-clock-history"></i> History
             </a>
             <a href="{{ route('admin.walikelas.create') }}" class="btn-catat">
@@ -183,36 +179,23 @@
             showConfirmButton: false,
             timer: 2000,
             timerProgressBar: true,
-            customClass: { 
-                popup: 'my-swal-popup',
-                title: 'swal2-title',
-                htmlContainer: 'swal2-html-container'
-            }
+            customClass: { popup: 'my-swal-popup', title: 'swal2-title', htmlContainer: 'swal2-html-container' }
         });
     @endif
 
-    function hapusData(id, nama) {
+    function hapusData(id) {
         Swal.fire({
             title: 'Pindahkan ke History?',
-            text: "Data walikelas " + nama + " akan dipindahkan ke history.",
+            text: "Data siswa akan dipindahkan ke history.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Ya, Pindahkan',
             cancelButtonText: 'Batal',
-            confirmButtonColor: '#ff7070',
-            cancelButtonColor: '#b5b5b5',
             reverseButtons: true,
-            customClass: {
-                popup: 'my-swal-popup',
-                confirmButton: 'swal-button-custom',
-                cancelButton: 'swal-button-custom'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('delete-' + id).submit();
-            }
+            customClass: { popup: 'my-swal-popup', confirmButton: 'swal-button-custom', cancelButton: 'swal-button-custom' }
+        }).then(function(result) {
+            if (result.value) { document.getElementById('delete-' + id).submit(); }
         });
     }
 </script>
-
 @endsection

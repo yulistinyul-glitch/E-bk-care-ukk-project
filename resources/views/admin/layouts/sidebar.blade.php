@@ -124,7 +124,7 @@
                     </a>
                 </li>
 
-<li class="nxl-item nxl-hasmenu {{ Route::is('admin.log') ? 'active nxl-trigger' : '' }}">
+<li class="nxl-item nxl-hasmenu {{ Route::is('admin.log') || Route::is('admin.autentifikasi') ? 'active nxl-trigger' : '' }}">
     <a href="javascript:void(0);" class="nxl-link">
         <span class="nxl-micon"><i class="feather-activity"></i></span>
         <span class="nxl-mtext">Monitoring</span>
@@ -134,6 +134,12 @@
         <li class="nxl-item {{ Route::is('admin.log') ? 'active' : '' }}">
             <a href="{{ route('admin.log') }}" class="nxl-link">
                 <span class="nxl-mtext">Log Aktivitas</span>
+            </a>
+        </li>
+        
+        <li class="nxl-item {{ Route::is('admin.autentikasi') ? 'active' : '' }}">
+            <a href="{{ route('admin.autentikasi') }}" class="nxl-link">
+                <span class="nxl-mtext">Autentikasi</span>
             </a>
         </li>
     </ul>

@@ -7,20 +7,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@yield('title', 'Dashboard Admin')</title>
 
+<<<<<<< HEAD
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/logo_ebk-careGold.png') }}" />
+=======
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/favicon.ico') }}" />
+>>>>>>> 4a836d07790973a95339febfcbbbd61ca5ae5e7a
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/vendors.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/daterangepicker.min.css') }}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
     
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/theme.min.css') }}" />
 
     <style> 
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; } 
     </style>
-
-    {{-- Tempat untuk CSS tambahan dari child view --}}
+    
     @stack('styles')
 </head>
 

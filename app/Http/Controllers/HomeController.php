@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\About; // Pastikan model About ada
+use App\Models\About;
+use App\Models\Article; // tambahkan ini
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        // Mengambil data pertama dari tabel 'abouts'
         $data = About::first(); 
+        $semua_artikel = Article::latest()->take(5)->get();
         
-        // Kirim ke view home
-        return view('home', compact('data'));
+        return view('home', compact('data', 'semua_artikel'));
     }
 }

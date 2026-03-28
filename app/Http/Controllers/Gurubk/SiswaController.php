@@ -10,12 +10,29 @@ use Illuminate\Http\Request;
 
 class SiswaController extends Controller
 {
-    public function index()
-    {
-        $siswa = Siswa::with('kelas.walikelas')->paginate(10);
-        return view('gurubk.siswa.index', compact('siswa'));
-    }
+public function index(Request $request)
+{
+    $search = $request->search;
+    $filter_kelas = $request->id_kelas;
 
+    // Ambil semua data kelas untuk isi dropdown
+    $list_kelas = \App\Models\Kelas::all();
+
+    $siswa = \App\Models\Siswa::with(['kelas.walikelas'])
+        ->withSum('riwayatPelanggaran as total_poin', 'poin')
+        ->when($search, function($query, $search) {
+            $query->where(function($q) use ($search) {
+                $q->where('nama_siswa', 'like', "%$search%")
+                  ->orWhere('NIPD', 'like', "%$search%");
+            });
+        })
+        ->when($filter_kelas, function($query, $filter_kelas) {
+            $query->where('id_kelas', $filter_kelas);
+        })
+        ->paginate(15);
+
+    return view('gurubk.siswa.index', compact('siswa', 'list_kelas'));
+}
     public function show($id)
     {
         $siswa = Siswa::with('kelas.walikelas')->findOrFail($id);

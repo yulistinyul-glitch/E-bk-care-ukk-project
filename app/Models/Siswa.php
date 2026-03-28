@@ -46,7 +46,6 @@ class Siswa extends Model
         return $this->hasMany(RiwayatPelanggaran::class, 'id_siswa', 'id_siswa');
     }
 
-
     public function getTotalPoinAttribute()
     {
         return $this->riwayatPelanggaran->sum('poin') ?? 0;

@@ -106,18 +106,12 @@ class GurubkController extends Controller
 
         return redirect()->route('admin.gurubk.index')->with('success', 'Data Guru BK berhasil diperbarui!');
     }
-
+    
     public function destroy($id)
     {
-        // Cari data berdasarkan Primary Key custom
-        $guru = Gurubk::where('id_gurubk', $id)->firstOrFail();
+        $guru = Gurubk::findOrFail($id);
 
-        DB::transaction(function () use ($guru) {
-            // Hapus User/Akun terlebih dahulu
-            User::where('id_pengguna', $guru->id_pengguna)->delete();
-            // Hapus data Guru BK secara permanen
-            $guru->delete();
-        });
+        $guru->delete(); 
 
         return redirect()->route('admin.gurubk.index')
                          ->with('success', 'Data Guru BK dan akun aksesnya berhasil dihapus permanen.');

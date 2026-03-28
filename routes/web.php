@@ -83,6 +83,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         
     Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/dashboard', [DashboardAdminController::class, 'dashboard'])->name('dashboard');
+        
 
       Route::get('/laporan', [LaporanBulananController::class, 'adminIndex'])->name('admin.laporan.index');
     Route::post('/laporan/{laporan}/update-status', [LaporanBulananController::class, 'adminUpdateStatus'])->name('admin.laporan.update_status');

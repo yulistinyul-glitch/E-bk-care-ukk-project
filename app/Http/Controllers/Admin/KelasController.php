@@ -3,87 +3,73 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Kelas;
 use Illuminate\Http\Request;
+use App\Models\Kelas;
 
 class KelasController extends Controller
 {
+
     public function index(Request $request)
     {
-        $search = $request->search;
+        $query = Kelas::query();
 
-        $kelas = Kelas::when($search, function ($query) use ($search) {
-                $query->where('id_kelas', 'like', "%{$search}%")
-                      ->orWhere('jurusan', 'like', "%{$search}%")
-                      ->orWhere('nomor_ruang', 'like', "%{$search}%");
-            })
-            ->latest()
-            ->paginate(20);
+        if ($request->search) {
+            $query->where('jurusan', 'like', '%' . $request->search . '%')
+                  ->orWhere('nama_kelas', 'like', '%' . $request->search . '%');
+        }
+
+        $kelas = $query->orderBy('id_kelas','asc')->paginate(10);
 
         return view('admin.kelas.index', compact('kelas'));
     }
+
 
     public function store(Request $request)
     {
         $request->validate([
             'id_kelas' => 'required|unique:kelas,id_kelas',
-            'nama_kelas' => 'required|integer',
-            'jurusan' => 'required',
-            'nomor_ruang' => 'required|integer',
             'id_walikelas' => 'required',
+            'nama_kelas' => 'required',
+            'jurusan' => 'required',
+            'nomor_ruang' => 'required'
         ]);
 
         Kelas::create($request->all());
 
-        return redirect()
-            ->route('admin.kelas.index')
-            ->with('success', 'Data kelas berhasil ditambahkan');
+        return redirect()->route('admin.kelas.index')
+            ->with('success','Data kelas berhasil ditambahkan');
     }
 
-    public function edit($id)
-    {
-        // Menggunakan where karena ID adalah string (KLS001)
-        $kelas = Kelas::where('id_kelas', $id)->firstOrFail();
-
-        return view('admin.kelas.edit', compact('kelas'));
-    }
 
     public function update(Request $request, $id)
     {
-        // Cari berdasarkan kolom id_kelas agar tepat sasaran
-        $kelas = Kelas::where('id_kelas', $id)->firstOrFail();
+        $kelas = Kelas::findOrFail($id);
 
         $request->validate([
-            'id_kelas' => 'required|unique:kelas,id_kelas,' . $id . ',id_kelas',
-            'nama_kelas' => 'required|integer',
+            'nama_kelas' => 'required',
             'jurusan' => 'required',
-            'nomor_ruang' => 'required|integer',
-            'id_walikelas' => 'required',
+            'nomor_ruang' => 'required'
         ]);
 
-        $kelas->update($request->all());
+        $kelas->update([
+            'nama_kelas' => $request->nama_kelas,
+            'jurusan' => $request->jurusan,
+            'nomor_ruang' => $request->nomor_ruang
+        ]);
 
-        return redirect()
-            ->route('admin.kelas.index')
-            ->with('success', 'Data kelas berhasil diupdate');
+        return redirect()->route('admin.kelas.index')
+            ->with('success','Data kelas berhasil diupdate');
     }
 
-public function destroy($kelas)
-{
-    try {
-        // 1. Cari data berdasarkan id_kelas yang dikirim dari route
-        // Kita gunakan where secara eksplisit agar lebih aman
-        $data = \App\Models\Kelas::where('id_kelas', $kelas)->firstOrFail();
 
-        // 2. Eksekusi Hapus Permanen
-        $data->delete();
+    public function destroy($id)
+    {
+        $kelas = Kelas::findOrFail($id);
 
-        // 3. Kembali ke halaman sebelumnya dengan pesan sukses
-        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil dihapus permanen!');
-        
-    } catch (\Exception $e) {
-        // Jika gagal (misal karena ada data siswa yang terhubung/foreign key)
-        return back()->with('error', 'Gagal menghapus: ' . $e->getMessage());
+        $kelas->delete(); // HAPUS PERMANEN
+
+        return redirect()->route('admin.kelas.index')
+            ->with('success','Data kelas berhasil dihapus permanen');
     }
-}
+
 }

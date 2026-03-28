@@ -1,150 +1,193 @@
 @extends('gurubk.layouts.app')
 
-@section('title', 'Data Siswa')
+@section('title', 'Data Seluruh Siswa')
 
 @section('content')
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <style>
-    .header-title { font-size: 28px; font-weight: 700; color: #333; }
+    .header-section { margin-bottom: 25px; }
+    .header-title { font-size: 24px; font-weight: 700; color: #1a1a1a; }
+    .header-subtitle { color: #71717a; font-size: 13px; }
 
-    .btn-history {
-        background-color: #b5b5b5;
-        color: white; padding: 10px 25px;
-        border-radius: 15px; font-weight: 500;
-        text-decoration: none; display: flex;
-        align-items: center; gap: 8px; transition: 0.3s;
+    /* Layout Filter & Search */
+    .filter-wrapper {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
     }
-    .btn-history:hover { background-color: #999; color: white; }
-
     .search-container {
         position: relative;
-        max-width: 400px;
-        margin-bottom: 12px;
+        width: 100%;
+        max-width: 320px; 
     }
     .search-input {
         width: 100%;
-        padding: 12px 45px; 
-        border-radius: 15px;
-        border: 1px solid #e0e0e0;
-        font-size: 14px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        padding: 9px 15px 9px 40px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        background: white;
+        font-size: 13px;
+        transition: 0.3s;
     }
-    .icon-left {
+    .search-input:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        outline: none;
+    }
+    .search-container i {
         position: absolute;
-        left: 15px;
+        left: 14px;
         top: 50%;
         transform: translateY(-50%);
-        color: #b5b5b5;
+        color: #94a3b8;
+        font-size: 16px;
     }
 
-    .select-kelas {
-        width: 100%;
-        max-width: 400px;
-        padding: 12px 20px;
-        border-radius: 15px;
-        border: 1px solid #e0e0e0;
-        background-color: white;
-        color: #666;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    .filter-select {
+        padding: 9px 12px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        background: white;
+        font-size: 13px;
+        color: #475569;
+        min-width: 160px;
+        outline: none;
+        cursor: pointer;
     }
 
+    /* Modern Table */
     .table-container {
-        background: white; border-radius: 20px;
-        padding: 20px; margin-top: 25px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        background: white;
+        border-radius: 12px;
+        padding: 10px;
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     }
-    .table thead th { 
-        border: none; 
-        font-size: 14px; 
-        color: #888; 
-        font-weight: 600; 
-        padding: 15px;
+    .table thead th {
+        background: #f8fafc;
+        border: none;
+        color: #64748b;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 12px;
     }
     .table tbody td {
-        padding: 15px;
-        color: #444;
-        font-size: 14px;
-        border-bottom: 1px solid #f8f9fa;
+        padding: 12px 15px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 13px;
     }
 
-    .btn-view {
-        background-color: #a5a6f6;
-        color: white;
-        border-radius: 8px;
-        width: 32px;
-        height: 32px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+    .badge-poin {
+        background-color: #fff1f2;
+        color: #e11d48;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-weight: 800;
+        border: 1px solid #ffe4e6;
+        font-size: 12px;
     }
-
-    .empty-state { padding: 60px 0; color: #b5b5b5; }
+    
+    .walikelas-info {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.3;
+    }
+    .nama-wali {
+        font-weight: 600;
+        color: #4f46e5;
+        font-size: 13px;
+    }
+    .id-wali {
+        font-size: 10px;
+        color: #94a3b8;
+    }
+    .small-jk { font-size: 10px; font-weight: 500; }
 </style>
 
-<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
-    <h4 class="header-title">Data Siswa</h4>
-
-    <a href="{{ route('gurubk.siswa.cetak.semua') }}" 
-       class="btn-history shadow-sm">
-        <i class="bi bi-file-earmark-pdf"></i> Cetak data
-    </a>
+<div class="header-section">
+    <h4 class="header-title">Data Seluruh Siswa</h4>
+    <p class="header-subtitle">Kelola informasi siswa dan pantau hasil akumulasi poin pelanggaran.</p>
 </div>
 
-<div class="row align-items-end mb-3">
-    <div class="col-md-8">
+<div class="filter-wrapper">
+    <form action="{{ route('gurubk.siswa.index') }}" method="GET" class="d-flex gap-2 w-100">
         <div class="search-container">
-            <i class="bi bi-search icon-left"></i>
-            <input type="text" class="search-input" placeholder="Cari siswa (Nama/NIPD)">
+            <i class="bi bi-search"></i>
+            <input type="text" name="search" class="search-input" 
+                   placeholder="Cari NIPD atau Nama..." 
+                   value="{{ request('search') }}">
         </div>
 
-        <select class="select-kelas">
-            <option value="">Semua kelas</option>
-            @foreach($kelas ?? [] as $k)
-                <option value="{{ $k->id_kelas }}">{{ $k->nama_lengkap }}</option>
+        <select name="id_kelas" class="filter-select" onchange="this.form.submit()">
+            <option value="">-- Semua Kelas --</option>
+            @foreach($list_kelas as $kls)
+                <option value="{{ $kls->id_kelas }}" {{ request('id_kelas') == $kls->id_kelas ? 'selected' : '' }}>
+                    {{ $kls->nama_lengkap }}
+                </option>
             @endforeach
         </select>
-    </div>
+        
+        @if(request('search') || request('id_kelas'))
+            <a href="{{ route('gurubk.siswa.index') }}" class="btn btn-light btn-sm d-flex align-items-center px-3" style="border-radius: 8px; border: 1px solid #e2e8f0; font-size: 12px;">
+                Reset
+            </a>
+        @endif
+    </form>
 </div>
 
 <div class="table-container">
     <div class="table-responsive">
-        <table class="table text-center align-middle">
+        <table class="table align-middle text-center">
             <thead>
                 <tr>
-                    <th>No</th>
+                    <th width="50">No</th>
                     <th>NIPD</th>
-                    <th>Nama siswa</th>
+                    <th class="text-start">Nama Siswa / JK</th>
                     <th>Kelas</th>
-                    <th>Walikelas</th> 
-                    <th>JK</th>
-                    <th>No. Telp</th>
-                    <th>Detail</th>
+                    <th class="text-start">Wali Kelas</th>
+                    <th>Poin</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($siswa as $index => $s)
                 <tr>
-                    <td>{{ $siswa->firstItem() + $index }}</td>
-                    <td class="fw-bold">{{ $s->NIPD }}</td>
-                    <td class="text-start">{{ $s->nama_siswa }}</td>
-                    <td>{{ $s->kelas->nama_lengkap ?? '-' }}</td>
-                    <td>{{ $s->kelas?->walikelas?->nama_guru ?? '-' }}</td>
-                    <td>{{ $s->JK }}</td>
-                    <td>{{ $s->no_telp }}</td>
+                    <td class="text-muted">{{ $siswa->firstItem() + $index }}</td>
+                    <td class="fw-bold text-dark">{{ $s->NIPD }}</td>
+                    <td class="text-start">
+                        <div class="fw-bold text-dark">{{ $s->nama_siswa }}</div>
+                        <div class="text-muted small-jk text-uppercase">{{ $s->JK }}</div>
+                    </td>
                     <td>
-                        <a href="{{ route('gurubk.siswa.show', $s->id_siswa) }}" 
-                           class="btn-view shadow-sm">
-                            <i class="bi bi-eye"></i>
-                        </a>
+                        <span class="badge bg-light text-primary border px-2 py-1" style="font-size: 10px;">
+                            {{ $s->kelas->nama_lengkap ?? '-' }}
+                        </span>
+                    </td>
+                    <td class="text-start">
+                        <div class="walikelas-info">
+                            <span class="nama-wali">
+                                {{ $s->kelas->walikelas->nama_guru ?? 'Belum Diatur' }}
+                            </span>
+                            <span class="id-wali">
+                                ID: {{ $s->kelas->id_walikelas ?? '-' }}
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge-poin">
+                            {{ $s->total_poin ?? 0 }}
+                        </span>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="8" class="empty-state">
-                        <i class="bi bi-person-exclamation" style="font-size: 48px;"></i>
-                        <p class="mt-3 mb-0">Belum ada data tersedia.</p>
+                    <td colspan="6" class="py-5 text-center text-muted">
+                        <i class="bi bi-search mb-2" style="font-size: 24px;"></i>
+                        <p style="font-size: 13px;">Data tidak ditemukan.</p>
                     </td>
                 </tr>
                 @endforelse
@@ -152,9 +195,11 @@
         </table>
     </div>
 
+    @if($siswa->hasPages())
     <div class="mt-4 d-flex justify-content-center">
-        {{ $siswa->links('pagination::bootstrap-5') }}
+        {{ $siswa->appends(request()->query())->links('pagination::bootstrap-5') }}
     </div>
+    @endif
 </div>
 
 @endsection

@@ -14,13 +14,28 @@ use Illuminate\Support\Facades\DB;
 
 class RiwayatPelanggaranController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $riwayat = RiwayatPelanggaran::with(['siswa.kelas', 'pelanggaran'])
-                    ->latest('tanggal_kejadian')
-                    ->get();
-        
+        $search = $request->search;
+        $filter_kelas = $request->id_kelas;
+
         $kelas = Kelas::all();
+
+        $riwayat = RiwayatPelanggaran::with(['siswa.kelas', 'pelanggaran'])
+            ->when($search, function ($query, $search) {
+                $query->whereHas('siswa', function ($q) use ($search) {
+                    $q->where('nama_siswa', 'like', "%$search%");
+                })->orWhereHas('pelanggaran', function ($q) use ($search) {
+                    $q->where('jenis_kegiatan', 'like', "%$search%");
+                });
+            })
+            ->when($filter_kelas, function ($query, $filter_kelas) {
+                $query->whereHas('siswa', function ($q) use ($filter_kelas) {
+                    $q->where('id_kelas', $filter_kelas);
+                });
+            })
+            ->orderBy('tanggal_kejadian', 'desc')
+            ->paginate(15);
 
         return view('gurubk.riwayatpelanggaran.index', compact('riwayat', 'kelas'));
     }
@@ -31,21 +46,6 @@ class RiwayatPelanggaranController extends Controller
         $jurusan_list = Kelas::select('jurusan')->distinct()->orderBy('jurusan', 'asc')->get();
         $kelas = Kelas::all();
         $kategori = Pelanggaran::select('kategori_pelanggaran')->distinct()->get();
-
-        $siswa = [];
-        if ($request->id_kelas) {
-            $siswa = Siswa::where('id_kelas', $request->id_kelas)->orderBy('nama_siswa', 'asc')->get();
-        }
-
-        $jenis_pelanggaran = [];
-        if ($request->kategori_pilih) {
-            $jenis_pelanggaran = Pelanggaran::where('kategori_pelanggaran', $request->kategori_pilih)->get();
-        }
-
-        $detail = null;
-        if ($request->id_pelanggaran) {
-            $detail = Pelanggaran::where('id_pelanggaran', $request->id_pelanggaran)->first();
-        }
 
         return view('gurubk.riwayatpelanggaran.create', compact(
             'kelas', 'kategori', 'siswa', 'jenis_pelanggaran', 'detail', 'tingkatan_list', 'jurusan_list'

@@ -166,8 +166,10 @@ body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; }
     </div>
 </div>
 
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    /* 1. Alert Notifikasi Sukses (Setelah redirect) */
     @if(session('success'))
         Swal.fire({
             title: 'Berhasil!',
@@ -177,10 +179,15 @@ body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; }
             showConfirmButton: false,
             timer: 2000,
             timerProgressBar: true,
-            customClass: { popup: 'my-swal-popup', title: 'swal2-title', htmlContainer: 'swal2-html-container' }
+            customClass: { 
+                popup: 'my-swal-popup', 
+                title: 'swal2-title', 
+                htmlContainer: 'swal2-html-container' 
+            }
         });
     @endif
 
+    /* 2. Fungsi Konfirmasi Hapus (Sama dengan Data Siswa) */
     function hapusDataPelanggaran(id) {
         Swal.fire({
             title: 'Pindahkan ke History?',
@@ -190,9 +197,14 @@ body { background-color: #f5f7fb; font-family: 'Poppins', sans-serif; }
             confirmButtonText: 'Ya, Pindahkan',
             cancelButtonText: 'Batal',
             reverseButtons: true,
-            customClass: { popup: 'my-swal-popup', confirmButton: 'swal-button-custom', cancelButton: 'swal-button-custom' }
+            customClass: { 
+                popup: 'my-swal-popup', 
+                confirmButton: 'swal-button-custom', 
+                cancelButton: 'swal-button-custom' 
+            }
         }).then(function(result) {
-            if (result.isConfirmed) { 
+            // Menggunakan pemeriksaan yang sama dengan script siswa
+            if (result.isConfirmed || result.value) { 
                 document.getElementById('delete-' + id).submit(); 
             }
         });

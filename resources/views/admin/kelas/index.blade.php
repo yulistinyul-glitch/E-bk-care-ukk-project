@@ -58,7 +58,6 @@
     .icon-delete { color: #ff7070; }
     .btn-action-icon:hover { transform: scale(1.15); }
     
-    /* PAGINATION STYLING (IDENTIK WALIKELAS) */
     .pagination-wrapper {
         display: flex !important;
         justify-content: center !important;
@@ -66,12 +65,10 @@
     }
     .page-link { padding: 3px 10px !important; font-size: 11px !important; border-radius: 5px !important; }
 
-    /* OFFCANVAS STYLING */
     .offcanvas { border: none; width: 380px !important; box-shadow: -10px 0 40px rgba(0,0,0,0.1); border-radius: 20px 0 0 20px; }
     .form-control-custom { border-radius: 10px; padding: 10px; background-color: #f8fafc; border: 1px solid #eceef1; font-size: 13px; }
     .form-label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 5px; display: block; }
 
-    /* KUSTOMISASI MODAL POPUP */
     .my-swal-popup { border-radius: 18px !important; padding: 1.5em !important; width: 320px !important; }
     .swal2-title { font-size: 18px !important; font-weight: 700 !important; }
     .swal2-html-container { font-size: 13px !important; }
@@ -90,6 +87,12 @@
             <i class="bi bi-plus-lg"></i> Tambah Kelas
         </button>
     </div>
+
+    @if(session('error'))
+        <div class="alert alert-danger mx-2" style="border-radius: 10px; font-size: 13px;">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <div class="main-wrapper shadow-sm">
         <div class="filter-area">
@@ -143,13 +146,20 @@
                                 <div class="d-flex justify-content-center gap-3">
                                     <button class="btn-action-icon icon-edit" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEdit{{ $k->id_kelas }}">
                                         <i class="bi bi-pencil-square"></i>
-                                    </button>
-                                    <form id="delete-form-{{ $k->id_kelas }}" action="{{ route('admin.kelas.destroy', $k->id_kelas) }}" method="POST" class="d-none">
-                                        @csrf @method('DELETE')
-                                    </form>
-                                    <button type="button" class="btn-action-icon icon-delete" onclick="confirmDelete('{{ $k->id_kelas }}', '{{ $tingkat }} {{ $jurusanSaja }}')">
+                                    </button>                 
+                                    <button type="button"
+                                        class="btn-action-icon icon-delete"
+                                        onclick="hapusKelas('{{ $k->id_kelas }}')">
                                         <i class="bi bi-trash"></i>
                                     </button>
+
+                                    <form id="delete-{{ $k->id_kelas }}"
+                                        action="{{ route('admin.kelas.destroy', $k->id_kelas) }}"
+                                        method="POST"
+                                        style="display:none;">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
                                 </div>
                             </td>
                         </tr>
@@ -161,34 +171,42 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
                             </div>
                             <div class="offcanvas-body">
-                                <form action="{{ route('admin.kelas.update', $k->id_kelas) }}" method="POST">
-                                    @csrf @method('PUT')
-                                    <div class="mb-3">
-                                        <label class="form-label">Tingkat Kelas</label>
-                                        <select name="nama_kelas" class="form-select form-control-custom" required>
-                                            <option value="10" {{ $k->nama_kelas == 10 ? 'selected' : '' }}>X</option>
-                                            <option value="11" {{ $k->nama_kelas == 11 ? 'selected' : '' }}>XI</option>
-                                            <option value="12" {{ $k->nama_kelas == 12 ? 'selected' : '' }}>XII</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">ID Wali Kelas</label>
-                                        <input type="text" class="form-control form-control-custom" value="{{ $k->id_walikelas }}" readonly>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Jurusan</label>
-                                        <select name="jurusan" class="form-select form-control-custom" required>
-                                            <option value="PPLG" {{ $k->jurusan == 'PPLG' ? 'selected' : '' }}>PPLG</option>
-                                            <option value="BRP" {{ $k->jurusan == 'BRP' ? 'selected' : '' }}>BRP</option>
-                                            <option value="DKV" {{ $k->jurusan == 'DKV' ? 'selected' : '' }}>DKV</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Nomor Ruang</label>
-                                        <input type="number" name="nomor_ruang" class="form-control form-control-custom" value="{{ $k->nomor_ruang }}" required>
-                                    </div>
-                                    <button type="submit" class="btn-catat w-100 justify-content-center py-2 border-0 mt-3">Simpan Perubahan</button>
-                                </form>
+                            <form action="{{ route('admin.kelas.update', $k->id_kelas) }}" method="POST">
+                                @csrf 
+                                @method('PUT')
+
+                                <div class="mb-3">
+                                    <label class="form-label">Tingkat Kelas</label>
+                                    <select name="nama_kelas" class="form-select form-control-custom" required>
+                                        <option value="10" {{ $k->nama_kelas == 10 ? 'selected' : '' }}>X</option>
+                                        <option value="11" {{ $k->nama_kelas == 11 ? 'selected' : '' }}>XI</option>
+                                        <option value="12" {{ $k->nama_kelas == 12 ? 'selected' : '' }}>XII</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">ID Wali Kelas</label>
+                                    <input type="text" class="form-control form-control-custom" value="{{ $k->id_walikelas }}" readonly>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Jurusan</label>
+                                    <select name="jurusan" class="form-select form-control-custom" required>
+                                        <option value="PPLG" {{ $k->jurusan == 'PPLG' ? 'selected' : '' }}>PPLG</option>
+                                        <option value="BRP" {{ $k->jurusan == 'BRP' ? 'selected' : '' }}>BRP</option>
+                                        <option value="DKV" {{ $k->jurusan == 'DKV' ? 'selected' : '' }}>DKV</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Nomor Ruang</label>
+                                    <input type="number" name="nomor_ruang" class="form-control form-control-custom" value="{{ $k->nomor_ruang }}" required>
+                                </div>
+
+                                <button type="submit" class="btn-catat w-100 justify-content-center py-2 border-0 mt-3">
+                                    Update Kelas
+                                </button>
+                            </form>
                             </div>
                         </div>
                         @empty
@@ -255,6 +273,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    // Alert Sukses
     @if(session('success'))
         Swal.fire({
             title: 'Berhasil!',
@@ -265,46 +284,50 @@
             timer: 2000,
             timerProgressBar: true,
             customClass: { 
-                popup: 'my-swal-popup',
-                title: 'swal2-title',
-                htmlContainer: 'swal2-html-container'
+                popup: 'my-swal-popup'
             }
         });
     @endif
 
-    function confirmDelete(id, nama) {
+    function hapusKelas(id) {
+
         Swal.fire({
-            title: 'Hapus?',
-            text: "Yakin ingin menghapus " + nama + "?",
+            title: 'Hapus Data?',
+            text: "Data kelas akan dihapus permanen.",
             icon: 'warning',
             iconColor: '#ff7070',
             showCancelButton: true,
-            confirmButtonColor: '#ff7070',
-            cancelButtonColor: '#f1f1f1',
-            confirmButtonText: 'Hapus',
+            confirmButtonText: 'Ya, Hapus',
             cancelButtonText: 'Batal',
             reverseButtons: true,
-            customClass: {
-                popup: 'my-swal-popup',
-                confirmButton: 'swal-button-custom',
-                cancelButton: 'swal-button-custom swal-btn-cancel'
+            customClass:{
+                popup:'my-swal-popup',
+                confirmButton:'swal-button-custom',
+                cancelButton:'swal-button-custom'
             }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('delete-form-' + id).submit();
-            }
-        })
-    }
 
+        }).then(function(result){
+
+            if(result.value){
+
+                document.getElementById('delete-'+id).submit();
+
+            }
+
+        });
+    }
+    // Script Input Otomatis
     document.addEventListener('DOMContentLoaded', function() {
         const inputIDKelas = document.getElementById('id_kelas_tambah');
         const inputIDWali = document.getElementById('id_walikelas_tambah');
 
-        inputIDKelas.addEventListener('input', function() {
-            let val = this.value.toUpperCase();
-            let angka = val.replace(/[^0-9]/g, '');            
-            inputIDWali.value = angka !== "" ? "GR" + angka : "GR...";
-        });
+        if(inputIDKelas) {
+            inputIDKelas.addEventListener('input', function() {
+                let val = this.value.toUpperCase();
+                let angka = val.replace(/[^0-9]/g, '');            
+                inputIDWali.value = angka !== "" ? "GR" + angka : "GR...";
+            });
+        }
     });
 </script>
 

@@ -38,9 +38,14 @@
                         <p class="opacity-75 mb-4" style="font-size: 13px; line-height: 1.6;">
                             Pantau, kelola, dan analisis seluruh data siswa, guru, serta laporan bimbingan konseling secara efisien.
                         </p>
-                        <a href="#" class="btn btn-light text-dark fw-bold small rounded-3 px-4 py-2 shadow-sm transition-all hover-lift">
-                            <i class="feather-bar-chart-2 me-2"></i> Dashboard Data
-                        </a>
+<div class="d-flex gap-2 flex-wrap">
+                <a href="#" class="btn btn-light text-dark fw-bold rounded-3 px-4 py-2 shadow-sm transition-all hover-lift d-inline-flex align-items-center" style="font-size: 13px;">
+                    <i class="feather-bar-chart-2 me-2"></i> Dashboard Data
+                </a>
+                <a href="#" class="btn btn-outline-light fw-bold rounded-3 px-4 py-2 transition-all hover-lift d-inline-flex align-items-center" style="font-size: 13px; border-width: 2px;">
+                    <i class="feather-settings me-2"></i> Konfigurasi
+                </a>
+            </div>
                     </div>
                     <div class="d-none d-md-block position-relative" style="z-index: 1;">
                         <img src="https://illustrations.popsy.co/white/work-from-home.svg" alt="Illustration" style="height: 180px;" class="img-fluid floating-anim">

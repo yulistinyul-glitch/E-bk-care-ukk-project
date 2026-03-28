@@ -166,37 +166,41 @@ class WalikelasController extends Controller
         if (!$file) return back()->withErrors(['file' => 'File tidak ditemukan']);
 
         $rows = array_map('str_getcsv', file($file->getRealPath()));
+        $count = 0;
 
         foreach ($rows as $i => $row) {
-            if ($i == 0) continue; // Skip header
+            if ($i == 0) continue; 
+
+            // Debug: cek isi row jika masih kosong
+            // dd($row); 
 
             $id_walikelas = trim($row[0] ?? null);
-            $id_kelas     = trim($row[1] ?? null);
-            $nip          = trim($row[2] ?? null);
-            $nama_guru    = trim($row[3] ?? null);
-            $jk           = strtoupper(trim($row[4] ?? 'L'));
-            $no_telp      = trim($row[5] ?? '-');
-            $email        = trim($row[6] ?? null);
-            $alamat       = trim($row[7] ?? '-');
+            $nip = trim($row[2] ?? '');
 
-            // Validasi data penting sebelum save
-            if (!$id_walikelas || strlen($nip) != 18) continue;
+            // Longgarkan validasi NIP untuk testing
+            if (!$id_walikelas) continue;
 
-            Walikelas::withTrashed()->updateOrCreate(
-                ['id_walikelas' => $id_walikelas],
-                [
-                    'id_kelas'  => $id_kelas,
-                    'NIP'       => $nip,
-                    'nama_guru' => $nama_guru,
-                    'JK'        => in_array($jk, ['L', 'P']) ? $jk : 'L',
-                    'no_telp'   => $no_telp,
-                    'email'     => $email,
-                    'alamat'    => $alamat,
-                ]
-            );
+            try {
+                Walikelas::withTrashed()->updateOrCreate(
+                    ['id_walikelas' => $id_walikelas],
+                    [
+                        'id_kelas'  => trim($row[1] ?? null),
+                        'NIP'       => $nip,
+                        'nama_guru' => trim($row[3] ?? null),
+                        'JK'        => strtoupper(trim($row[4] ?? 'L')),
+                        'no_telp'   => trim($row[5] ?? '-'),
+                        'email'     => trim($row[6] ?? null),
+                        'alamat'    => trim($row[7] ?? '-'),
+                    ]
+                );
+                $count++;
+            } catch (\Exception $e) {
+                // Ini akan memunculkan error jika ada masalah database
+                return back()->withErrors(['error' => 'Baris ke-'.($i+1).': ' . $e->getMessage()]);
+            }
         }
 
-        return back()->with('success', 'Import Data Walikelas Berhasil!');
+        return back()->with('success', "Import Berhasil! $count data diproses.");
     }
 
     public function cetakSemua()

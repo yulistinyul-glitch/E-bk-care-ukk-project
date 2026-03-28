@@ -42,9 +42,12 @@
 
     .pagination-wrapper { display: flex !important; justify-content: center !important; padding: 25px 0 10px; }
 
-    /* Custom Swal Style */
-    .my-swal-popup { border-radius: 20px !important; padding: 2em !important; width: 400px !important; }
-    .swal-button-custom { border-radius: 12px !important; padding: 10px 25px !important; font-size: 13px !important; font-weight: 600 !important; }
+   .my-swal-popup { border-radius: 18px !important; padding: 1.5em !important; width: 320px !important; }
+    .swal2-title { font-size: 18px !important; font-weight: 700 !important; }
+    .swal2-html-container { font-size: 13px !important; }
+    .swal2-icon { transform: scale(0.7); margin: 10px auto 5px !important; }
+    .swal-button-custom { border-radius: 8px !important; padding: 6px 20px !important; font-size: 12px !important; }
+    .swal-btn-cancel { background-color: #f1f1f1 !important; color: #666 !important; }
 </style>
 
 <div class="container-fluid py-4">
@@ -75,7 +78,7 @@
                             <th width="50">No</th>
                             <th>ID Guru</th>
                             <th>NIP</th>
-                            <th class="text-start">Nama Lengkap</th>
+                            <th class="text-start">Nama</th>
                             <th>JK</th>
                             <th>No. Telp</th>
                             <th>Email</th>
@@ -102,17 +105,17 @@
                                        class="btn-action-icon icon-edit" title="Edit Data">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-
                                     <button type="button" 
                                             class="btn-action-icon icon-delete" 
-                                            onclick="confirmDelete('{{ $g->id_gurubk }}')" title="Hapus Permanen">
-                                        <i class="bi bi-trash3-fill"></i>
+                                            onclick="hapusGuruBK('{{ $g->id_gurubk }}','{{ $g->nama_gurubk }}')" 
+                                            title="Hapus Permanen">
+                                        <i class="bi bi-trash"></i>
                                     </button>
 
-                                    {{-- ID Form harus sama dengan yang dipanggil di JavaScript --}}
-                                    <form id="delete-form-{{ $g->id_gurubk }}" 
-                                          action="{{ route('admin.gurubk.destroy', $g->id_gurubk) }}" 
-                                          method="POST" style="display:none;">
+                                    <form id="delete-{{ $g->id_gurubk }}" 
+                                        action="{{ route('admin.gurubk.destroy', $g->id_gurubk) }}" 
+                                        method="POST" 
+                                        style="display:none;">
                                         @csrf
                                         @method('DELETE')
                                     </form>
@@ -138,51 +141,55 @@
     </div>
 </div>
 
-{{-- Scripts --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    // 1. Notifikasi Sukses via Session
-    @if(session('success'))
-        Swal.fire({
-            title: 'Berhasil!',
-            text: "{{ session('success') }}",
-            icon: 'success',
-            iconColor: '#00C897',
-            showConfirmButton: false,
-            timer: 2500,
-            timerProgressBar: true,
-            customClass: { popup: 'my-swal-popup' }
-        });
-    @endif
 
-    // 2. Fungsi Konfirmasi Hapus
-    function confirmDelete(id) {
-        Swal.fire({
-            title: 'Hapus Permanen?',
-            text: "Seluruh data terkait (termasuk akun login) akan dihapus selamanya!",
-            icon: 'warning',
-            iconColor: '#ef4444',
-            showCancelButton: true,
-            confirmButtonColor: '#ef4444',
-            cancelButtonColor: '#6b7280',
-            confirmButtonText: 'Ya, Hapus Sekarang',
-            cancelButtonText: 'Batal',
-            reverseButtons: true,
-            customClass: { 
-                popup: 'my-swal-popup', 
-                confirmButton: 'swal-button-custom', 
-                cancelButton: 'swal-button-custom' 
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const form = document.getElementById('delete-form-' + id);
-                if (form) {
-                    form.submit();
-                } else {
-                    console.error('Form hapus tidak ditemukan untuk ID: ' + id);
-                }
-            }
-        });
+<script>
+
+// Alert Success
+@if(session('success'))
+Swal.fire({
+    title: 'Berhasil!',
+    text: "{{ session('success') }}",
+    icon: 'success',
+    iconColor: '#00C897',
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    customClass: { 
+        popup: 'my-swal-popup'
     }
+});
+@endif
+
+
+function hapusGuruBK(id, nama){
+
+    Swal.fire({
+        title: 'Hapus Data?',
+        text: "Guru BK " + nama + " akan dihapus permanen.",
+        icon: 'warning',
+        iconColor: '#ff7070',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Hapus',
+        cancelButtonText: 'Batal',
+        reverseButtons: true,
+        customClass:{
+            popup:'my-swal-popup',
+            confirmButton:'swal-button-custom',
+            cancelButton:'swal-button-custom'
+        }
+
+    }).then(function(result){
+
+        if(result.value){
+
+            document.getElementById('delete-'+id).submit();
+
+        }
+
+    });
+
+}
+
 </script>
 @endsection

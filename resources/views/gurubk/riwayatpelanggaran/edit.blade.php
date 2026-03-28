@@ -3,107 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Pelanggaran</title>
-    
+    <title>Edit Pelanggaran Siswa</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_green.css">
 
     <style>
-        body { 
-            background: #F5F5F5; 
-            font-family: 'Poppins', sans-serif;
-            display: flex; align-items: center; justify-content: center;
-            min-height: 100vh; margin: 0;
+        body { background: #F8F9FA; font-family: 'Poppins', sans-serif; }
+        .center-wrapper { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px 0; }
+        .form-box { width: 100%; max-width: 550px; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        
+        /* Mengecilkan ukuran Header */
+        h4 { font-weight: 600; color: #2D3436; margin-bottom: 20px; font-size: 1.1rem; }
+        
+        /* Mengecilkan ukuran Label */
+        .form-label { font-weight: 500; color: #2D3436; margin-bottom: 4px; font-size: 0.75rem; }
+        
+        /* Mengecilkan ukuran Input & Select */
+        .form-control, .form-select { 
+            border: 1.5px solid #DFE6E9; 
+            border-radius: 8px; 
+            padding: 8px 10px; 
+            font-size: 0.8rem; 
+            height: auto;
         }
-        .form-box { 
-            width: 100%; max-width: 500px; 
-            background: white; padding: 40px; 
-            border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); 
+        
+        .form-control:focus, .form-select:focus { border-color: #27ae60; box-shadow: none; }
+        .form-control[readonly] { background-color: #f8f9fa; font-weight: 600; color: #5D5FEF; font-size: 0.75rem; }
+        
+        .text-danger-custom { color: #d63031 !important; font-weight: 700; }
+        
+        /* Tombol lebih kecil */
+        .button-group { display: flex; gap: 10px; margin-top: 25px; }
+        .btn-kembali { 
+            background: #B5B5B5; color: white; border-radius: 8px; padding: 10px; flex: 1; 
+            text-decoration: none; display: flex; align-items: center; justify-content: center; 
+            font-size: 0.8rem; font-weight: 500; 
         }
-        .form-label { font-weight: 500; color: #333; margin-bottom: 8px; }
-        .form-control, .form-select {
-            border: 1px solid #D1D1D1; border-radius: 10px;
-            padding: 12px 15px; background-color: #fff;
+        .btn-simpan { 
+            background: #27ae60; color: white; border: none; border-radius: 8px; padding: 10px; 
+            flex: 1.5; font-weight: 500; font-size: 0.8rem; 
         }
-        .datepicker { background-color: #fff !important; cursor: pointer; }
-        .button-group { display: flex; gap: 15px; margin-top: 30px; }
-        .btn-kembali {
-            background: #B5B5B5; color: white; border: none;
-            border-radius: 10px; padding: 12px 20px; flex: 1;
-            text-decoration: none; text-align: center;
-        }
-        .btn-simpan {
-            background: #32C142; color: white; border: none;
-            border-radius: 10px; padding: 12px 20px; flex: 1.5;
-            font-weight: 500;
-        }
-        .current-file { font-size: 12px; color: #666; margin-top: 5px; }
+        .btn-simpan:hover { background: #219150; }
+
+        /* Preview area */
+        .preview-container { margin-top: 8px; padding: 8px; background: #f8f9fa; border-radius: 8px; border: 1px dashed #DFE6E9; }
+        .img-preview { width: 80px; height: 50px; object-fit: cover; border-radius: 4px; }
+        .file-hint { font-size: 0.7rem; color: #636e72; }
+        hr { margin: 20px 0; opacity: 0.1; }
     </style>
 </head>
+
 <body>
+<div class="center-wrapper">
+    <div class="form-box">
+        <h4 class="text-center">Edit Riwayat Pelanggaran</h4>
 
-<div class="form-box">
-    <h4 class="text-center fw-bold mb-4">Edit Pelanggaran</h4>
-    <form action="{{ route('gurubk.pelanggaran.update', $pelanggaran->id_riwayat) }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT') 
+        @if ($errors->any())
+            <div class="alert alert-danger py-2" style="border-radius: 8px; font-size: 0.75rem;">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        <div class="mb-3">
-            <label class="form-label">Nama Siswa</label>
-            <select name="id_siswa" class="form-select" required>
-                @foreach($siswa as $s)
-                    <option value="{{ $s->id_siswa }}" {{ $s->id_siswa == $pelanggaran->id_siswa ? 'selected' : '' }}>
-                        {{ $s->nama_siswa }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Tanggal Kejadian</label>
-            <input type="text" name="tanggal_kejadian" id="pilih_tanggal" 
-                   class="form-control datepicker" 
-                   value="{{ $pelanggaran->tanggal_kejadian }}" 
-                   placeholder="Pilih Tanggal.." readonly required>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Keterangan</label>
-            <textarea name="keterangan" class="form-control" rows="2" placeholder="Tulis detail...">{{ $pelanggaran->keterangan }}</textarea>
-        </div>
-
-        <div class="mb-4">
-            <label class="form-label">Ganti Bukti Foto</label>
-            <input type="file" name="bukti_foto" class="form-control">
-            @if($pelanggaran->bukti_foto)
-                <div class="current-file">
-                    File saat ini: <a href="{{ asset('storage/'.$pelanggaran->bukti_foto) }}" target="_blank">Lihat Foto</a>
+        {{-- Form Filter --}}
+        <form action="{{ route('gurubk.riwayatpelanggaran.edit', $riwayat->id_riwayat) }}" method="GET">
+            <div class="row">
+                <div class="col-6 mb-2">
+                    <label class="form-label">Pilih Kelas</label>
+                    <select name="id_kelas" class="form-select" onchange="this.form.submit()">
+                        @foreach($kelas as $k)
+                            <option value="{{ $k->id_kelas }}" {{ (request('id_kelas') ?? $riwayat->siswa->id_kelas) == $k->id_kelas ? 'selected' : '' }}>
+                                {{ $k->nama_kelas }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
-            @endif
-        </div>
+                <div class="col-6 mb-2">
+                    <label class="form-label">Nama Siswa</label>
+                    <select name="id_siswa" class="form-select" onchange="this.form.submit()">
+                        @foreach($siswa_in_kelas as $s)
+                            <option value="{{ $s->id_siswa }}" {{ (request('id_siswa') ?? $riwayat->id_siswa) == $s->id_siswa ? 'selected' : '' }}>
+                                {{ $s->nama_siswa }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
 
-        <div class="button-group">
-            <a href="{{ route('pelanggaran.index') }}" class="btn-kembali">← Kembali</a>
-            <button type="submit" class="btn-simpan">💾 Update Data</button>
-        </div>
-    </form>
+            <div class="mb-2">
+                <label class="form-label">Kategori</label>
+                <select name="kategori_pilih" class="form-select" onchange="this.form.submit()">
+                    @foreach($kategori_list as $kat)
+                        <option value="{{ $kat->kategori_pelanggaran }}" {{ (request('kategori_pilih') ?? $riwayat->pelanggaran->kategori_pelanggaran) == $kat->kategori_pelanggaran ? 'selected' : '' }}>
+                            {{ $kat->kategori_pelanggaran }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Jenis Kegiatan</label>
+                <select name="id_pelanggaran" class="form-select" onchange="this.form.submit()">
+                    @foreach($pelanggaran_in_kategori as $j)
+                        <option value="{{ $j->id_pelanggaran }}" {{ (request('id_pelanggaran') ?? $riwayat->id_pelanggaran) == $j->id_pelanggaran ? 'selected' : '' }}>
+                            {{ $j->jenis_kegiatan }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </form>
+
+        <hr>
+
+        {{-- Form Update --}}
+        <form action="{{ route('gurubk.riwayatpelanggaran.update', $riwayat->id_riwayat) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+
+            <input type="hidden" name="id_siswa" value="{{ request('id_siswa') ?? $riwayat->id_siswa }}">
+            <input type="hidden" name="id_pelanggaran" value="{{ request('id_pelanggaran') ?? $riwayat->id_pelanggaran }}">
+
+            <div class="row">
+                <div class="col-6 mb-2">
+                    <label class="form-label">Status</label>
+                    @php $current_p = $pelanggaran_in_kategori->where('id_pelanggaran', request('id_pelanggaran') ?? $riwayat->id_pelanggaran)->first(); @endphp
+                    <input type="text" class="form-control" readonly value="{{ $current_p ? strtoupper($current_p->tingkatan ?? 'RINGAN') : 'RINGAN' }}">
+                </div>
+                <div class="col-6 mb-2">
+                    <label class="form-label">Poin</label>
+                    <input type="text" class="form-control text-danger-custom" readonly value="{{ $current_p ? $current_p->poin_pelanggaran : '0' }}">
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Tanggal Kejadian</label>
+                <input type="date" name="tanggal" class="form-control" 
+                       value="{{ old('tanggal', date('Y-m-d', strtotime($riwayat->tanggal_kejadian))) }}" required>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Bukti (Opsional)</label>
+                <input type="file" name="file_bukti" class="form-control" accept="image/*,video/*">
+                
+                @if($riwayat->file && $riwayat->file != '-')
+                <div class="preview-container d-flex align-items-center gap-2">
+                    @php $ext = pathinfo($riwayat->file, PATHINFO_EXTENSION); @endphp
+                    @if(in_array(strtolower($ext), ['jpg','jpeg','png','webp']))
+                        <img src="{{ asset('uploads/pelanggaran/'.$riwayat->file) }}" class="img-preview">
+                    @else
+                        <div class="bg-light p-1 rounded border small" style="font-size: 0.65rem;">Video File</div>
+                    @endif
+                    <div class="file-hint">
+                        <a href="{{ asset('uploads/pelanggaran/'.$riwayat->file) }}" target="_blank" class="text-decoration-none">Lihat Dokumen</a>
+                    </div>
+                </div>
+                @endif
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Keterangan</label>
+                <textarea name="keterangan" class="form-control" rows="2" placeholder="Detail kejadian...">{{ old('keterangan', $riwayat->keterangan) }}</textarea>
+            </div>
+
+            <div class="button-group">
+                <a href="{{ route('gurubk.riwayatpelanggaran.index') }}" class="btn-kembali">Batal</a>
+                <button type="submit" class="btn-simpan">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://npmcdn.com/flatpickr/dist/l10n/id.js"></script>
-<script>
-    flatpickr("#pilih_tanggal", {
-        locale: "id",
-        dateFormat: "Y-m-d",
-        altInput: true,
-        altFormat: "d F Y",
-        defaultDate: "{{ $pelanggaran->tanggal_kejadian }}",
-        allowInput: true,
-        disableMobile: "true"
-    });
-</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

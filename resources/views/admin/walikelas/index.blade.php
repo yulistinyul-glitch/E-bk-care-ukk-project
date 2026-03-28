@@ -12,7 +12,7 @@
     .btn-catat:hover { transform:translateY(-2px); color: white; }
     .btn-history { background:#b5b5b5;color:white;padding:8px 20px;border-radius:10px;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:8px; }
     .btn-history:hover { background:#999;color:white; }
-    .main-wrapper { background:white;border-radius:10px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.03); }
+    .main-wrapper { background:white;border-radius:10px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.03); position: relative; }
     .filter-area { padding:20px; }
 
     .search-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
@@ -43,21 +43,37 @@
     .swal2-html-container { font-size: 13px !important; }
     .swal2-icon { transform: scale(0.7); margin: 10px auto 5px !important; }
     .swal-button-custom { border-radius: 8px !important; padding: 6px 20px !important; font-size: 12px !important; }
+    .swal-btn-cancel { background-color: #f1f1f1 !important; color: #666 !important; }
+
+    /* Modal Styling Responsive */
+    .detail-label { font-size: 10px; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; display: block; }
+    .detail-value { font-size: 13.5px; font-weight: 600; color: #2d3748; margin-bottom: 12px; word-break: break-word; }
+    
+    .modal { z-index: 1060 !important; }
+    .modal-backdrop { z-index: 1050 !important; }
+
+    /* Media Queries for better Mobile UI */
+    @media (max-width: 576px) {
+        .header-title { font-size: 20px; }
+        .btn-history, .btn-catat { padding: 8px 12px; font-size: 11px; }
+        .filter-area .col-md-5 { margin-bottom: 10px; }
+        .modal-dialog { margin: 10px; }
+    }
 </style>
 
 <div class="container-fluid py-4">
-
     <div class="d-flex justify-content-between align-items-center mb-4 px-2">
         <div>
             <h4 class="header-title mb-0">Manajemen Data Walikelas</h4>
             <span class="header-subtitle">Kelola informasi guru yang bertugas sebagai wali kelas.</span>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ route(('admin.walikelas.history')) }}" class="btn-history">
-                <i class="bi bi-clock-history"></i> History
+            <a href="{{ route('admin.walikelas.history') }}" class="btn-history">
+                <i class="bi bi-clock-history"></i> <span class="d-none d-sm-inline">History</span>
             </a>
             <a href="{{ route('admin.walikelas.create') }}" class="btn-catat">
-                <i class="bi bi-plus-lg"></i> Tambah Walikelas
+                <i class="bi bi-plus-lg"></i> <span class="d-none d-sm-inline">Tambah Walikelas</span>
+                <span class="d-inline d-sm-none">Tambah</span>
             </a>
         </div>
     </div>
@@ -75,7 +91,6 @@
                                    onkeyup="if(event.keyCode == 13) this.form.submit()">
                         </div>
                     </div>
-
                     <div class="col text-end">
                         <a href="{{ route('admin.walikelas.cetak.semua') }}" class="btn-export-solid">
                            <i class="bi bi-file-earmark-pdf"></i> Export PDF
@@ -130,21 +145,18 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center gap-3">
-                                    <a href="{{ route('admin.walikelas.show', $w->id_walikelas) }}" class="btn-action-icon icon-view">
+                                    <button type="button" class="btn-action-icon icon-view" 
+                                        onclick="showDetail('{{ $w->NIP }}', '{{ $w->nama_guru }}', '{{ $w->kelas->nama_lengkap ?? '-' }}', '{{ $w->JK == 'L' ? 'Laki-laki' : 'Perempuan' }}', '{{ $w->no_telp ?? '-' }}', '{{ $w->alamat ?? '-' }}')">
                                         <i class="bi bi-eye"></i>
-                                    </a>
+                                    </button>
                                     <a href="{{ route('admin.walikelas.edit', $w->id_walikelas) }}" class="btn-action-icon icon-edit">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-
                                     <button type="button" class="btn-action-icon icon-delete"
                                             onclick="hapusData('{{ $w->id_walikelas }}', '{{ $w->nama_guru }}')">
                                         <i class="bi bi-trash"></i>
                                     </button>
-
-                                    <form id="delete-{{ $w->id_walikelas }}"
-                                          action="{{ route('admin.walikelas.destroy', $w->id_walikelas) }}"
-                                          method="POST" style="display:none;">
+                                    <form id="delete-{{ $w->id_walikelas }}" action="{{ route('admin.walikelas.destroy', $w->id_walikelas) }}" method="POST" style="display:none;">
                                         @csrf
                                         @method('DELETE')
                                     </form>
@@ -159,7 +171,6 @@
                     </tbody>
                 </table>
             </div>
-
             <div class="pagination-wrapper">
                 {{ $walikelas->links('pagination::bootstrap-5') }}
             </div>
@@ -167,10 +178,57 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{{-- MODAL DETAIL --}}
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+            <div class="modal-header border-0 pt-4 px-4 pb-0">
+                <h6 class="modal-title fw-bold"><i class="bi bi-person-badge me-2 text-primary"></i>Detail Walikelas</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 pb-5">
+                <div class="text-center mb-4">
+                    <div class="bg-light d-inline-block rounded-circle p-3 mb-2" style="width: 70px; height: 70px;">
+                        <i class="bi bi-person text-primary" style="font-size: 2rem;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0" id="det-nama">-</h5>
+                </div>
 
+                <div class="row g-2">
+                    {{-- Row 1: NIP (7) Gender (5) --}}
+                    <div class="col-7">
+                        <span class="detail-label">NIP</span>
+                        <p class="detail-value text-primary" id="det-nip-val">-</p>
+                    </div>
+                    <div class="col-5">
+                        <span class="detail-label">Gender</span>
+                        <p class="detail-value" id="det-jk">-</p>
+                    </div>
+
+                    {{-- Row 2: No Telp di bawah NIP (7), Alamat di bawah Gender (5) --}}
+                    <div class="col-7">
+                        <span class="detail-label">No. Telepon</span>
+                        <p class="detail-value" id="det-telp">-</p>
+                    </div>
+                    <div class="col-5">
+                        <span class="detail-label">Alamat</span>
+                        <p class="detail-value" id="det-alamat">-</p>
+                    </div>
+
+                    {{-- Row 3: Kelas Full Width untuk kejelasan --}}
+                    <div class="col-12 mt-1">
+                        <span class="detail-label">Wali Kelas</span>
+                        <p class="detail-value" id="det-kelas">-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    @if(session('success'))
+@if(session('success'))
         Swal.fire({
             title: 'Berhasil!',
             text: "{{ session('success') }}",
@@ -197,5 +255,22 @@
             if (result.value) { document.getElementById('delete-' + id).submit(); }
         });
     }
+
+    function showDetail(nip, nama, kelas, jk, telp, alamat) {
+        document.getElementById('det-nama').innerText = nama;
+        document.getElementById('det-nip-val').innerText = nip;
+        document.getElementById('det-kelas').innerText = kelas;
+        document.getElementById('det-jk').innerText = jk;
+        document.getElementById('det-telp').innerText = telp;
+        document.getElementById('det-alamat').innerText = alamat;
+
+        const modalEl = document.getElementById('modalDetail');
+        document.body.appendChild(modalEl);
+
+        var myModal = new bootstrap.Modal(modalEl);
+        myModal.show();
+    }
+
+    
 </script>
-@endsection
+@endsection 

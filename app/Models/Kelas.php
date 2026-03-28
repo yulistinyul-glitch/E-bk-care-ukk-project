@@ -33,6 +33,7 @@ class Kelas extends Model
         return $this->belongsTo(Walikelas::class, 'id_walikelas', 'id_walikelas');
     }
 
+    
     public function getNamaLengkapAttribute()
     {
         $romawi = [10 => 'X', 11 => 'XI', 12 => 'XII'];

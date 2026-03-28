@@ -10,17 +10,17 @@ return new class extends Migration
     {
         Schema::create('riwayat_pelanggarans', function (Blueprint $table) {
 
-            $table->string('id_riwayat', 8)->primary();
+            $table->string('id_riwayat', 10)->primary();
 
             $table->string('id_siswa', 6);
             $table->string('id_pelanggaran', 8);
             $table->string('id_gurubk', 6);
-
+            $table->integer('poin')->default(0);
+            $table->string('status')->default('ringan');
             $table->dateTime('tanggal_kejadian');
             $table->text('keterangan')->nullable();
-
+            $table->string('bukti')->default('foto');
             $table->string('file')->nullable();
-
             $table->timestamps();
 
             $table->foreign('id_siswa')

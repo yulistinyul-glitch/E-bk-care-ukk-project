@@ -4,32 +4,95 @@
     <meta charset="UTF-8">
     <title>Laporan Daftar Pelanggaran</title>
     <style>
-        body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10pt; color: #333; }
-        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #444; padding-bottom: 10px; }
-        .header h2 { margin: 0; text-transform: uppercase; }
-        .header p { margin: 5px 0 0; font-size: 9pt; color: #666; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { background-color: #4a5568; color: white; padding: 10px 5px; text-align: center; text-transform: uppercase; font-size: 9pt; }
-        td { border: 1px solid #ccc; padding: 8px; vertical-align: middle; }
-        
+        @page {
+            size: A4;
+            margin: 15mm 10mm;
+        }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 10px;
+            margin: 0;
+            color: #333;
+        }
+
+        .header-sekolah {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .header-sekolah h3 {
+            margin: 0;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        hr {
+            border: 1px solid black;
+            margin: 5px 0 15px 0;
+        }
+
+        h4 {
+            text-align: center;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            color: black;
+            padding: 8px 4px;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 9px;
+            border: 1px solid black;
+        }
+
+        td {
+            border: 1px solid black;
+            padding: 7px;
+            vertical-align: middle;
+            font-size: 9px;
+        }
+
         .text-center { text-align: center; }
         .font-bold { font-weight: bold; }
         
-        /* Pewarnaan Tingkatan */
+        /* Warna untuk Tingkatan */
         .ringan { color: #2d6a4f; }
         .sedang { color: #d97706; }
         .berat { color: #dc2626; font-weight: bold; }
 
-        .footer { position: fixed; bottom: 0; width: 100%; text-align: right; font-size: 8pt; color: #999; }
+        .no-border td {
+            border: none;
+        }
+
+        .footer-note {
+            margin-top: 20px;
+            font-size: 8pt;
+            color: #666;
+        }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h2>Daftar Kriteria Pelanggaran & Poin</h2>
-        <p>Dicetak pada: {{ now()->format('d F Y H:i') }}</p>
+    <div class="header-sekolah">
+        <h3>SEKOLAH MENENGAH KEJURUAN BUDI BAKTI CIWIDEY</h3>
+        <div style="font-size: 10px;">
+            Jl. Contoh Alamat No. 123 Ciwidey<br>
+            Telp: (022) 1234567
+        </div>
     </div>
+
+    <hr>
+
+    <h4>DAFTAR KRITERIA PELANGGARAN & POIN SISWA</h4>
 
     <table>
         <thead>
@@ -58,9 +121,23 @@
         </tbody>
     </table>
 
-    <div class="footer">
-        Halaman 1 dari 1 - Sistem Informasi Point Pelanggaran
-    </div>
+    <br><br>
+
+    <table class="no-border">
+        <tr>
+            <td style="width:60%;">
+                <div class="footer-note">
+                    * Dokumen ini dicetak otomatis melalui Sistem Informasi Poin Pelanggaran<br>
+                    Waktu Cetak: {{ date('d-m-Y H:i') }}
+                </div>
+            </td>
+            <td style="text-align:center;">
+                Ciwidey, {{ date('d-m-Y') }}<br>
+                Kesiswaan,<br><br><br><br><br>
+                <strong>( __________________________ )</strong>
+            </td>
+        </tr>
+    </table>
 
 </body>
 </html>

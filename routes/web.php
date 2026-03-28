@@ -83,6 +83,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         
     Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/dashboard', [DashboardAdminController::class, 'dashboard'])->name('dashboard');
+        
 
       Route::get('/laporan', [LaporanBulananController::class, 'adminIndex'])->name('admin.laporan.index');
     Route::post('/laporan/{laporan}/update-status', [LaporanBulananController::class, 'adminUpdateStatus'])->name('admin.laporan.update_status');
@@ -216,12 +217,11 @@ Route::get('/laporan/create', [LaporanBulananController::class, 'create'])
     Route::post('/counseling-requests/{id}/approve', [KonselingController::class, 'approve'])->name('counseling.approve');
     Route::get('/jadwal-konseling', [KonselingController::class, 'listKonseling'])->name('konseling.konseling');
     Route::patch('/konseling/{id}/status', [KonselingController::class, 'updateStatus'])->name('konseling.updateStatus');
-    // Riwayat Pelanggaran
-    Route::get('/get-siswa/{id_kelas}', [RiwayatPelanggaranController::class, 'getSiswa'])->name('riwayatpelanggaran.getSiswa'); 
-    Route::get('/get-pelanggaran/{id}', [RiwayatPelanggaranController::class, 'getPelanggaran'])->name('riwayatpelanggaran.getPelanggaran'); 
-    Route::post('/riwayatpelanggaran/store', [RiwayatPelanggaranController::class, 'store'])->name('riwayatpelanggaran.store'); 
-    Route::resource('riwayatpelanggaran', RiwayatPelanggaranController::class);
 
+
+    Route::resource('riwayatpelanggaran', RiwayatPelanggaranController::class);
+// Route di bawah ini tidak akan pernah terbaca karena dianggap sebagai ID oleh resource
+Route::get('riwayatpelanggaran/history', [RiwayatPelanggaranController::class, 'history']);
     // Saran
     Route::get('/saran', [SaranController::class, 'index'])->name('saran.index');
     Route::patch('/saran/{id}/read', [SaranController::class, 'markAsRead'])->name('saran.read');
@@ -241,9 +241,12 @@ Route::get('/laporan/create', [LaporanBulananController::class, 'create'])
     Route::get('/siswa/{id}', [GuruBkSiswaController::class, 'show'])->name('siswa.show');
 
     // E-Surat
+    Route::get('e_surat/{id}/print-pdf', [E_SuratController::class, 'print_pdf'])->name('e_surat.print_pdf');
     Route::get('e_surat/{id}/export', [E_SuratController::class, 'export'])->name('e_surat.export');
-    Route::get('e_surat/{id}/email', [E_SuratController::class, 'sendEmail'])->name('e_surat.email');
+    Route::get('e_surat/{id}/email', [E_SuratController::class, 'send_email'])->name('e_surat.send_email');
     Route::get('e_surat/{id}/selesai', [E_SuratController::class, 'selesai'])->name('e_surat.selesai');
+
+    // 2. DAFTARKAN RESOURCE PALING BAWAH
     Route::resource('e_surat', E_SuratController::class)->except(['destroy']);
     
     // Logout

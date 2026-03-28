@@ -39,7 +39,7 @@ class KonselingSiswaController extends Controller
     {
 
         $request->validate([
-            'kategori' => 'required',
+            'kategori' => 'required|in:Pribadi,Sosial,Belajar,Karir',
             'pilihan_metode' => 'required',
             'deskripsi' => 'required|min:10',
         ]);
@@ -71,7 +71,11 @@ class KonselingSiswaController extends Controller
     public function home()
     {
     $user = Auth::user();
-    $siswa = Siswa::where('id_pengguna', $user->id_pengguna)->first();
+
+    $siswa = Siswa::with('riwayatPelanggaran')
+                  ->where('id_pengguna', $user->id_pengguna)
+                  ->first();
+    
 
     if (!$siswa) { 
         abort(404, 'Data Siswa Tidak Ditemukan'); 
@@ -86,6 +90,22 @@ class KonselingSiswaController extends Controller
     $lastChat = Chat::whereHas('konseling', function($query) use ($id_siswa) {
                     $query->where('id_siswa', $id_siswa);
                 })->latest()->first();
+
+    $totalPoin = $siswa->riwayatPelanggaran->sum('poin');
+    if ($totalPoin <= 20 ) {
+        $status = ['warna' => 'bg-green-500', 'teks' => 'Aman', 'label' => 'text-green-600', 'icon' => 'bi-circle'];
+    }elseif ($totalPoin <= 50) {
+        $status = ['warna' => 'bg-yellow-400', 'teks' => 'Peringatan', 'label' => 'text-yellow-600', 'icon' => 'bi-exclamation-triangle'];
+    } elseif ($totalPoin <= 75) {
+        $status = ['warna' => 'bg-orange-500', 'teks' => 'Waspada (SP 1/2)', 'label' => 'text-orange-600', 'icon' => 'bi-exclamation-octagon'];
+    } else {
+        $status = ['warna' => 'bg-red-600', 'teks' => 'Bahaya (SP 3)', 'label' => 'text-red-600', 'icon' => 'bi-x-octagon-fill'];
+    }
+
+    $suratBaru = \App\Models\KotakSurats::where('id_siswa', $siswa->id_siswa)
+                        ->where('is_read', false)
+                        ->latest()
+                        ->first();
 
     $jadwalTerdekat = CounselingSession::whereHas('request', function($query) use ($id_siswa) {
         $query->where('id_siswa', $id_siswa);

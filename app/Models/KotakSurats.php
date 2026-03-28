@@ -13,6 +13,7 @@ class KotakSurats extends Model
         'id_siswa', 
         'session_id', 
         'subject', 
+        'judul',
         'message', 
         'is_read', 
         'type'

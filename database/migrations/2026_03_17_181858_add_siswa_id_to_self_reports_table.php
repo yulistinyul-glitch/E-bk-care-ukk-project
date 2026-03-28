@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+   public function up()
     {
         Schema::table('self_reports', function (Blueprint $table) {
-            $table->string('id_siswa')->after('id');
+            // Hapus ->after('id')
+            $table->string('id_siswa'); 
         });
     }
 };

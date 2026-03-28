@@ -13,6 +13,7 @@ class SelfReport extends Model
 
     protected $fillable = [
         'id_report',
+        'id_siswa',
         'id_gurubk',
         'tanggal_lapor',
         'kategori_masalah',

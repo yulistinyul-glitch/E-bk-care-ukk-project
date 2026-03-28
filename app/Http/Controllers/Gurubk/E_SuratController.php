@@ -8,29 +8,21 @@ use App\Models\{Chat, CounselingRequest, Siswa, Gurubk, TemplateSurat, ESurat, K
 use App\Mail\LaporanBKMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\File;
-
 use PhpOffice\PhpWord\TemplateProcessor;
 use Carbon\Carbon;
-
-use function Symfony\Component\Clock\now;
 
 class E_SuratController extends Controller
 {
     public function index(Request $request)
     {
         Carbon::setLocale('id');
-
         $siswa = Siswa::with(['kelas.walikelas'])->get();
         $gurubk = Gurubk::all(); 
         $template = TemplateSurat::all();
-
-        $selectedSiswaId = $request->query('id_siswa');
         
-        $surat = ESurat::with(['siswa.kelas.walikelas', 'gurubk'])
-                    ->latest()
-                    ->paginate(15);
+        $surat = ESurat::with(['siswa.kelas.walikelas', 'gurubk'])->latest()->paginate(15);
 
-        // Logika Nomor Surat Otomatis
+        // Nomor Surat Otomatis (Format: 001/BK/III/2026)
         $lastSurat = ESurat::whereYear('created_at', date('Y'))->latest()->first();
         $nextNumber = $lastSurat ? ((int)explode('/', $lastSurat->nomor_surat_resmi)[0] + 1) : 1;
         
@@ -46,23 +38,21 @@ class E_SuratController extends Controller
             'id_siswa' => 'required',
             'id_template' => 'required',
             'nomor_surat_resmi' => 'required',
-            'tanggal_terbit' => 'required|date',
             'keterangan_tambahan' => 'required',
             'nama_walikelas_input' => 'required', 
         ]);
 
         Carbon::setLocale('id');
-
         $dataSiswa = Siswa::with(['kelas.walikelas'])->where('id_siswa', $request->id_siswa)->firstOrFail();
-        
-        // Ambil Guru BK pertama jika tidak dipilih eksplisit (atau sesuaikan logic Anda)
-        $dataGuruBK = Gurubk::firstOrFail(); 
         $dataTemplate = TemplateSurat::where('id_template', $request->id_template)->firstOrFail();
+        
+        // Ambil ID Guru BK
+        $idGurubk = $request->id_gurubk ?? Gurubk::first()->id_gurubk;
+        $dataGuruBK = Gurubk::where('id_gurubk', $idGurubk)->first();
 
         $templatePath = storage_path('app/public/template_surats/' . $dataTemplate->file);
-        
         if (!File::exists($templatePath)) {
-            return redirect()->back()->with('error', 'File template dokumen tidak ditemukan di server.');
+            return redirect()->back()->with('error', 'Template tidak ditemukan.');
         }
 
         // 1. GENERATE WORD
@@ -71,9 +61,7 @@ class E_SuratController extends Controller
         $processor->setValue('nama_siswa', $dataSiswa->nama_siswa);
         $processor->setValue('nipd', $dataSiswa->NIPD);
         $processor->setValue('kelas', $dataSiswa->kelas->nama_lengkap ?? '-');
-        
-        $tanggalIndo = Carbon::parse($request->tanggal_terbit)->translatedFormat('d F Y');
-        $processor->setValue('tanggal', $tanggalIndo);
+        $processor->setValue('tanggal', Carbon::now()->translatedFormat('d F Y'));
         $processor->setValue('keterangan', $request->keterangan_tambahan);
         $processor->setValue('nama_guru', $dataGuruBK->nama_gurubk);
         $processor->setValue('walikelas', $request->nama_walikelas_input);
@@ -87,96 +75,88 @@ class E_SuratController extends Controller
 
         $processor->saveAs($directory . '/' . $fileName);
 
-        // 2. SIMPAN DATABASE
+        // 2. LOGIKA GENERATE ID SURAT (FIXED: Menghindari Duplicate Entry)
+        $lastEntry = ESurat::orderBy('id_surat', 'desc')->first();
+        if ($lastEntry) {
+            $lastNumber = (int) substr($lastEntry->id_surat, 2);
+            $newId = 'SR' . str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+        } else {
+            $newId = 'SR0001';
+        }
+
+        // 3. SIMPAN DATABASE
         ESurat::create([
-            'id_surat' => 'SR' . str_pad(ESurat::count() + 1, 4, '0', STR_PAD_LEFT),
+            'id_surat' => $newId,
             'nomor_surat_resmi' => $request->nomor_surat_resmi,
             'id_siswa' => $request->id_siswa,
-            'id_gurubk' => $dataGuruBK->id_gurubk,
+            'id_gurubk' => $idGurubk,
             'id_template' => $request->id_template,
-            'tanggal_terbit' => $request->tanggal_terbit,
+            'tanggal_terbit' => now(),
             'keterangan_tambahan' => $request->keterangan_tambahan,
             'file_generate' => $fileName,
             'status' => 'draft',
         ]);
 
-
-       // --- 3. LOGIKA CHAT & KONSELING (DIBUNGKUS TRY-CATCH AGAR TIDAK ERROR) ---
-        try {
-            // Kita cari atau buat konseling TANPA memasukkan id_gurubk (karena kolomnya ga ada di DB kamu)
-            $konseling = CounselingRequest::firstOrCreate(
-                ['id_siswa' => $request->id_siswa, 'status' => 'ongoing'],
-                ['id' => 'KNS' . time(), 'tanggal' => now()]
-            );
-
-            // Hitung jumlah SP untuk pesan otomatis
-            $jumlahSP = ESurat::where('id_siswa', $request->id_siswa)->count();
-
-            if ($jumlahSP <= 1) {
-                $pesanChat = "⚠️ ALERT SISTEM: Halo {$dataSiswa->nama_siswa}, SP1 telah diterbitkan. Cek Kotak Surat untuk detailnya.";
-            } else {
-                $pesanChat = "⚠️ PERINGATAN KERAS: Halo {$dataSiswa->nama_siswa}, SP {$jumlahSP} telah diterbitkan. Orang tua Anda akan dipanggil melalui Wali Kelas. Segera temui Guru BK.";
-            }
-
-            Chat::create([
-                'konseling_id' => $konseling->id,
-                'sender_type' => 'gurubk',
-                'message' => $pesanChat,
-                'is_read' => false
-            ]);
-        } catch (\Exception $e) {
-            // Jika database chat error karena kolom tidak cocok, sistem akan mengabaikan
-            // dan tetap lanjut ke return success di bawah.
-        }
-
-        return redirect()->back()->with('success', 'Surat Berhasil Dibuat & Bot telah mengirim notifikasi ke Siswa!');
+        return redirect()->back()->with('success', 'Surat Berhasil Dibuat!');
     }
 
-    public function print_pdf($id)
-    {
-        $surat = ESurat::where('id_surat', $id)->firstOrFail();
-        $wordPath = storage_path('app/public/generated_surats/' . $surat->file_generate);
-        $outDir = storage_path('app/public/generated_surats');
-        $pdfName = str_replace('.docx', '.pdf', $surat->file_generate);
-        $pdfPath = $outDir . '/' . $pdfName;
+   public function print_pdf($id)
+{
+    $surat = ESurat::with('siswa.kelas')->where('id_surat', $id)->firstOrFail();
+    
+    $wordFileName = $surat->file_generate; // Contoh: SR0014.docx
+    $pdfFileName = str_replace('.docx', '.pdf', $wordFileName);
+    
+    $wordPath = storage_path('app/public/generated_surats/' . $wordFileName);
+    $outDir = storage_path('app/public/generated_surats');
+    $pdfPath = $outDir . '/' . $pdfFileName;
 
-        if (!File::exists($wordPath)) {
-            return redirect()->back()->with('error', 'File Word asal tidak ditemukan.');
-        }
-
-        if (!File::exists($pdfPath)) {
-            $libreOfficePath = '"C:\Program Files\LibreOffice\program\soffice.exe"';
-            $shellCommand = "$libreOfficePath --headless --convert-to pdf --outdir " . escapeshellarg($outDir) . " " . escapeshellarg($wordPath);
-            shell_exec($shellCommand);
-        }
-
-        if ($surat->status == 'draft') {
-            $surat->update(['status' => 'cetak_pdf']);
-        }
-
-        return view('gurubk.e_surat.preview', compact('surat', 'pdfName'));
+    // Jika PDF belum ada, kita panggil mesin LibreOffice
+    if (!file_exists($pdfPath)) {
+        // Lokasi standar instalasi LibreOffice di Windows
+        $libreOfficePath = '"C:\Program Files\LibreOffice\program\soffice.exe"';
+        
+        // Perintah konversi
+        $cmd = "{$libreOfficePath} --headless --convert-to pdf --outdir \"{$outDir}\" \"{$wordPath}\"";
+        
+        shell_exec($cmd);
     }
 
-public function send_email($id)
+    return view('gurubk.e_surat.preview', [
+        'surat' => $surat,
+        'pdfName' => $pdfFileName
+    ]);
+}
+    public function stream_pdf($filename)
+{
+    $path = storage_path('app/public/generated_surats/' . $filename);
+    
+    if (!file_exists($path)) {
+        abort(404, "File PDF belum ter-generate. Pastikan LibreOffice terinstal.");
+    }
+
+    return response()->file($path, [
+        'Content-Type' => 'application/pdf',
+        'X-Frame-Options' => 'ALLOW-FROM *'
+    ]);
+}
+
+    public function send_email($id)
     {
-        // 1. Ambil data surat beserta relasi wali kelas
         $surat = ESurat::with(['siswa.kelas.walikelas'])->where('id_surat', $id)->firstOrFail();
         $emailWali = $surat->siswa->kelas->walikelas->email ?? null;
 
         if (!$emailWali) {
-            return redirect()->back()->with('error', 'Gagal! Email Wali Kelas tidak ditemukan di database.');
+            return redirect()->back()->with('error', 'Gagal! Email Wali Kelas tidak ditemukan.');
         }
 
-        // 2. Tentukan path PDF (Mengonversi nama file .docx ke .pdf)
         $fileNamePdf = str_replace('.docx', '.pdf', $surat->file_generate);
         $pdfPath = storage_path('app/public/generated_surats/' . $fileNamePdf);
 
-        // 3. Cek fisik file PDF sebelum lanjut
         if (!File::exists($pdfPath)) {
-            return redirect()->back()->with('error', 'File PDF tidak ditemukan di folder penyimpanan.');
+            return redirect()->back()->with('error', 'File PDF belum di-generate. Silakan klik Cetak PDF terlebih dahulu.');
         }
 
-        // 4. Bungkus data untuk Mailable
         $rincian = [
             'subjek'   => 'Pemberitahuan SP: ' . $surat->siswa->nama_siswa,
             'surat'    => $surat,
@@ -185,19 +165,20 @@ public function send_email($id)
         ];
 
         try {
-            // 5. Kirim Email
             Mail::to($emailWali)->send(new LaporanBKMail($rincian));
 
-            // 6. Update status ke 'sent'
             $surat->update(['status' => 'sent']);
+
+            // Simpan ke Kotak Surat Siswa
             KotakSurats::create([
                 'id_siswa' => $surat->id_siswa,
                 'judul' => 'Surat Peringatan Baru: ' . $surat->nomor_surat_resmi,
-                'pesan' => "Pemberitahuan resmi mengenai:" . $surat->keterangan_tambahan,
-                'file_pdf' => str_replace('.docx', '.pdf', $surat->file_generate),
+                'pesan' => "Pemberitahuan resmi mengenai: " . $surat->keterangan_tambahan,
+                'file_pdf' => $fileNamePdf,
                 'is_read' => false,
             ]);
 
+            // Kirim Notifikasi via Chat Konseling (jika ada)
             $konseling = CounselingRequest::where('id_siswa', $surat->id_siswa)
                                            ->whereIn('status', ['ongoing', 'accepted'])
                                            ->first();
@@ -205,17 +186,15 @@ public function send_email($id)
                 Chat::create([
                     'konseling_id' => $konseling->id,
                     'sender_type' => 'gurubk',
-                    'message' => "🤖 [BOT ALERT]: Halo, surat SP ({$surat->nomor_surat_resmi}) telah dikirim ke wali kelasmu dan sudah tersedia di Kotak Suratmu. Harap segera dicek.",
+                    'message' => "🤖 [BOT ALERT]: Halo, surat SP ({$surat->nomor_surat_resmi}) telah dikirim ke wali kelasmu dan tersedia di Kotak Surat. Harap dicek.",
                     'is_read' => false
                 ]);
             }
 
             return redirect()->route('gurubk.e_surat.index')
-                            ->with('success', 'Surat Berhasil Dikirim ke Wali Kelas (' . $emailWali . ')');
+                             ->with('success', 'Surat Berhasil Dikirim ke Wali Kelas (' . $emailWali . ')');
 
-       
         } catch (\Exception $e) {
-            // Jika ada kesalahan SMTP atau jaringan
             return redirect()->back()->with('error', 'Gagal mengirim email: ' . $e->getMessage());
         }
     }

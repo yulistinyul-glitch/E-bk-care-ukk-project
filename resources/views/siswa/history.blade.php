@@ -98,16 +98,24 @@
       }
 
       function getStatusColor(status) {
-        switch(status.toLowerCase()) {
-          case 'selesai':
-          case 'disetujui' : return { border: 'border-green-500', bg: 'bg-green-100', text: 'text-green-600' };
-          case 'dibatalkan':
-          case 'ditolak' : return { border: 'border-red-500', bg: 'bg-red-100', text: 'text-red-600' };
-          case 'mendatang' :
-          case 'proses' : return { border: 'border-blue-500', bg: 'bg-blue-100', text: 'text-blue-600' };
-          default: return { border: 'border-gray-300', bg: 'bg-gray-100', text: 'text-gray-500' };
-        }
-      }
+  // Pakai .toLowerCase() supaya aman jika di DB huruf besar/kecil
+  const s = status ? status.toLowerCase() : '';
+  
+  switch(s) {
+    case 'selesai':
+    case 'disetujui': 
+      return { border: 'border-green-500', bg: 'bg-green-100', text: 'text-green-600' };
+    case 'dibatalkan':
+    case 'ditolak': 
+      return { border: 'border-red-500', bg: 'bg-red-100', text: 'text-red-600' };
+    case 'mendatang':
+    case 'proses':
+    case 'pending': // Tambahkan ini agar 'pending' punya warna
+      return { border: 'border-blue-500', bg: 'bg-blue-100', text: 'text-blue-600' };
+    default: 
+      return { border: 'border-gray-300', bg: 'bg-gray-100', text: 'text-gray-500' };
+  }
+}
 
       // Event Listener Pencarian
       document.getElementById('search-input').addEventListener('input', (e) => {

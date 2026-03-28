@@ -246,16 +246,19 @@ Route::get('/laporan/create', [LaporanBulananController::class, 'create'])
     Route::get('/siswa/{id}', [GuruBkSiswaController::class, 'show'])->name('siswa.show');
 
     // E-Surat
-    Route::get('esp/print{id}', [E_SuratController::class, 'print_pdf'])->name('e_surat.print_pdf');
-    Route::post('e_surat/send-email/{id}', [E_SuratController::class, 'send_email'])->name('e_surat.send_email');
-    Route::resource('e_surat', E_SuratController::class)->names([
-        'index' => 'e_surat.index',
-        'store' => 'e_surat.store',
-        'create' => 'e_surat_create',
-        'show' => 'e_surat.show',
-        'update' => 'e_surat.update',
-        'edit' => 'e_surat.edit',
-    ])->parameters([ 'e_surat' => 'id'])->except(['destroy']);
+Route::prefix('e_surat')->group(function () {
+    // Sekarang namanya jadi gurubk.e_surat.stream
+    Route::get('/stream/{filename}', [E_SuratController::class, 'stream_pdf'])->name('e_surat.stream');
+    
+    Route::post('/{id}/email', [E_SuratController::class, 'send_email'])->name('e_surat.send_email');
+    Route::get('/{id}/print-pdf', [E_SuratController::class, 'print_pdf'])->name('e_surat.print_pdf');
+    Route::get('/{id}/export', [E_SuratController::class, 'export'])->name('e_surat.export');
+    Route::get('/{id}/selesai', [E_SuratController::class, 'selesai'])->name('e_surat.selesai');
+});
+
+    // Resource diletakkan SETELAH route spesifik agar tidak bentrok
+    Route::resource('e_surat', E_SuratController::class)->except(['destroy']);
+     
     // Logout
     Route::post('/logout', [GuruAuthController::class, 'logout'])->name('logout');
 });

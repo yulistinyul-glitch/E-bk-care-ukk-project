@@ -36,4 +36,3 @@ protected $fillable = [
         return $this->belongsTo(Pelanggaran::class, 'id_pelanggaran', 'id_pelanggaran');
     }
 }
-

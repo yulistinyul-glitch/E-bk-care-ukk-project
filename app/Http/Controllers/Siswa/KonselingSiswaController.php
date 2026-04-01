@@ -39,7 +39,7 @@ class KonselingSiswaController extends Controller
     {
 
         $request->validate([
-            'kategori' => 'required|in:Pribadi,Sosial,Belajar,Karir',
+            'kategori' => 'required|in:Pribadi,Sosial,Akademik,Karier',
             'pilihan_metode' => 'required',
             'deskripsi' => 'required|min:10',
         ]);
@@ -48,7 +48,7 @@ class KonselingSiswaController extends Controller
 
         CounselingRequest::create([
             'id_siswa' => $id_siswa, 
-            'kategori' => $request->kategori,
+            'kategori' => strtolower($request->kategori),
             'pilihan_metode' => $request->pilihan_metode,
             'deskripsi' => $request->deskripsi,
             'status' => 'pending',
@@ -91,23 +91,19 @@ class KonselingSiswaController extends Controller
                     $query->where('id_siswa', $id_siswa);
                 })->latest()->first();
 
-    $totalPoin = $siswa->riwayatPelanggaran->sum('poin');
-    if ($totalPoin <= 20 ) {
+    $totalPoint = $siswa->riwayatPelanggaran->sum('poin');
+    if ($totalPoint <= 20 ) {
         $status = ['warna' => 'bg-green-500', 'teks' => 'Aman', 'label' => 'text-green-600', 'icon' => 'bi-circle'];
-    }elseif ($totalPoin <= 50) {
+    }elseif ($totalPoint <= 50) {
         $status = ['warna' => 'bg-yellow-400', 'teks' => 'Peringatan', 'label' => 'text-yellow-600', 'icon' => 'bi-exclamation-triangle'];
-    } elseif ($totalPoin <= 75) {
+    } elseif ($totalPoint <= 75) {
         $status = ['warna' => 'bg-orange-500', 'teks' => 'Waspada (SP 1/2)', 'label' => 'text-orange-600', 'icon' => 'bi-exclamation-octagon'];
     } else {
         $status = ['warna' => 'bg-red-600', 'teks' => 'Bahaya (SP 3)', 'label' => 'text-red-600', 'icon' => 'bi-x-octagon-fill'];
     }
 
-    $suratBaru = \App\Models\KotakSurats::where('id_siswa', $siswa->id_siswa)
-                        ->where('is_read', false)
-                        ->latest()
-                        ->first();
 
-    $jadwalTerdekat = CounselingSession::whereHas('request', function($query) use ($id_siswa) {
+    $scheduled = CounselingSession::whereHas('request', function($query) use ($id_siswa) {
         $query->where('id_siswa', $id_siswa);
     })
     ->where('status', 'dijadwalkan') 
@@ -121,7 +117,7 @@ class KonselingSiswaController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
     
-    return view('siswa.home', compact('lastChat', 'jadwalTerdekat', 'unreadMessages', 'reports'));
+    return view('siswa.home', compact('lastChat', 'scheduled', 'unreadMessages', 'reports'));
     }
 
     public function storeChat(Request $request)

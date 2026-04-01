@@ -7,6 +7,7 @@ use App\Models\Chat;
 use App\Models\KotakSurats;
 use App\Models\Siswa;
 use App\Models\CounselingSession;
+use App\Models\SelfReport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -18,26 +19,50 @@ class DashboardSiswaController extends Controller
 {
     public function dashboard()
     {
-        $id_siswa = Auth::user()->id_siswa;
-
-        $lastChat = Chat::whereHas('konseling', function($query) use ($id_siswa) {
-                        $query->where('id_siswa', $id_siswa);
+        $id_siswa = Auth::user()->siswa;
+        if (!$id_siswa) {
+          return redirect()->back()->with('error', 'Profil siswa tidak ditemukan.');
+        }
+        $newMail = KotakSurats::where('id_siswa', $id_siswa->id_siswa)
+                                ->where('is_read', false)
+                                ->first();
+        $id_siswa_string = $id_siswa->id_siswa;
+        $lastChat = Chat::whereHas('konseling', function($query) use ($id_siswa_string) {
+                        $query->where('id_siswa', $id_siswa_string);
                     })
                     ->latest()
                     ->first();
 
-        $unreadMessages = KotakSurats::where('id_siswa', $id_siswa)->whereNull('read_at')->count();
-        $jadwalTerdekat = CounselingSession::whereHas('request', function($q) use ($id_siswa) {
-            $q->where('id_siswa', $id_siswa);
-        })->where('scheduled_date', '>=', now())->first();
+        $unreadMessages = KotakSurats::where('id_siswa', $id_siswa->id_siswa)->whereNull('read_at')->count();
 
-        return view('siswa.home', compact('lastChat', 'unreadMessages', 'jadwalTerdekat'));
+        $scheduled = CounselingSession::whereHas('request', function($q) use ($id_siswa_string) {
+            $q->where('id_siswa', $id_siswa_string); })
+            ->where('status', 'dijadwalkan') 
+            ->whereDate('scheduled_date', '>=', now()->toDateString())
+            ->orderBy('scheduled_time', 'asc')
+            ->first();
+
+        $sessionIds = session()->get('my_sessions', []);
+        $reports = SelfReport::whereIn('id_report', $sessionIds)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+        
+        $totalPoint = $id_siswa->riwayatPelanggaran->sum('poin');
+        if ($totalPoint <= 20 ) {
+            $status = ['warna' => 'bg-green-500', 'teks' => 'Aman', 'label' => 'text-green-600', 'icon' => 'bi-circle'];
+        } elseif ($totalPoint <= 50) {
+            $status = ['warna' => 'bg-yellow-400', 'teks' => 'Peringatan', 'label' => 'text-yellow-600', 'icon' => 'bi-exclamation-triangle'];
+        } elseif ($totalPoint <= 75) {
+            $status = ['warna' => 'bg-orange-500', 'teks' => 'Waspada (SP 1/2)', 'label' => 'text-orange-600', 'icon' => 'bi-exclamation-octagon'];
+        } else {
+            $status = ['warna' => 'bg-red-600', 'teks' => 'Bahaya (SP 3)', 'label' => 'text-red-600', 'icon' => 'bi-x-octagon-fill'];
+    }
+        return view('siswa.home', compact('lastChat', 'unreadMessages', 'scheduled', 'reports', 'status', 'newMail'));
     }
 
     public function history()
 {
     $user = Auth::user();
-    // Ambil data siswa (SIS007) berdasarkan user (PS007)
     $siswa = \App\Models\Siswa::where('id_pengguna', $user->id_pengguna)->first();
 
     if (!$siswa) {
@@ -46,7 +71,6 @@ class DashboardSiswaController extends Controller
 
     $id_siswa = $siswa->id_siswa;
 
-    // 1. Ambil Riwayat Konseling
     $riwayatJadwal = \App\Models\CounselingRequest::where('id_siswa', $id_siswa)
         ->orderBy('created_at', 'desc')
         ->get()
@@ -59,8 +83,7 @@ class DashboardSiswaController extends Controller
             ];
         });
 
-    // 2. Ambil Riwayat Self Report
-    // Menggunakan kolom id_siswa yang baru kita tambahkan
+  
     $riwayatReport = \App\Models\SelfReport::where('id_siswa', $id_siswa) 
         ->orderBy('created_at', 'desc')
         ->get()
@@ -69,7 +92,7 @@ class DashboardSiswaController extends Controller
                 'title'  => "Self Report: " . $item->kategori_masalah,
                 'date'   => $item->created_at->translatedFormat('d M Y'),
                 'time'   => null,
-                'status' => $item->status_verifikasi, // Sesuaikan dengan ENUM di screenshot kamu
+                'status' => $item->status_verifikasi, 
             ];
         });
 

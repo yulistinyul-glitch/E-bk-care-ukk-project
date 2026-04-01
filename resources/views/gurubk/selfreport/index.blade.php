@@ -146,7 +146,9 @@
                 <div class="modal-body py-4">
                     <div class="mb-3">
                         <label class="text-muted small d-block">Kategori Masalah</label>
-                        <span class="fw-semibold text-primary">{{ $report->kategori_masalah }}</span>
+                        <h6 class="fw-bold">
+                            {{ $report->getRawOriginal('kategori_masalah') ?? 'Kolom tidak ditemukan' }}
+                        </h6>
                     </div>
                     
                     <div class="mb-3">
@@ -162,20 +164,23 @@
                     </div>
                 </div>
 
-                <div class="modal-footer border-0 pt-0">
-                    <form action="{{ route('gurubk.selfreport.verifikasi', $report->id_report) }}"
-                          method="POST"
-                          class="d-flex gap-2 w-100">
+                <div class="modal-footer border-0 pt-0 d-flex gap-2">
+                    <form action="{{ route('gurubk.selfreport.verifikasi', $report->id_report) }}" method="POST" class="flex-fill">
                         @csrf
-                        <button type="submit" name="status" value="disetujui" class="btn btn-success flex-fill rounded-3 py-2">
+                        <input type="hidden" name="status" value="disetujui">
+                        <button type="submit" class="btn btn-success w-100 rounded-3 py-2">
                             ✔ Setujui
                         </button>
-                        <button type="submit" name="status" value="ditolak" class="btn btn-danger flex-fill rounded-3 py-2">
+                    </form>
+
+                    <form action="{{ route('gurubk.selfreport.verifikasi', $report->id_report) }}" method="POST" class="flex-fill">
+                        @csrf
+                        <input type="hidden" name="status" value="ditolak">
+                        <button type="submit" class="btn btn-danger w-100 rounded-3 py-2">
                             ✖ Tolak
                         </button>
                     </form>
                 </div>
-
             </div>
         </div>
     </div>

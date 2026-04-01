@@ -53,7 +53,6 @@ use Illuminate\Support\Facades\App;
 |--------------------------------------------------------------------------
 */
 
-// Rute utama - Ini yang akan memanggil data About
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home.index');
 
@@ -116,27 +115,21 @@ Route::resource('data/galeri', AdminGaleriController::class)->names([
     'destroy' => 'data.galeri.destroy',
 ]);
 
-// Route History
 Route::get('siswa/history', [SiswaController::class, 'history'])
     ->name('siswa.history');
 
-// Route Fitur Tambahan
 Route::get('siswa/cetak-semua', [SiswaController::class, 'cetakSemua'])
     ->name('siswa.cetak.semua');
 
 Route::post('siswa/import', [SiswaController::class, 'import'])
     ->name('siswa.import');
 
-// Route Restore (Kembalikan data)
 Route::post('siswa/{id}/restore', [SiswaController::class, 'restore'])
     ->name('siswa.restore');
 
-// Route Force Delete (Hapus Permanen) - TAMBAHKAN INI
 Route::delete('siswa/{id}/force-delete', [SiswaController::class, 'forceDelete'])
     ->name('siswa.forceDelete');
 
-    // 3. Resource Route
-    // Tetap gunakan 'siswa' sebagai nama resource
     Route::resource('siswa', SiswaController::class);
 
     Route::resource('kelas', KelasController::class);
@@ -150,7 +143,7 @@ Route::delete('siswa/{id}/force-delete', [SiswaController::class, 'forceDelete']
     Route::get('template_surats/{id}/download', [TemplateSuratController::class, 'download'])
         ->name('template_surats.download');
 
-// Route Khusus Walikelas (Taruh di ATAS resource)
+// Route Khusus Walikelas 
 Route::get('walikelas/history', [WalikelasController::class, 'history'])->name('walikelas.history');
 Route::post('walikelas/{id}/restore', [WalikelasController::class, 'restore'])->name('walikelas.restore');
 Route::delete('walikelas/{id}/force-delete', [WalikelasController::class, 'forceDelete'])->name('walikelas.forceDelete');
@@ -159,19 +152,15 @@ Route::delete('walikelas/{id}/force-delete', [WalikelasController::class, 'force
 Route::post('walikelas/import', [WalikelasController::class, 'import'])->name('walikelas.import');
 Route::get('walikelas/cetak-semua', [WalikelasController::class, 'cetakSemua'])->name('walikelas.cetak.semua');
 
-// Route Resource (Standard CRUD: index, create, store, show, edit, update, destroy)
 Route::resource('walikelas', WalikelasController::class);
     // Pelanggaran
-// Route Khusus (WAJIB DI ATAS)
 Route::get('pelanggaran/history', [PelanggaranController::class, 'history'])->name('pelanggaran.history');
 Route::get('pelanggaran/cetak-semua', [PelanggaranController::class, 'cetakSemua'])->name('pelanggaran.cetak-semua');
 Route::post('pelanggaran/import', [PelanggaranController::class, 'import'])->name('pelanggaran.import');
 
-// Route Restore & Force Delete
 Route::post('pelanggaran/{id}/restore', [PelanggaranController::class, 'restore'])->name('pelanggaran.restore');
 Route::delete('pelanggaran/{id}/force-delete', [PelanggaranController::class, 'forceDelete'])->name('pelanggaran.forceDelete');
 
-// Route Resource (WAJIB DI BAWAH)
 Route::resource('pelanggaran', PelanggaranController::class);
     });
 
@@ -194,7 +183,6 @@ Route::resource('pelanggaran', PelanggaranController::class);
 | GURU BK ROUTES
 |--------------------------------------------------------------------------
 */
-    // 1. Rute LOGIN (Bisa diakses tanpa login)
     Route::prefix('gurubk')->name('gurubk.')->group(function () {
         Route::get('/login', [GuruAuthController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [GuruAuthController::class, 'login'])->name('login.submit');
@@ -202,10 +190,12 @@ Route::resource('pelanggaran', PelanggaranController::class);
 
 Route::middleware(['auth', 'role:GuruBK'])->prefix('gurubk')->name('gurubk.')->group(function () {
 
-Route::get('/laporan', [LaporanBulananController::class, 'guruIndex'])->name('laporan.index');
-Route::get('/laporan/create', [LaporanBulananController::class, 'create'])
-    ->name('laporan.create');
+    // Route Laporan Bulanan 
+    Route::get('/laporan', [LaporanBulananController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/create', [LaporanBulananController::class, 'create'])->name('laporan.create');
     Route::post('/laporan/store', [LaporanBulananController::class, 'guruStore'])->name('laporan.store');
+    Route::get('/laporan/cetak/{id}', [LaporanBulananController::class, 'cetakPdf'])->name('gurubk.laporan.cetak');
+
     // Dashboard & Chat
     Route::get('/dashboard', [DashboardbkController::class, 'dashboard'])->name('dashboard');
     Route::get('chat', [ChatController::class, 'index'])->name('chat.index');
@@ -224,10 +214,11 @@ Route::get('/laporan/create', [LaporanBulananController::class, 'create'])
     Route::post('/riwayatpelanggaran/store', [RiwayatPelanggaranController::class, 'store'])->name('riwayatpelanggaran.store');
     Route::get('/get-kelas-filter', [RiwayatPelanggaranController::class, 'getKelasByJurusan'])->name('get.kelas.filter');
     Route::get('/get-siswa-filter/{id_kelas}', [RiwayatPelanggaranController::class, 'getSiswaByKelas'])->name('get.siswa.filter');
+    Route::resource('riwayatpelanggaran', RiwayatPelanggaranController::class);
 
     // Akumulasi poin pelanggaran 
-
     Route::get('/akumulasi-pelanggaran', [RiwayatPelanggaranController::class, 'akumulasi'])->name('riwayatpelanggaran.akumulasi');
+
     // Saran
     Route::get('/saran', [SaranController::class, 'index'])->name('saran.index');
     Route::patch('/saran/{id}/read', [SaranController::class, 'markAsRead'])->name('saran.read');
@@ -247,17 +238,14 @@ Route::get('/laporan/create', [LaporanBulananController::class, 'create'])
     Route::get('/siswa/{id}', [GuruBkSiswaController::class, 'show'])->name('siswa.show');
 
     // E-Surat
-Route::prefix('e_surat')->group(function () {
-    // Sekarang namanya jadi gurubk.e_surat.stream
+    Route::prefix('e_surat')->group(function () {
     Route::get('/stream/{filename}', [E_SuratController::class, 'stream_pdf'])->name('e_surat.stream');
-    
     Route::post('/{id}/email', [E_SuratController::class, 'send_email'])->name('e_surat.send_email');
     Route::get('/{id}/print-pdf', [E_SuratController::class, 'print_pdf'])->name('e_surat.print_pdf');
     Route::get('/{id}/export', [E_SuratController::class, 'export'])->name('e_surat.export');
     Route::get('/{id}/selesai', [E_SuratController::class, 'selesai'])->name('e_surat.selesai');
 });
 
-    // Resource diletakkan SETELAH route spesifik agar tidak bentrok
     Route::resource('e_surat', E_SuratController::class)->except(['destroy']);
      
     // Logout
@@ -295,7 +283,7 @@ Route::prefix('siswa')->name('siswa.')->group(function () {
         Route::post('/ajukan-konseling', [KonselingSiswaController::class, 'store'])->name('konseling.store');
         Route::post('/mailbox/{id}/read', [KonselingSiswaController::class, 'markAsRead'])->name('mailbox.read');
 
-        Route::get('/home', [KonselingSiswaController::class, 'home'])->name('home');
+        Route::get('/home', [DashboardSiswaController::class, 'dashboard'])->name('home');
         Route::get('/history', [DashboardSiswaController::class, 'history'])->name('history');
         Route::get('/profile', [DashboardSiswaController::class, 'profile'])->name('profile');
 

@@ -6,11 +6,11 @@
 <div class="lg:ml-28 px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto">
 
 
-<div class="max-w-7xl mx-auto px-6 lg:px-10 mt-6 font-['Poppins'] ">
+<div class="max-w-7xl mx-auto px-6 lg:px-10 font-['Poppins'] ">
   <div class="mx-auto  bg-[#1A374C] text-white p-5 rounded-b-[40px] shadow-lg">
      <div class="flex items-center gap-4 md:gap-4">
       <div class="w-24 h-24 md:w-20 md:h-20 text-black rounded-full flex items-center justify-center shrink-0 border-2 border-blue-400 overflow-hidden text-xs font-bold uppercase">
-        <img src="{{ Auth::user()->siswa->foto ? asset('storage/profile_siswa/' . Auth::user()->siswa->foto) : asset('img/guruProfile.jpg')}}" alt="Profile" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+        <img src="{{ Auth::user()->siswa->foto ? asset('storage/profile_siswa/' . Auth::user()->siswa->foto) : asset('img/profile_default.jpg') }}" alt="Profile" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
       </div>
       <div class="flex-1 min-w-0">
         <h2 class="text-lg md:text-xl font-bold  leading-tight uppercase">
@@ -27,32 +27,34 @@
   </div>
 </div>
 
-@php
-    $authSiswa = auth()->user() ? \App\Models\Siswa::where('id_pengguna', auth()->user()->id_pengguna)->first() : null;
-    
-    $suratBaru = null;
-    if ($authSiswa) {
-        $suratBaru = \App\Models\KotakSurats::where('id_siswa', $authSiswa->id_siswa)
-                                          ->where('is_read', false)
-                                          ->first();
-    }
-    
-@endphp
+@if ( $newMail )
+<div class="max-w-5xl mx-auto mt-4 lg:px-10 px-6">
+    <div class="relative overflow-hidden bg-white border-l-8 border-yellow-500 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.05)] p-5 mb-6 animate-pulse-slow">
 
-@if ($suratBaru)
-<div class="alert alert-danger border shadow-lg d-flex align-items-center fade show" role="alert" style="border-radius: 15px;">
-  <div class="p-2 bg-white rounded-circle me-3">
-    <i class="bi bi-exclamation-octagon-fill text-danger fs-4"></i>
-  </div>
-  <div>
-    <h6 class="fw-bold mb-0 text-dark">⚠️Peringatan Penting!!🚨</h6>
-    <small class="text-dark">Kamu memiliki surat peringatan baru yang belum dibaca.</small>
-  </div>
-  <a href="{{ route('siswa.kotaksurat.index') }}" class="btn btn-danger btn-sm rounded-pill ms-auto px-4">
-    Buka sekarang
-  </a>
+        <div class="relative flex flex-col md:flex-row items-center gap-5">
+            <div class="flex items-center justify-center gap-3">
+                <div class="shrink-0 w-12 h-12 bg-yellow-100 rounded-md flex items-center justify-center shadow-inner">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-yellow-600 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h6 class="text-lg font-black text-yellow-500 flex items-center justify-center md:justify-start gap-2">
+                    Peringatan Penting🚨
+                </h6>
+            </div>
+            <p class="text-gray-600 text-sm">
+              Kamu memiliki surat atau jadwal penting yang belum dibaca!
+            </p>
+            <div class="w-full md:w-auto">
+                <a href="{{ route('siswa.kotaksurat.index') }}"
+                   class="w-full md:w-auto bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-full shadow-lg transition-all active:scale-95">
+                    Lihat Surat 
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
-  
+    
 @endif
 
 {{-- mood tracker --}}
@@ -147,7 +149,7 @@
 
     // Pastikan variabel lain tidak bikin crash
     $unreadMessages = $unreadMessages ?? 0;
-    $jadwalTerdekat = $jadwalTerdekat ?? null;
+    $scheduled = $scheduled ?? null;
 @endphp
 {{-- Container Utama --}}
 <div class="my-6 mx-4 sm:my-8 sm:mx-6 lg:my-8 lg:mx-4 font-['Poppins']">
@@ -176,22 +178,22 @@
                     <h3 class="text-sm font-bold text-slate-800 uppercase tracking-tight">Jadwal Terdekat</h3>
                 </div>
                 
-                @if ($jadwalTerdekat)
+                @if ( $scheduled )
                     <div class="bg-linear-to-br from-blue-50 to-indigo-50 p-4 rounded-[1.8rem] border border-blue-100">
                         <div class="flex items-center gap-3 mb-2">
                             <div class="bg-white p-2 rounded-xl shadow-sm">
                                 <i class="fas fa-calendar-alt text-blue-500 text-xs"></i>
                             </div>
                             <p class="text-xs font-bold text-blue-900 uppercase">
-                                {{ \Carbon\Carbon::parse($jadwalTerdekat->scheduled_date)->format('d M Y') }}
+                                {{ \Carbon\Carbon::parse($scheduled->scheduled_date)->format('d M Y') }}
                             </p>
                         </div>
                         <div class="flex flex-col gap-1 ml-1">
                             <span class="text-[10px] text-blue-600 font-bold uppercase tracking-wide italic">
-                                <i class="far fa-clock mr-1"></i> {{ $jadwalTerdekat->scheduled_time }}
+                                <i class="far fa-clock mr-1"></i> {{ $scheduled->scheduled_time }}
                             </span>
                             <span class="text-[10px] text-blue-500 font-medium truncate italic">
-                                <i class="fas fa-map-marker-alt mr-1"></i> {{ $jadwalTerdekat->location_link }}
+                                <i class="fas fa-map-marker-alt mr-1"></i> {{ $scheduled->location_link }}
                             </span>
                         </div>
                     </div>
@@ -231,14 +233,14 @@
                 
                 <div class="flex justify-between items-center relative z-10">
                     <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Kesehatan Poin</p>
-                    <span class="px-3 py-1 {{ $status['bg'] }} {{ $status['text'] }} rounded-full text-[10px] font-black uppercase italic tracking-widest">
-                        {{ $status['label'] }}
+                    <span class="px-3 py-1 {{ $status['warna'] }} {{ $status['label'] }} rounded-full text-[10px] font-black uppercase italic tracking-widest">
+                        {{ $status['teks'] }}
                     </span>
                 </div>
 
                <div class="flex items-center gap-6 relative z-10">
                   {{-- Menampilkan angka total poin --}}
-                  <div class="text-2xl font-black {{ $status['text'] }} tracking-tighter italic">
+                  <div class="text-2xl font-black {{ $status['label'] }} tracking-tighter italic">
                       {{ $totalPoin }}
                   </div>
                   
@@ -335,62 +337,80 @@
     </a>
   </div>
 
- <div class="mx-auto mt-4 font-['Poppins']">
-    <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100">
-        
-        <div class="mb-6 text-center">
-            <h3 class="text-xl font-bold text-[#1A374C] inline-block border-b-4 border-blue-400 pb-1">
-                Status Laporanmu
-            </h3>
-        </div>
-
-        <div class="mt-6 bg-blue-50 p-6 rounded-3xl border-2 border-dashed border-blue-200">
-            <h4 class="text-sm font-bold text-blue-900 mb-3 flex items-center gap-2">
-                <span>🔍</span> Lacak Laporan Manual
-            </h4>
-            <form action="{{ route('siswa.selfreport.check') }}" method="POST" class="flex gap-2">
-                @csrf
-                <input type="text" name="id_report" placeholder="Masukkan ID (Contoh: SR-A1B2)" 
-                      class="flex-1 p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-blue-400 text-sm uppercase font-mono">
-                <button type="submit" class="bg-blue-900 text-white px-5 rounded-xl text-sm font-bold hover:bg-blue-800 transition-all">
-                    Cek
-                </button>
-            </form>
-            <p class="text-[10px] text-blue-600 mt-2 italic">*Gunakan ID yang kamu dapatkan saat mengirim laporan.</p>
-          </div>
-        <div class="flex flex-col space-y-2">
-
-          @forelse ($reports as $report)
-          <div class="group flex items-center justify-between p-4 border-b border-gray-100 transition-all hover:bg-gray-100 rounded-xl">
-            <div class="flex flex-col">
-                <span class="font-semibold text-gray-700">Laporan #{{ $report->id_report }}</span>
-                <span class="text-[10px] text-gray-400">Kategori: {{ ucfirst($report->kategori_masalah) }}</span>
-            </div>
+    <div class="mx-auto mt-6 font-['Poppins'] w-full max-w-4xl px-2">
+        <div class="bg-white p-5 md:p-8 rounded-4xl shadow-xl border border-gray-100">
             
+            <div class="mb-8 text-center md:text-left">
+                <h3 class="text-xl font-extrabold text-[#1A374C] relative inline-block">
+                    Status Laporanmu
+                    <span class="absolute bottom-0 left-0 w-full h-1 bg-blue-400 rounded-full opacity-50"></span>
+                </h3>
+            </div>
 
-            @if($report->status_verifikasi == 'disetujui')
-                <div class="bg-green-100 text-green-700 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>Selesai
+            <div class="mb-8 bg-blue-50 p-5 md:p-6 rounded-3xl border-2 border-dashed border-blue-200">
+                <h4 class="text-xs md:text-sm font-bold text-blue-900 mb-4 flex items-center gap-2">
+                    <span class="bg-blue-200 p-1.5 rounded-lg text-base">🔍</span> 
+                    Lacak Laporan Manual
+                </h4>
+                
+                <form action="{{ route('siswa.selfreport.check') }}" method="POST" class="flex flex-col sm:flex-row gap-3">
+                    @csrf
+                    <div class="relative flex-1">
+                        <input type="text" name="id_report" placeholder="Masukkan ID (SR-A1B2)" 
+                            class="w-full p-3.5 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-blue-400 text-sm uppercase font-mono transition-all shadow-inner">
+                    </div>
+                    <button type="submit" class="bg-blue-900 text-white px-8 py-3.5 rounded-xl text-sm font-bold hover:bg-[#1A374C] hover:shadow-lg active:scale-95 transition-all duration-300">
+                        Cek Status
+                    </button>
+                </form>
+                <p class="text-[10px] text-blue-500 mt-3 italic font-medium">*Gunakan ID unik yang kamu dapatkan sesaat setelah mengirim laporan.</p>
+            </div>
+
+            {{-- List Laporan --}}
+            <div class="space-y-3">
+                @forelse ($reports as $report)
+                <div class="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 border border-gray-50 bg-gray-50/30 rounded-2xl transition-all hover:bg-white hover:shadow-md hover:border-blue-100">
+                    
+                    {{-- Info Laporan --}}
+                    <div class="flex items-center gap-4 mb-3 sm:mb-0 w-full sm:w-auto">
+                        <div class="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-lg">
+                            📄
+                        </div>
+                        <div class="flex flex-col min-w-0">
+                            <span class="font-bold text-[#1A374C] truncate">#{{ $report->id_report }}</span>
+                            <span class="text-[11px] text-gray-500 font-medium">Kategori: <span class="text-blue-600">{{ ucfirst($report->kategori_masalah) }}</span></span>
+                        </div>
+                    </div>
+
+                    {{-- Status Badge --}}
+                    <div class="w-full sm:w-auto flex justify-end">
+                        @if($report->status_verifikasi == 'disetujui')
+                            <div class="flex items-center gap-1.5 bg-green-50 text-green-700 px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider border border-green-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                Selesai
+                            </div>
+                        @elseif($report->status_verifikasi == 'ditolak')
+                            <div class="flex items-center gap-1.5 bg-red-50 text-red-700 px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider border border-red-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                                Ditolak
+                            </div>
+                        @else
+                            <div class="flex items-center gap-1.5 bg-blue-900 text-white px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+                                Diproses
+                            </div>
+                        @endif
+                    </div>
                 </div>
-            @elseif($report->status_verifikasi == 'ditolak')
-                <div class="bg-red-100 text-red-800 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>Ditolak
+                @empty
+                <div class="text-center py-10">
+                    <div class="text-4xl mb-3">👻</div>
+                    <p class="text-sm text-gray-500 font-medium italic">Belum ada laporan aktif.</p>
+                    <p class="text-[10px] text-gray-400 mt-1">*Laporan anonim tidak tersimpan permanen di sini.</p>
                 </div>
-            @else
-                <div class="bg-blue-100 text-blue-900 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
-                  Diproses
-                </div>
-            @endif
+            @endforelse
         </div>
-         @empty
-        <div class="text-center py-6">
-            <p class="text-sm text-gray-400 italic">Belum ada laporan aktif dari perangkat ini.</p>
-            <p class="text-[10px] text-gray-400 mt-1">*Laporan anonim hanya muncul sementara di dashboard ini.</p>
-        </div>
-        @endforelse
     </div>
-  </div>
 </div>
 
 </div>
@@ -514,6 +534,14 @@
 
   .animate-fade-in {
     animation: fade-in 0.4s ease-in-out forwards;
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% { transform: scale(1); }
+    50% {transform: scale(1.01); }
+  }
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
   }
 </style>
 

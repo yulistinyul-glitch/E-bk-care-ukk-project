@@ -42,7 +42,7 @@
                                     {{ \Carbon\Carbon::parse($report->updated_at)->format('d F Y') }}
                                 </td>
 
-                                <td>{{ $report->kategori }}</td>
+                                <td>{{ $report->kategori_masalah }}</td>
 
                                 <td>
                                     @if($report->status_verifikasi == 'disetujui')

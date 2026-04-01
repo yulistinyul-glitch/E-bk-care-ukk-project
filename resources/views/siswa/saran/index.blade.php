@@ -1,12 +1,19 @@
 @extends('partials.app')
 
 @section('content')
-<section class="min-h-screen flex items-center justify-center py-12 px-4 font-['Poppins'] text-gray-800">
-  
+
+@if (session('success'))
+    <div class=" max-w-2xl mb-4 mt-12 mx-auto flex items-center justify-center bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded " role="alert">
+      <strong class="font-bold" >Terimakasih atas saranmu! kami akan pertimbangkan saranmu! </strong>
+      <span class="block sm:inline">{{ session('success') }}</span>
+    </div>
+   @endif 
+<section class="min-h-screen flex items-center justify-center pb-12 pt-6 px-4 font-['Poppins'] text-gray-800">
+ 
   <div class="relative w-full max-w-2xl">
     <div class="bg-linear-to-r from-blue-900 to-blue-700 rounded-t-3xl p-8 text-white shadow-lg relative">
       
-      <a href="{{ route('siswa.home')}}" class="absolute top-6 right-6 hover:scale-110 duration-300 transition-all cursor-pointer bg-white/20 p-2 rounded-full cursor-pointer">
+      <a href="{{ route('siswa.home')}}" class="absolute top-6 right-6 hover:scale-110 duration-300 transition-all cursor-pointer bg-white/20 p-2 rounded-full">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
           <path fill="currentColor" d="m15.06 5.283l5.657 5.657a1.5 1.5 0 0 1 0 2.12l-5.656 5.658a1.5 1.5 0 0 1-2.122-2.122l3.096-3.096H4.5a1.5 1.5 0 0 1 0-3h11.535L12.94 7.404a1.5 1.5 0 0 1 2.122-2.121Z" />
         </svg>
@@ -27,21 +34,21 @@
         <div class="grid md:grid-cols-2 gap-6">
           <div class="space-y-2">
             <label class="block text-sm font-semibold text-gray-700">Identitas Pengirim</label>
-            <select name="is_anonymous" class="w-full p-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-900 bg-gray-50 outline-none text-sm transition-all">
-              <option value="Tidak">Tetap Anonim (Rahasia)</option>
-              <option value="Ya">Sertakan Nama</option>
+            <select name="is_anonymous" class="w-full text-sm md:text-base p-2 md:p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-900 bg-gray-50 outline-none  transition-all">
+              <option class="text-xs" value="Tidak">Tetap Anonim (Rahasia)</option>
+              <option class="text-xs" value="Ya">Sertakan Nama</option>
             </select>
             <p class="text-[11px] text-gray-500 italic">*Pilih anonim jika ingin merasa lebih nyaman</p>
           </div>
           
           <div class="space-y-2">
             <label class="block text-sm font-semibold text-gray-700">Saran ditujukan untuk..</label>
-            <select name="target" class="w-full p-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-900 outline-none bg-gray-50 text-sm transition-all">
-              <option value="Wali Kelas">Wali Kelas</option>
-              <option value="Guru/staf">Guru/ Staf pengajar</option>
-              <option value="Kepala sekolah">Kepala sekolah</option>
-              <option value="Organisasi">Organisasi (OSIS/MPK)</option>
-              <option value="Fasilitas">Fasilitas</option>
+            <select name="target" class="w-full text-sm md:text-base p-2 md:p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-900 outline-none bg-gray-50 transition-all">
+              <option class="text-xs" value="Wali Kelas">Wali Kelas</option>
+              <option class="text-xs" value="Guru/staf">Guru/ Staf pengajar</option>
+              <option class="text-xs" value="Kepala sekolah">Kepala sekolah</option>
+              <option class="text-xs" value="Organisasi">Organisasi (OSIS/MPK)</option>
+              <option class="text-xs" value="Fasilitas">Fasilitas</option>
             </select>
           </div>
         </div>

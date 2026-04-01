@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Siswa;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\SelfReport;
+use App\Models\Siswa;
 use Illuminate\Support\Str; 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class SelfReportSiswaController extends Controller
 {
@@ -20,6 +22,7 @@ class SelfReportSiswaController extends Controller
         $request->validate([
             'kategori_masalah' => 'required',
             'isi_laporan' => 'required',
+            'bukti' => 'required|file|mimes:jpg,jpeg,png,mp4,mov,avi,mp3,wav',
         ]);
 
         $newID = 'SR-' . strtoupper(Str::random(5));
@@ -29,8 +32,17 @@ class SelfReportSiswaController extends Controller
             $pathBukti = $request->file('bukti')->store('evidence', 'public');
         }
 
+        $user = Auth::user();
+        $siswa = Siswa::where('id_pengguna', $user->id_pengguna)->first();
+     
+
+        if (!$siswa) {
+            return redirect()->back()->with('error', 'Profil siswa tidak ditemukan untuk Id: ' . $user->id_pengguna);
+        }
+
         SelfReport::create([
                 'id_report'        => $newID,
+                'id_siswa'         => $siswa->id_siswa,
                 'tanggal_lapor'    => now(),
                 'kategori_masalah' => $request->kategori_masalah,
                 'isi_laporan'      => "LOKASI: {$request->lokasi}\n" . 

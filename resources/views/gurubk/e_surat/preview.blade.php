@@ -101,7 +101,7 @@
 
     <nav class="preview-navbar justify-content-between">
         <div class="d-flex align-items-center">
-            <button type="button" onclick="window.history.back()" class="btn-back me-3">
+            <button type="button" onclick="window.location.href='{{ url()->previous() }}'" class="btn-back me-3">
                 <i class="bi bi-arrow-left me-2"></i>Kembali
             </button>
             <div class="text-white">

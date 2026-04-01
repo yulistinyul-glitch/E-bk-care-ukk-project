@@ -37,18 +37,18 @@
           <div class="space-y-2">
             <label class="block text-sm font-semibold text-gray-700">Kategori Masalah</label>
             <select name="kategori" class="w-full p-3.5 rounded-xl border border-gray-100 focus:ring-2 focus:ring-blue-900 bg-gray-50 outline-none text-sm transition-all">
-              <option value="Pribadi">Pribadi</option>
-              <option value="Sosial">Sosial</option>
-              <option value="Belajar">Belajar</option>
-              <option value="Karir">Karir</option>
+              <option class="text-xs" value="Pribadi">Pribadi</option>
+              <option class="text-xs" value="Akademik">Akademik</option>
+              <option class="text-xs" value="Karier">Karier</option>
+              <option class="text-xs" value="Sosial">Sosial</option>
             </select>
           </div>
           
           <div class="space-y-2">
             <label class="block text-sm font-semibold text-gray-700">Metode Konseling</label>
             <select name="pilihan_metode" class="w-full p-3.5 rounded-xl border border-gray-100 focus:ring-2 focus:ring-blue-900 outline-none bg-gray-50 text-sm transition-all">
-              <option value="Offline">Tatap muka (Offline)</option>
-              <option value="Online">Chat (Online)</option>
+              <option class="text-xs" value="Offline">Tatap muka (Offline)</option>
+              <option class="text-xs" value="Online">Chat (Online)</option>
             </select>
           </div>
         </div>

@@ -12,14 +12,8 @@ class SelfReport extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id_report',
-        'id_siswa',
-        'id_gurubk',
-        'tanggal_lapor',
-        'kategori_masalah',
-        'isi_laporan',
-        'file',
-        'status_verifikasi'
+        'id_report', 'id_gurubk', 'tanggal_lapor', 'kategori_masalah', 
+        'isi_laporan', 'bukti_pendukung', 'file', 'status_verifikasi', 'id_siswa'
     ];
 
 }

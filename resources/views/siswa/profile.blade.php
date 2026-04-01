@@ -158,7 +158,10 @@
     </div>
 </div>
       <div class="items-center justify-center flex mx-auto my-7 lg:hidden">
-       <button class="text-md font-['Poppins'] text-red-500 bg-transparent p-4 rounded-full border-2 border-red-500 hover:border-white hover:text-white hover:bg-red-500">LOGOUT</button>
+        <form action="{{ route('logout')}}" method="POST" class="w-full flex justify-center">
+            @csrf       
+            <button class="text-md font-['Poppins'] text-red-500 bg-transparent p-4 rounded-full border-2 border-red-500 hover:border-white hover:text-white hover:bg-red-500">LOGOUT</button>
+        </form>
       </div>
 
     {{-- popup edit profile siswa --}}

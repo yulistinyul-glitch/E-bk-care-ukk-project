@@ -20,41 +20,44 @@
         <h5 class="card-title text-white fw-bold m-0 text-uppercase">
             New Message
         </h5>
-    </div>  
+    </div>
 
     <div class="card-body px-4 pb-4">
         <div class="d-flex flex-column">
-
-            @for($i=0; $i<3; $i++)
+            @forelse($recentChat as $chat)
             <div class="d-flex align-items-center justify-content-between py-3 border-bottom"
-                 style="border-color: rgba(255,255,255,0.2) !important;">
+                style="border-color: rgba(255,255,255,0.2) !important;">
 
                 <div class="d-flex align-items-center gap-3">
-                    
                     <div class="avatar-text avatar-md bg-secondary rounded-circle text-white d-flex align-items-center justify-content-center">
-                        <i class="feather-user"></i>
+                        {{ substr($chat->konseling->siswa->nama_siswa ?? 'S', 0, 1) }}
                     </div>
 
-                    <div>
+                    <a href="{{ route('gurubk.chat.index', $chat->konseling->id) }}" class="text-decoration-none">
                         <h6 class="mb-0 text-white fs-12 fw-bold">
-                            NAMA SISWA - KELAS
+                            {{ strtoupper($chat->konseling->siswa->nama_siswa ?? 'Siswa') }} - 
+                            {{ $chat->konseling->siswa->kelas->na ?? 'N/A' }}
                         </h6>
-                        <small class="text-white-50 small d-block">
-                            PESAN MASUK...
+                        <small class="text-white-50 small d-block text-truncate" style="max-width: 180px;">
+                            {{ $chat->message }}
                         </small>
-                    </div>
+                    </a>
                 </div>
 
+                @if(!$chat->is_read)
                 <span class="badge rounded-circle d-flex align-items-center justify-content-center"
-                      style="background-color: white; color: #1a233a; width: 24px; height: 24px;">
-                    1
+                    style="background-color: #ff4757; color: white; width: 20px; height: 20px; font-size: 10px;">
+                    NEW
                 </span>
-
+                @endif
             </div>
-            @endfor
-
+            @empty
+            <div class="text-center py-4 text-white-50 small">Tidak ada pesan masuk.</div>
+            @endforelse
         </div>
     </div>
+
+    
 </div>
 
 

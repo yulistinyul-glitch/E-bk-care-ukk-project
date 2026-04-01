@@ -145,7 +145,7 @@ body {
             @foreach($konseling as $k)
             <a href="?id={{ $k->id }}" style="text-decoration:none;color:inherit;">
                 <div class="chat-user {{ request('id')==$k->id?'active':'' }}">
-                   <img src="{{ $k->siswa->foto ? asset('storage/profile_siswa/' . $k->siswa->foto) : asset('images/default-avatar.png') }}" class="avatar">
+                   <img src="{{ $k->siswa->foto ? asset('storage/profile_siswa/' . $k->siswa->foto) : asset('img/profile_default.jpg') }}" class="avatar">
                     <div>
                         <h6>{{ $k->siswa->nama_siswa }}
                             @php $unread=$k->chats->where('is_read',0)->where('sender_type','siswa')->count(); @endphp
@@ -163,7 +163,7 @@ body {
 
         @if($selectedChat)
         <div class="chat-navbar">
-            <img src="{{ $selectedChat->siswa->foto ? asset('storage/profile_siswa/' . $selectedChat->siswa->foto) : asset('img/guruProfile.jpg')}}" class="avatar">
+            <img src="{{ $selectedChat->siswa->foto ? asset('storage/profile_siswa/' . $selectedChat->siswa->foto) : asset('img/profile_default.jpg') }}" class="avatar">
             <div>
                 {{ $selectedChat->siswa->nama_siswa }}
                 <div class="status-box">Status: {{ ucfirst($selectedChat->status_konseling) }}</div>
@@ -222,19 +222,23 @@ window.Echo=new Echo({
 
 @if($selectedChat)
 window.Echo.channel('chat.{{ $selectedChat->id_konseling }}')
-    .listen('ChatSent',(e)=>{
-        const div=document.createElement('div');
-        div.classList.add('chat-bubble',e.chat.sender_type);
-        div.innerHTML=e.chat.message+'<div class="timestamp">'+(new Date(e.chat.created_at)).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+'</div>';
-        chatBody.appendChild(div);
-        chatBody.scrollTop=chatBody.scrollHeight;
-        document.getElementById('notifSound').play();
+    .listen('ChatSent', (e) {
+        const div = document.createElement('div');
+        div.classList.add('chat-bubble', e.chat.sender_type);
 
-        fetch('/gurubk/chat/'+e.chat.konseling_id+'/read',{
-            method:'POST',
-            headers:{'X-CSRF-TOKEN':'{{ csrf_token() }}'}
-        });
+        let content = '';
+            if (e.chat.file_path) {
+                content += `<img src"/storage/${e.chat.file_path}" class="max-w-full rounded-lg mb-2">`
+            }
+            if (e.chat.message) {
+                content += `<p>${e.chat.message}</p>`;
+            }
+
+            div.innerHTML = content + `<div class= "timestamp">${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>`;
+            chatBody.appendChild(div);
+            chatBody.scrollTop = chatBody.scrollHeight;
     });
+    
 @endif
 </script>
 @endsection

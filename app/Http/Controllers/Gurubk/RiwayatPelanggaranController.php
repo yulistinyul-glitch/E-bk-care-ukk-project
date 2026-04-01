@@ -10,7 +10,8 @@ use App\Models\Pelanggaran;
 use App\Models\RiwayatPelanggaran;
 use App\Models\LogAktivitas;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class RiwayatPelanggaranController extends Controller
 {
@@ -43,22 +44,54 @@ class RiwayatPelanggaranController extends Controller
     public function create(Request $request)
     {
         $tingkatan_list = Kelas::select('nama_kelas')->distinct()->orderBy('nama_kelas', 'asc')->get();
-        $jurusan_list = Kelas::select('jurusan')->distinct()->orderBy('jurusan', 'asc')->get();
+
+        $jurusan_list = [];
+        if ($request->filled('tingkatan_pilih')) {
+            $jurusan_list = Kelas::where('nama_kelas', $request->tingkatan_pilih)
+                                ->select('jurusan')->distinct()
+                                ->orderBy('jurusan', 'asc')->get();
+        }
+
         $kelas = Kelas::all();
+
+        $siswa = [];
+        if ($request->filled('id_kelas')) {
+            $siswa = Siswa::where('id_kelas', $request->id_kelas)
+                        ->orderBy('nama_siswa', 'asc')->get();
+        }
+
         $kategori = Pelanggaran::select('kategori_pelanggaran')->distinct()->get();
 
+        $jenis_pelanggaran = [];
+        if ($request->filled('kategori_pilih')) {
+            $jenis_pelanggaran = Pelanggaran::where('kategori_pelanggaran', $request->kategori_pilih)
+                                            ->orderBy('jenis_kegiatan', 'asc')
+                                            ->get();
+        }
+
+        $detail = null;
+        if ($request->filled('id_pelanggaran')) {
+            $detail = Pelanggaran::find($request->id_pelanggaran);
+        }
+
         return view('gurubk.riwayatpelanggaran.create', compact(
-            'kelas', 'kategori', 'siswa', 'jenis_pelanggaran', 'detail', 'tingkatan_list', 'jurusan_list'
+            'tingkatan_list', 
+            'jurusan_list', 
+            'kelas', 
+            'siswa', 
+            'kategori', 
+            'jenis_pelanggaran', 
+            'detail'
         ));
     }
 
     public function store(Request $request)
     {
-       $request->validate([
-        'id_siswa' => 'required',
-        'id_pelanggaran' => 'required',
-        'tanggal' => 'required|date',
-        'file_bukti' => 'required|file|mimes:jpg,png,mp4|max:10240', 
+        $request->validate([
+            'id_siswa' => 'required',
+            'id_pelanggaran' => 'required',
+            'tanggal' => 'required|date',
+            'file_bukti' => 'required|file|mimes:jpg,png,mp4|max:10240',
         ]);
 
         DB::beginTransaction();
@@ -72,29 +105,112 @@ class RiwayatPelanggaranController extends Controller
                 $file->move(public_path('uploads/pelanggaran'), $fileName);
             }
 
-                $riwayat = RiwayatPelanggaran::create([
+            RiwayatPelanggaran::create([
                 'id_riwayat' => 'RW' . strtoupper(Str::random(6)),
                 'id_siswa' => $request->id_siswa,
                 'id_pelanggaran' => $request->id_pelanggaran,
-                'id_gurubk' => 'BK001',
+                'id_gurubk' => 'BK001', // Sesuaikan dengan Auth::user()->id jika sudah dinamis
                 'poin' => $pelanggaran->poin_pelanggaran,
                 'status' => $pelanggaran->tingkatan,
                 'tanggal_kejadian' => $request->tanggal,
                 'keterangan' => $request->keterangan,
-                'bukti' => $request->bukti,
                 'file' => $fileName,
             ]);
 
-            $siswa = Siswa::find($request->id_siswa);
-            $totalPoinSekarang = $siswa->total_poin;
-
-            LogAktivitas::catat('input data', 'Mencatat pelanggaran siswa');
+            LogAktivitas::catat('input data', 'Mencatat pelanggaran siswa ID: ' . $request->id_siswa);
 
             DB::commit();
             return redirect()->route('gurubk.riwayatpelanggaran.index')->with('success', 'Data berhasil dicatat!');
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function show($id)
+    {
+        $riwayat = RiwayatPelanggaran::with(['siswa.kelas', 'pelanggaran'])->findOrFail($id);
+        return view('gurubk.riwayatpelanggaran.show', compact('riwayat'));
+    }
+
+    public function edit($id)
+    {
+        $riwayat = RiwayatPelanggaran::findOrFail($id);
+        $kelas = Kelas::all();
+        $kategori_list = Pelanggaran::select('kategori_pelanggaran')->distinct()->get();
+        
+        // Data pendukung untuk dropdown edit
+        $siswa_in_kelas = Siswa::where('id_kelas', $riwayat->siswa->id_kelas)->get();
+        $pelanggaran_in_kategori = Pelanggaran::where('kategori_pelanggaran', $riwayat->pelanggaran->kategori_pelanggaran)->get();
+
+        return view('gurubk.riwayatpelanggaran.edit', compact(
+            'riwayat', 'kelas', 'kategori_list', 'siswa_in_kelas', 'pelanggaran_in_kategori'
+        ));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'id_siswa' => 'required',
+            'id_pelanggaran' => 'required',
+            'tanggal' => 'required|date',
+            'file_bukti' => 'nullable|file|mimes:jpg,png,mp4|max:10240',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $riwayat = RiwayatPelanggaran::findOrFail($id);
+            $pelanggaran = Pelanggaran::findOrFail($request->id_pelanggaran);
+
+            $data = [
+                'id_siswa' => $request->id_siswa,
+                'id_pelanggaran' => $request->id_pelanggaran,
+                'poin' => $pelanggaran->poin_pelanggaran,
+                'status' => $pelanggaran->tingkatan,
+                'tanggal_kejadian' => $request->tanggal,
+                'keterangan' => $request->keterangan,
+            ];
+
+            if ($request->hasFile('file_bukti')) {
+                // Hapus file lama
+                if ($riwayat->file && $riwayat->file != '-' && File::exists(public_path('uploads/pelanggaran/' . $riwayat->file))) {
+                    File::delete(public_path('uploads/pelanggaran/' . $riwayat->file));
+                }
+
+                $file = $request->file('file_bukti');
+                $fileName = 'bukti_' . time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/pelanggaran'), $fileName);
+                $data['file'] = $fileName;
+            }
+
+            $riwayat->update($data);
+
+            LogAktivitas::catat('edit data', 'Mengupdate riwayat pelanggaran ' . $id);
+
+            DB::commit();
+            return redirect()->route('gurubk.riwayatpelanggaran.index')->with('success', 'Data berhasil diperbarui!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $riwayat = RiwayatPelanggaran::findOrFail($id);
+
+            // Hapus file fisik
+            if ($riwayat->file && $riwayat->file != '-' && File::exists(public_path('uploads/pelanggaran/' . $riwayat->file))) {
+                File::delete(public_path('uploads/pelanggaran/' . $riwayat->file));
+            }
+
+            $riwayat->delete();
+            LogAktivitas::catat('hapus data', 'Menghapus riwayat pelanggaran ' . $id);
+
+            return redirect()->route('gurubk.riwayatpelanggaran.index')->with('success', 'Data berhasil dihapus!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
     }
 
@@ -112,7 +228,6 @@ class RiwayatPelanggaranController extends Controller
         return response()->json($siswa);
     }
 
-    // AKUMULASI POIN
     public function akumulasi(Request $request)
     {
         $kelas = Kelas::all();
@@ -125,10 +240,30 @@ class RiwayatPelanggaranController extends Controller
         if ($request->search) {
             $query->where('nama_siswa', 'like', '%' . $request->search . '%');
         }
+
         $siswaList = $query->get();
-        $totalSiswaMelanggar = $siswaList->filter(fn($s) => $s->total_poin >0)->count();
-        $siswaSp3 = $siswaList->filter(fn($s) => $s->total_poin >= 76 )->count();
+        $totalSiswaMelanggar = $siswaList->filter(fn($s) => $s->total_poin > 0)->count();
+        $siswaSp3 = $siswaList->filter(fn($s) => $s->total_poin >= 75)->count();
 
         return view('gurubk.akumulasipoin.index', compact('siswaList', 'kelas', 'totalSiswaMelanggar', 'siswaSp3'));
     }
-}    
+
+    public function getDetailPelanggaran($id_siswa)
+    {
+
+        $riwayat = RiwayatPelanggaran::with(['pelanggaran', 'guru'])
+                    ->where('id_siswa', $id_siswa)
+                    ->orderBy('tanggal', 'desc')
+                    ->get()
+                    ->map(function($item) {
+                        return [
+                            'tanggal' => $item->tanggal->format('d M Y'),
+                            'nama_pelanggaran' => $item->pelanggaran->nama_pelanggaran,
+                            'poin' => $item->pelanggaran->poin,
+                            'guru' => $item->guru->nama_lengkap ?? 'Sistem'
+                        ];
+                    });
+
+        return response()->json($riwayat);
+    }
+}

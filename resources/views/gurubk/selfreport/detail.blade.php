@@ -9,12 +9,27 @@
     <div class="card shadow rounded-4">
         <div class="card-body">
 
-            <p><strong>ID:</strong> #{{ $report->id }}</p>
+            <p><strong>ID:</strong> {{ $report->id_report }}</p>
             <p><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($report->tanggal_lapor)->format('d F Y') }}</p>
-            <p><strong>Kategori:</strong> {{ $report->kategori }}</p>
+            <p><strong>Kategori:</strong> {{ $report->kategori_masalah }}</p>
             <p><strong>Deskripsi:</strong></p>
-            <p>{{ $report->deskripsi }}</p>
+            <p>{{ $report->isi_laporan }}</p>
+            <p><strong>Bukti Pendukung:</strong></p>
+            @if ($report->file)
+             @php
+                 $extension = pathinfo($report->file, PATHINFO_EXTENSION)
+             @endphp
 
+             @if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+                    <div class="mb-2">
+                        <img src="{{ asset('storage/' . $report->file)}}" alt="Bukti kejadian"
+                        class="img-fluid rounded-3 border" style="max-width: 300px">
+                    </div>
+             @endif
+            
+             @else
+                <p class="text-muted italic">Tidak ada bukti pendukung yang diunggah.</p>               
+            @endif
             <hr>
 
             @if($report->status_verifikasi == 'menunggu')

@@ -34,50 +34,79 @@
     <script src="{{ asset('assets/js/common-init.min.js') }}"></script>
     <script src="{{ asset('assets/js/theme-customizer-init.min.js') }}"></script>
 
-    <div class="modal fade" id="modalDetailSaran" tabindex="-1" style="z-index: 99999;">
+  {{-- pop up modal --}}
+  <div class="modal fade" id="modalDetailSaran" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title text-white">Detail Saran Siswa</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+                <div class="modal-header border-0 pb-0 px-4 pt-4">
+                    <h5 class="fw-bold text-dark mb-0">Detail Aspirasi</h5>
+                    <button type="button" class="btn-close small" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <div class="mb-3">
-                        <label class="fw-bold text-muted small">DITUJUKAN UNTUK:</label>
-                        <p id="detailTarget" class="fw-bold text-primary"></p>
-                    </div>
-                    <div class="mb-3">
-                        <label class="fw-bold text-muted small">PENGIRIM:</label>
-                        <p id="detailPengirim"></p>
-                    </div>
-                    <hr>
-                    <div class="mb-3">
-                        <label class="fw-bold text-muted small">ISI PESAN:</label>
-                        <div class="p-3 bg-light rounded border">
-                            <p id="detailPesan" style="white-space: pre-wrap; color:black;"></p>
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-4">
+                                <label class="d-block text-muted small fw-bold text-uppercase mb-1" style="font-size: 10px; letter-spacing: 1px;">Ditujukan Ke</label>
+                                <span id="detailTarget" class="fw-bold text-primary"></span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-4">
+                                <label class="d-block text-muted small fw-bold text-uppercase mb-1" style="font-size: 10px; letter-spacing: 1px;">Pengirim</label>
+                                <span id="detailPengirim" class="fw-bold text-dark text-truncate d-block"></span>
+                            </div>
                         </div>
                     </div>
+
+                    <div class="mb-2">
+                        <label class="d-block text-muted small fw-bold text-uppercase mb-2" style="font-size: 10px; letter-spacing: 1px;">Isi Pesan/Saran</label>
+                        <div class="p-4 bg-white rounded-4 border shadow-sm" style="min-height: 120px; border-color: #f1f5f9 !important;">
+                            <p id="detailPesan" class="mb-0 text-dark lh-base" style="white-space: pre-wrap; font-size: 0.95rem;"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-4 pt-0 d-flex gap-2">
+                    <button type="button" class="btn btn-light flex-grow-1 fw-bold py-2 shadow-sm" data-bs-dismiss="modal" style="border-radius: 12px; border: 1px solid #e2e8f0;">Tutup</button>
+                    <form id="formTandaiBaca" action="" method="POST" class="flex-grow-1">
+                        @csrf 
+                        @method('PATCH')
+                        <button type="submit" id="btnTandaiBaca" class="btn btn-primary w-100 fw-bold py-2 shadow-sm" style="border-radius: 12px; background: #4f46e5; border: none;">
+                            <i class="bi bi-check2-all me-1"></i> Tandai Baca
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // JS ini juga ditaruh di layout agar global
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
         const modalDetail = document.getElementById('modalDetailSaran');
         if(modalDetail) {
             modalDetail.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget; // Perbaikan typo di sini
+                const button = event.relatedTarget;
                 
+                const id = button.getAttribute('data-id'); 
+                const status = button.getAttribute('data-status');
                 const pesan = button.getAttribute('data-pesan');
                 const pengirim = button.getAttribute('data-pengirim');
                 const target = button.getAttribute('data-target');
 
-                modalDetail.querySelector('#detailPesan').textContent = pesan;
-                modalDetail.querySelector('#detailPengirim').textContent = pengirim;
-                modalDetail.querySelector('#detailTarget').textContent = target;
+                this.querySelector('#detailPesan').textContent = pesan;
+                this.querySelector('#detailPengirim').textContent = pengirim;
+                this.querySelector('#detailTarget').textContent = target;
+
+                const formUpdate = this.querySelector('#formTandaiBaca');
+                
+                if (status === 'unread') {
+                    formUpdate.action = `/gurubk/saran/${id}/read`; 
+                    formUpdate.style.display = 'block';
+                } else {
+                    formUpdate.style.display = 'none';
+                }
             });
         }
-    </script>
+    });
+</script>
 </body>
 </html>

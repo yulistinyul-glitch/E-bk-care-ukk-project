@@ -16,13 +16,16 @@ class E_SuratController extends Controller
     public function index(Request $request)
     {
         Carbon::setLocale('id');
-        $siswa = Siswa::with(['kelas.walikelas'])->get();
+        $siswa = Siswa::whereHas('riwayatPelanggaran')
+            ->with(['kelas.walikelas', 'riwayatPelanggaran'])
+            ->get()
+            ->filter(function($s) {
+                return $s->total_poin > 0;
+            });
         $gurubk = Gurubk::all(); 
         $template = TemplateSurat::all();
-        
         $surat = ESurat::with(['siswa.kelas.walikelas', 'gurubk'])->latest()->paginate(15);
 
-        // Nomor Surat Otomatis (Format: 001/BK/III/2026)
         $lastSurat = ESurat::whereYear('created_at', date('Y'))->latest()->first();
         $nextNumber = $lastSurat ? ((int)explode('/', $lastSurat->nomor_surat_resmi)[0] + 1) : 1;
         
@@ -46,7 +49,6 @@ class E_SuratController extends Controller
         $dataSiswa = Siswa::with(['kelas.walikelas'])->where('id_siswa', $request->id_siswa)->firstOrFail();
         $dataTemplate = TemplateSurat::where('id_template', $request->id_template)->firstOrFail();
         
-        // Ambil ID Guru BK
         $idGurubk = $request->id_gurubk ?? Gurubk::first()->id_gurubk;
         $dataGuruBK = Gurubk::where('id_gurubk', $idGurubk)->first();
 
@@ -55,7 +57,7 @@ class E_SuratController extends Controller
             return redirect()->back()->with('error', 'Template tidak ditemukan.');
         }
 
-        // 1. GENERATE WORD
+        // GENERATE WORD
         $processor = new TemplateProcessor($templatePath);
         $processor->setValue('nomor_surat_resmi', $request->nomor_surat_resmi);
         $processor->setValue('nama_siswa', $dataSiswa->nama_siswa);
@@ -75,7 +77,6 @@ class E_SuratController extends Controller
 
         $processor->saveAs($directory . '/' . $fileName);
 
-        // 2. LOGIKA GENERATE ID SURAT (FIXED: Menghindari Duplicate Entry)
         $lastEntry = ESurat::orderBy('id_surat', 'desc')->first();
         if ($lastEntry) {
             $lastNumber = (int) substr($lastEntry->id_surat, 2);
@@ -84,7 +85,6 @@ class E_SuratController extends Controller
             $newId = 'SR0001';
         }
 
-        // 3. SIMPAN DATABASE
         ESurat::create([
             'id_surat' => $newId,
             'nomor_surat_resmi' => $request->nomor_surat_resmi,
@@ -104,16 +104,14 @@ class E_SuratController extends Controller
 {
     $surat = ESurat::with('siswa.kelas')->where('id_surat', $id)->firstOrFail();
     
-    $wordFileName = $surat->file_generate; // Contoh: SR0014.docx
+    $wordFileName = $surat->file_generate; 
     $pdfFileName = str_replace('.docx', '.pdf', $wordFileName);
     
     $wordPath = storage_path('app/public/generated_surats/' . $wordFileName);
     $outDir = storage_path('app/public/generated_surats');
     $pdfPath = $outDir . '/' . $pdfFileName;
 
-    // Jika PDF belum ada, kita panggil mesin LibreOffice
     if (!file_exists($pdfPath)) {
-        // Lokasi standar instalasi LibreOffice di Windows
         $libreOfficePath = '"C:\Program Files\LibreOffice\program\soffice.exe"';
         
         // Perintah konversi
@@ -145,6 +143,7 @@ class E_SuratController extends Controller
     {
         $surat = ESurat::with(['siswa.kelas.walikelas'])->where('id_surat', $id)->firstOrFail();
         $emailWali = $surat->siswa->kelas->walikelas->email ?? null;
+        $emailSiswa = $surat->siswa->user->email ?? null;
 
         if (!$emailWali) {
             return redirect()->back()->with('error', 'Gagal! Email Wali Kelas tidak ditemukan.');
@@ -167,18 +166,21 @@ class E_SuratController extends Controller
         try {
             Mail::to($emailWali)->send(new LaporanBKMail($rincian));
 
+            if ($emailSiswa) {
+                $rincian['subjek'] = 'Pemberitahuan SP untukmu';
+                Mail::to($emailSiswa)->send(new LaporanBKMail($rincian));
+            }
+
             $surat->update(['status' => 'sent']);
 
-            // Simpan ke Kotak Surat Siswa
             KotakSurats::create([
                 'id_siswa' => $surat->id_siswa,
-                'judul' => 'Surat Peringatan Baru: ' . $surat->nomor_surat_resmi,
-                'pesan' => "Pemberitahuan resmi mengenai: " . $surat->keterangan_tambahan,
-                'file_pdf' => $fileNamePdf,
+                'subject' => 'Surat Peringatan Baru: ' . $surat->nomor_surat_resmi,
+                'message' => "Perhatian!" . $surat->siswa->nama_siswa . ", surat SP dengan nomor " . $surat->nomor_surat_resmi . " telah dikirim ke wali kelasmu. Silakan cek email atau kotak surat untuk detailnya.",
+                'type' => 'danger',
                 'is_read' => false,
             ]);
 
-            // Kirim Notifikasi via Chat Konseling (jika ada)
             $konseling = CounselingRequest::where('id_siswa', $surat->id_siswa)
                                            ->whereIn('status', ['ongoing', 'accepted'])
                                            ->first();

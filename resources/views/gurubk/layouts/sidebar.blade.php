@@ -113,6 +113,12 @@
                         <li class="nxl-item"><a class="nxl-link" href="{{ route('gurubk.e_surat.index') }}">Cetak E-SP</a></li>
                     </ul>
                 </li>
+                <li class="nxl-item {{ Request::routeIs('gurubk.laporan.*') ? 'active' : '' }}">
+                    <a href="{{ route('gurubk.laporan.index') }}" class="nxl-link">
+                        <span class="nxl-micon"><i class="feather-file-text"></i></span>
+                        <span class="nxl-mtext">Laporan Bulanan</span>
+                    </a>
+                </li>
             </ul>
 
             <div class="divider-white"></div>

@@ -220,49 +220,184 @@ value="{{ request('search') }}">
 
 
 <div class="table-container">
-    <div class="table-responsive">
-        <table class="table text-center align-middle">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Tanggal</th>
-                    <th>Nama siswa</th>
-                    <th>Kelas</th>
-                    <th>Pelanggaran</th>
-                    <th>Poin</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($riwayat as $index => $r)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ \Carbon\Carbon::parse($r->tanggal_kejadian)->format('d/m/Y') }}</td>
-                    <td class="fw-bold text-dark text-start">{{ $r->siswa->nama_siswa }}</td>
-                    <td>{{ $r->siswa->kelas->nama_lengkap }}</td>
-                    <td class="text-start">{{ $r->pelanggaran->jenis_kegiatan }}</td>
-                    <td><span class="badge-poin">{{ $r->poin }}</span></td>
-                    <td>
-                        <span class="badge {{ $r->status == 'Ringan' ? 'bg-info' : ($r->status == 'Sedang' ? 'bg-warning' : 'bg-danger') }} rounded-pill">
-                            {{ $r->status }}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn btn-sm btn-light rounded-pill"><i class="bi bi-three-dots"></i></button>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="8" class="empty-state">
-                        <i class="bi bi-folder2-open" style="font-size: 48px;"></i>
-                        <p class="mt-3 mb-0 text-dark fw-bold">Belum ada data tersedia.</p>
-                        <small>Data akan muncul setelah anda menginput pelanggaran baru.</small>
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+
+<div class="table-responsive">
+
+<table class="table text-center align-middle">
+
+<thead>
+<tr>
+<th width="50">No</th>
+<th>Tanggal</th>
+<th class="text-start">Nama Siswa</th>
+<th>Kelas</th>
+<th class="text-start">Pelanggaran</th>
+<th>Poin</th>
+<th>Status</th>
+<th width="130">Aksi</th>
+</tr>
+</thead>
+
+<tbody>
+
+@forelse($riwayat as $index=>$r)
+
+<tr>
+
+<td class="text-muted">{{ $riwayat->firstItem()+$index }}</td>
+
+<td class="text-secondary">
+{{ \Carbon\Carbon::parse($r->tanggal_kejadian)->format('d/m/Y') }}
+</td>
+
+<td class="fw-bold text-dark text-start">
+{{ $r->siswa->nama_siswa ?? 'N/A' }}
+</td>
+
+<td>
+<span class="badge bg-light text-primary border px-2 py-1" style="font-size:11px;">
+{{ $r->siswa->kelas->nama_kelas ?? '-' }}
+{{ $r->siswa->kelas->jurusan ?? '' }}
+</span>
+</td>
+
+<td class="text-start text-truncate" style="max-width:180px;">
+{{ $r->pelanggaran->jenis_kegiatan ?? '-' }}
+</td>
+
+<td>
+<span class="badge-poin">{{ $r->poin }}</span>
+</td>
+
+<td>
+<span class="badge badge-status {{ $r->status=='Ringan'?'bg-info':($r->status=='Sedang'?'bg-warning':'bg-danger') }} rounded-pill">
+{{ $r->status }}
+</span>
+</td>
+
+<td>
+
+<div class="d-flex justify-content-center gap-2">
+
+<button
+class="btn-action btn-show"
+data-bs-toggle="modal"
+data-bs-target="#modalDetail"
+
+data-tanggal="{{ \Carbon\Carbon::parse($r->tanggal_kejadian)->format('d F Y') }}"
+data-siswa="{{ $r->siswa->nama_siswa }}"
+data-kelas="{{ $r->siswa->kelas->nama_kelas }} {{ $r->siswa->kelas->jurusan }}"
+data-jenis="{{ $r->pelanggaran->jenis_kegiatan }}"
+data-kategori="{{ $r->pelanggaran->kategori_pelanggaran }}"
+data-poin="{{ $r->poin }}"
+data-status="{{ $r->status }}"
+data-keterangan="{{ $r->keterangan ?? '-' }}"
+data-foto="{{ ($r->file && $r->file != '-') ? asset('uploads/pelanggaran/' . $r->file) : '' }}"
+>
+<i class="bi bi-eye"></i>
+</button>
+
+
+<a href="{{ route('gurubk.riwayatpelanggaran.edit',$r->id_riwayat) }}" class="btn-action btn-edit">
+<i class="bi bi-pencil"></i>
+</a>
+
+
+<form action="{{ route('gurubk.riwayatpelanggaran.destroy',$r->id_riwayat) }}" method="POST" onsubmit="return confirm('Yakin hapus data?')">
+@csrf
+@method('DELETE')
+
+<button class="btn-action btn-delete">
+<i class="bi bi-trash"></i>
+</button>
+
+</form>
+
+</div>
+
+</td>
+
+</tr>
+
+@empty
+
+<tr>
+<td colspan="8" class="empty-state">
+<i class="bi bi-clipboard-x d-block mb-3" style="font-size:40px;opacity:.3;"></i>
+<span class="fw-bold d-block text-dark">Data Pelanggaran Tidak Ditemukan</span>
+</td>
+</tr>
+
+@endforelse
+
+</tbody>
+</table>
+
+</div>
+
+</div>
+
+
+<div class="modal fade" id="modalDetail">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="fw-bold">Detail Pelanggaran</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body p-4">
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="modal-detail-label">Nama Siswa</div>
+                                <div class="modal-detail-value" id="md-siswa"></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="modal-detail-label">Kelas</div>
+                                <div class="modal-detail-value" id="md-kelas"></div>
+                            </div>
+                            <div class="col-12">
+                                <div class="modal-detail-label">Jenis Pelanggaran</div>
+                                <div class="modal-detail-value text-primary" id="md-jenis"></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="modal-detail-label">Kategori</div>
+                                <div class="modal-detail-value" id="md-kategori"></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="modal-detail-label">Tanggal</div>
+                                <div class="modal-detail-value" id="md-tanggal"></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="modal-detail-label">Poin</div>
+                                <div class="modal-detail-value text-danger" id="md-poin"></div>
+                            </div>
+                            <div class="col-6">
+                                <div class="modal-detail-label">Status</div>
+                                <div id="md-status"></div>
+                            </div>
+                            <div class="col-12">
+                                <div class="modal-detail-label">Keterangan</div>
+                                <div class="bg-light p-3 rounded-3 small text-secondary" id="md-keterangan" style="min-height: 60px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-5 mt-3 mt-md-0">
+                        <div class="modal-detail-label">Bukti Foto</div>
+                        <div class="photo-container">
+                            <img id="md-foto" src="" alt="Bukti" style="display: none;">
+                            <div id="md-no-foto" class="text-center text-muted">
+                                <i class="bi bi-image d-block fs-1 opacity-25"></i>
+                                <span class="small">Tidak ada bukti foto</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
